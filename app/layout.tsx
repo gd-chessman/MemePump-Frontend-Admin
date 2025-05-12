@@ -1,8 +1,12 @@
+"use client";
 import type React from "react"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useState } from "react"
+
 
 // Configure Inter font with all required weights
 const inter = Inter({
@@ -22,11 +26,23 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
+
+    // Khởi tạo QueryClient trong component để nó không bị chia sẻ giữa các yêu cầu
+    const [queryClient] = useState(() => new QueryClient({
+      defaultOptions: {
+        queries: {
+          refetchOnMount: false,
+        },
+      },
+    }));
+    
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} ${inter.className}`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          {children}
+          <QueryClientProvider client={queryClient}>
+            {children}
+          </QueryClientProvider>
         </ThemeProvider>
       </body>
     </html>
