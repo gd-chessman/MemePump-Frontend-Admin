@@ -31,6 +31,7 @@ export default function LoginPage() {
       setIsLoading(true)
 
       // Simulate API call with timeout
+      console.log(username, password)
       await new Promise((resolve) => setTimeout(resolve, 1000))
 
       // For demo purposes, hardcode a successful login with specific credentials
