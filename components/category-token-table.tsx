@@ -1,0 +1,380 @@
+"use client"
+
+import { useState } from "react"
+import {
+  type ColumnDef,
+  type ColumnFiltersState,
+  type SortingState,
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable,
+} from "@tanstack/react-table"
+import { ArrowUpDown, Trash, CheckCircle2, XCircle, Eye, EyeOff } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { EditableCell } from "@/components/editable-cell"
+import { Badge } from "@/components/ui/badge"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
+
+type CategoryToken = {
+  id: string
+  name: string
+  slug: string
+  prioritize: "yes" | "no"
+  status: "active" | "hidden"
+  createdAt: string
+}
+
+const initialData: CategoryToken[] = [
+  {
+    id: "1",
+    name: "NFT Collection",
+    slug: "nft-collection",
+    prioritize: "yes",
+    status: "active",
+    createdAt: "2023-05-15",
+  },
+  {
+    id: "2",
+    name: "Gaming Assets",
+    slug: "gaming-assets",
+    prioritize: "yes",
+    status: "active",
+    createdAt: "2023-06-22",
+  },
+  {
+    id: "3",
+    name: "Digital Art",
+    slug: "digital-art",
+    prioritize: "no",
+    status: "active",
+    createdAt: "2023-04-10",
+  },
+  {
+    id: "4",
+    name: "Virtual Real Estate",
+    slug: "virtual-real-estate",
+    prioritize: "no",
+    status: "hidden",
+    createdAt: "2023-07-05",
+  },
+  {
+    id: "5",
+    name: "Membership Tokens",
+    slug: "membership-tokens",
+    prioritize: "yes",
+    status: "active",
+    createdAt: "2023-08-18",
+  },
+]
+
+export function CategoryTokenTable() {
+  const [data, setData] = useState<CategoryToken[]>(initialData)
+  const [sorting, setSorting] = useState<SortingState>([])
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+  const [openAlert, setOpenAlert] = useState<{ [key: string]: boolean }>({})
+
+  const updateCategoryField = (id: string, field: keyof CategoryToken, value: string) => {
+    setData((prev) =>
+      prev.map((category) => {
+        if (category.id === id) {
+          return { ...category, [field]: value }
+        }
+        return category
+      }),
+    )
+  }
+
+  // Toggle prioritize value between "yes" and "no"
+  const togglePrioritize = (id: string) => {
+    setData((prev) =>
+      prev.map((category) => {
+        if (category.id === id) {
+          const newValue = category.prioritize === "yes" ? "no" : "yes"
+          return { ...category, prioritize: newValue }
+        }
+        return category
+      }),
+    )
+  }
+
+  // Toggle status value between "active" and "hidden"
+  const toggleStatus = (id: string) => {
+    setData((prev) =>
+      prev.map((category) => {
+        if (category.id === id) {
+          const newValue = category.status === "active" ? "hidden" : "active"
+          return { ...category, status: newValue }
+        }
+        return category
+      }),
+    )
+  }
+
+  // Delete a category
+  const deleteCategory = (id: string) => {
+    setData((prev) => prev.filter((category) => category.id !== id))
+  }
+
+  // Auto-generate slug from name
+  const generateSlugFromName = (name: string) => {
+    return name
+      .toLowerCase()
+      .replace(/\s+/g, "-")
+      .replace(/[^\w-]+/g, "")
+  }
+
+  const columns: ColumnDef<CategoryToken>[] = [
+    {
+      accessorKey: "name",
+      header: "Category Name",
+      cell: ({ row }) => {
+        const category = row.original
+        return (
+          <EditableCell
+            value={category.name}
+            onSave={(value) => {
+              updateCategoryField(category.id, "name", value)
+              // Optionally auto-update slug when name changes
+              const newSlug = generateSlugFromName(value)
+              updateCategoryField(category.id, "slug", newSlug)
+            }}
+            className="font-medium"
+          />
+        )
+      },
+    },
+    {
+      accessorKey: "slug",
+      header: "Slug",
+      cell: ({ row }) => {
+        const category = row.original
+        return (
+          <EditableCell
+            value={category.slug}
+            onSave={(value) => updateCategoryField(category.id, "slug", value)}
+            className="text-muted-foreground"
+          />
+        )
+      },
+    },
+    {
+      accessorKey: "prioritize",
+      header: "Prioritize",
+      cell: ({ row }) => {
+        const category = row.original
+        const isPrioritized = category.prioritize === "yes"
+
+        return (
+          <div className="flex justify-center">
+            <Badge
+              variant="outline"
+              className={`cursor-pointer flex items-center gap-1 px-3 py-1 transition-colors duration-200 ${
+                isPrioritized
+                  ? "bg-emerald-50 text-emerald-600 border-emerald-200 hover:bg-emerald-500 hover:text-white hover:border-emerald-500"
+                  : "bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-500 hover:text-white hover:border-slate-500"
+              } dark:${
+                isPrioritized
+                  ? "bg-emerald-950/30 text-emerald-400 border-emerald-800/50 hover:bg-emerald-600 hover:text-white hover:border-emerald-600"
+                  : "bg-slate-950/30 text-slate-400 border-slate-800/50 hover:bg-slate-600 hover:text-white hover:border-slate-600"
+              }`}
+              onClick={() => togglePrioritize(category.id)}
+            >
+              {isPrioritized ? (
+                <CheckCircle2 className={`h-3.5 w-3.5 ${isPrioritized ? "text-emerald-500" : "text-slate-500"}`} />
+              ) : (
+                <XCircle className="h-3.5 w-3.5 text-slate-500" />
+              )}
+              <span>{isPrioritized ? "Yes" : "No"}</span>
+            </Badge>
+          </div>
+        )
+      },
+    },
+    {
+      accessorKey: "status",
+      header: "Status",
+      cell: ({ row }) => {
+        const category = row.original
+        const isActive = category.status === "active"
+
+        return (
+          <div className="flex justify-center">
+            <Badge
+              variant="outline"
+              className={`cursor-pointer flex items-center gap-1 px-3 py-1 transition-colors duration-200 ${
+                isActive
+                  ? "bg-blue-50 text-blue-600 border-blue-200 hover:bg-blue-500 hover:text-white hover:border-blue-500"
+                  : "bg-amber-50 text-amber-600 border-amber-200 hover:bg-amber-500 hover:text-white hover:border-amber-500"
+              } dark:${
+                isActive
+                  ? "bg-blue-950/30 text-blue-400 border-blue-800/50 hover:bg-blue-600 hover:text-white hover:border-blue-600"
+                  : "bg-amber-950/30 text-amber-400 border-amber-800/50 hover:bg-amber-600 hover:text-white hover:border-amber-600"
+              }`}
+              onClick={() => toggleStatus(category.id)}
+            >
+              {isActive ? (
+                <Eye className="h-3.5 w-3.5 text-blue-500" />
+              ) : (
+                <EyeOff className="h-3.5 w-3.5 text-amber-500" />
+              )}
+              <span>{isActive ? "Active" : "Hidden"}</span>
+            </Badge>
+          </div>
+        )
+      },
+    },
+    {
+      accessorKey: "createdAt",
+      header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            className="p-0 hover:bg-transparent"
+          >
+            Created Date
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        )
+      },
+    },
+    {
+      id: "actions",
+      cell: ({ row }) => {
+        const category = row.original
+        const open = openAlert[category.id] || false
+
+        return (
+          <div className="flex items-center justify-end">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 p-0 text-destructive hover:text-destructive hover:bg-destructive/10"
+              onClick={() => setOpenAlert((prevState) => ({ ...prevState, [category.id]: true }))}
+            >
+              <Trash className="h-4 w-4" />
+              <span className="sr-only">Delete</span>
+            </Button>
+
+            <AlertDialog
+              open={open}
+              onOpenChange={(open) => setOpenAlert((prevState) => ({ ...prevState, [category.id]: open }))}
+            >
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This will permanently delete the category "{category.name}". This action cannot be undone.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel
+                    onClick={() => setOpenAlert((prevState) => ({ ...prevState, [category.id]: false }))}
+                  >
+                    Cancel
+                  </AlertDialogCancel>
+                  <AlertDialogAction
+                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                    onClick={() => {
+                      deleteCategory(category.id)
+                      setOpenAlert((prevState) => ({ ...prevState, [category.id]: false }))
+                    }}
+                  >
+                    Delete
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
+        )
+      },
+    },
+  ]
+
+  const table = useReactTable({
+    data,
+    columns,
+    onSortingChange: setSorting,
+    onColumnFiltersChange: setColumnFilters,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    state: {
+      sorting,
+      columnFilters,
+    },
+  })
+
+  return (
+    <div className="space-y-4">
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                  return (
+                    <TableHead key={header.id}>
+                      {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                    </TableHead>
+                  )
+                })}
+              </TableRow>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {table.getRowModel().rows?.length ? (
+              table.getRowModel().rows.map((row) => (
+                <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={columns.length} className="h-24 text-center">
+                  No results.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
+      <div className="flex items-center justify-between">
+        <div className="text-sm text-muted-foreground">
+          Showing {table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1} to{" "}
+          {Math.min((table.getState().pagination.pageIndex + 1) * table.getState().pagination.pageSize, data.length)} of{" "}
+          {data.length} entries
+        </div>
+        <div className="flex items-center space-x-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+          >
+            Previous
+          </Button>
+          <Button variant="outline" size="sm" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
+            Next
+          </Button>
+        </div>
+      </div>
+    </div>
+  )
+}
