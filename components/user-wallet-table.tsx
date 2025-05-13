@@ -17,6 +17,8 @@ import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
+import { useQuery } from "@tanstack/react-query"
+import { getUserWallets } from "@/services/api/UserWalletsService"
 
 // Define types based on the provided JSON structure
 interface WalletAuth {
@@ -43,86 +45,12 @@ interface UserWalletResponse {
   limit: number
 }
 
-// Sample data based on the provided JSON
-const sampleData: UserWalletResponse = {
-  data: [
-    {
-      uw_id: 7255603,
-      uw_telegram_id: "8102748433",
-      uw_phone: null,
-      uw_email: null,
-      uw_password: null,
-      wallet_auths: [
-        {
-          wa_id: 10,
-          wa_user_id: 7255603,
-          wa_wallet_id: 3255842,
-          wa_type: "main",
-          wa_name: "Le Van Quy",
-        },
-        {
-          wa_id: 20,
-          wa_user_id: 7255603,
-          wa_wallet_id: 3259634,
-          wa_type: "other",
-          wa_name: "Test 1",
-        },
-      ],
-    },
-    // Add more sample data for demonstration
-    {
-      uw_id: 7255604,
-      uw_telegram_id: "8102748434",
-      uw_phone: null,
-      uw_email: null,
-      uw_password: null,
-      wallet_auths: [
-        {
-          wa_id: 11,
-          wa_user_id: 7255604,
-          wa_wallet_id: 3255843,
-          wa_type: "main",
-          wa_name: "Nguyen Van A",
-        },
-      ],
-    },
-    {
-      uw_id: 7255605,
-      uw_telegram_id: "8102748435",
-      uw_phone: null,
-      uw_email: null,
-      uw_password: null,
-      wallet_auths: [
-        {
-          wa_id: 12,
-          wa_user_id: 7255605,
-          wa_wallet_id: 3255844,
-          wa_type: "main",
-          wa_name: "Tran Thi B",
-        },
-        {
-          wa_id: 21,
-          wa_user_id: 7255605,
-          wa_wallet_id: 3259635,
-          wa_type: "other",
-          wa_name: "Business Account",
-        },
-        {
-          wa_id: 22,
-          wa_user_id: 7255605,
-          wa_wallet_id: 3259636,
-          wa_type: "other",
-          wa_name: "Personal Savings",
-        },
-      ],
-    },
-  ],
-  total: 3,
-  page: 1,
-  limit: 10,
-}
 
 export function UserWalletTable() {
+  const { data: userWallets, isLoading } = useQuery({
+    queryKey: ["user-wallets"],
+    queryFn: () => getUserWallets(),
+  })
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [expandedRows, setExpandedRows] = useState<Record<number, boolean>>({})
@@ -189,7 +117,7 @@ export function UserWalletTable() {
   ]
 
   const table = useReactTable({
-    data: sampleData.data,
+    data: userWallets?.data ?? [],
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -202,6 +130,10 @@ export function UserWalletTable() {
       columnFilters,
     },
   })
+
+  if (isLoading) {
+    return <div>Loading...</div>
+  }
 
   return (
     <div className="space-y-4">
@@ -293,9 +225,9 @@ export function UserWalletTable() {
           Showing {table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1} to{" "}
           {Math.min(
             (table.getState().pagination.pageIndex + 1) * table.getState().pagination.pageSize,
-            sampleData.total,
+            userWallets?.total,
           )}{" "}
-          of {sampleData.total} entries
+          of {userWallets?.total} entries
         </div>
         <div className="flex items-center space-x-2">
           <Button
