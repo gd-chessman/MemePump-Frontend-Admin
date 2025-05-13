@@ -24,7 +24,7 @@ export default function SettingsPage() {
   
   const [generalSettings, setGeneralSettings] = useState({
     appName: "",
-    logo: "",
+    logo: null as File | null,
     telegramBot: ""
   })
 
@@ -32,7 +32,7 @@ export default function SettingsPage() {
     if (setting) {
       setGeneralSettings({
         appName: setting.appName || "",
-        logo: setting.logo || "",
+        logo: null,
         telegramBot: setting.telegramBot || ""
       })
     }
@@ -40,7 +40,13 @@ export default function SettingsPage() {
 
   const handleUpdateGeneralSetting = async () => {
     try {
-      await SettingService.updateSetting(generalSettings)
+      const formData = new FormData()
+      formData.append('appName', generalSettings.appName)
+      formData.append('telegramBot', generalSettings.telegramBot)
+      if (generalSettings.logo) {
+        formData.append('logo', generalSettings.logo)
+      }
+      await SettingService.updateSetting(formData)
       toast.success("Settings updated successfully")
     } catch (error) {
       console.error("Error updating settings:", error)
@@ -89,7 +95,7 @@ export default function SettingsPage() {
                       <div className="h-24 w-24 rounded-md border-2 border-dashed border-primary/20 flex items-center justify-center bg-background overflow-hidden">
                         {generalSettings.logo ? (
                           <img
-                            src={generalSettings.logo}
+                            src={URL.createObjectURL(generalSettings.logo)}
                             alt="Current logo"
                             className="max-h-20 max-w-20 object-contain"
                           />
@@ -115,7 +121,7 @@ export default function SettingsPage() {
                             onChange={(e) => {
                               const file = e.target.files?.[0]
                               if (file) {
-                                setGeneralSettings(prev => ({ ...prev, logo: file.name }))
+                                setGeneralSettings(prev => ({ ...prev, logo: file }))
                               }
                             }}
                           />
