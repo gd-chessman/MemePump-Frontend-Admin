@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react"
 import { Bell, Search, Settings, LogOut, X, ShieldAlert, RefreshCw, Server, AlertTriangle } from "lucide-react"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Avatar } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
@@ -188,9 +188,8 @@ export function AdminHeader() {
               className={`relative h-9 w-9 rounded-full transition-all duration-200 ${isAvatarMenuOpen ? "ring-2 ring-primary ring-offset-2" : ""}`}
               onClick={() => setIsAvatarMenuOpen(!isAvatarMenuOpen)}
             >
-              <Avatar className="h-9 w-9 border-2 border-primary/20">
-                <AvatarImage src="/abstract-geometric-shapes.png" alt="User" />
-                <AvatarFallback className="bg-primary/10 text-primary">{myInfor?.username.charAt(0).toUpperCase()}</AvatarFallback>
+              <Avatar className="h-9 w-9 border-2 border-primary/20 bg-primary/10 text-primary flex items-center justify-center">
+                {myInfor?.username.charAt(0).toUpperCase()}
               </Avatar>
             </Button>
 
@@ -200,9 +199,8 @@ export function AdminHeader() {
                 className="absolute right-0 mt-2 w-64 rounded-md border bg-popover p-1 text-popover-foreground shadow-md animate-in fade-in-0 zoom-in-95 z-50"
               >
                 <div className="flex items-center gap-4 p-3">
-                  <Avatar className="h-12 w-12 border-2 border-primary/20">
-                    <AvatarImage src="/abstract-geometric-shapes.png" alt="User" />
-                    <AvatarFallback className="bg-primary/10 text-primary">{myInfor?.username.charAt(0).toUpperCase()}</AvatarFallback>
+                  <Avatar className="h-12 w-12 border-2 border-primary/20 bg-primary/10 text-primary flex items-center justify-center">
+                    {myInfor?.username.charAt(0).toUpperCase()}
                   </Avatar>
                   <div className="flex flex-col space-y-1">
                     <p className="text-sm font-medium leading-none">{myInfor?.username}</p>
