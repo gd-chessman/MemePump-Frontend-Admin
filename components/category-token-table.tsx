@@ -28,7 +28,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
-import { getCategoryToken, deleteCategoryToken } from "@/services/api/CategorysTokenService"
+import { getCategoryToken, deleteCategoryToken, updateCategoryToken } from "@/services/api/CategorysTokenService"
 import { toast } from "react-toastify"
 
 type CategoryToken = {
@@ -60,15 +60,33 @@ export function CategoryTokenTable() {
     }
   }, [categoryToken])
 
-  const updateCategoryField = (id: number, field: keyof CategoryToken, value: string) => {
-    setData((prev) =>
-      prev.map((category) => {
-        if (category.slct_id === id) {
-          return { ...category, [field]: value }
-        }
-        return category
-      }),
-    )
+  const updateCategoryField = async (id: number, field: keyof CategoryToken, value: string) => {
+    try {
+      // Update local state first for optimistic update
+      setData((prev) =>
+        prev.map((category) => {
+          if (category.slct_id === id) {
+            return { ...category, [field]: value }
+          }
+          return category
+        }),
+      )
+
+      // Call API to update
+      await updateCategoryToken({
+        slct_id: id.toString(),
+        [field]: value
+      })
+
+      // Invalidate and refetch the categories query
+      await queryClient.invalidateQueries({ queryKey: ["category-token"] })
+      toast.success("Category updated successfully")
+    } catch (error) {
+      console.error("Error updating category:", error)
+      toast.error("Failed to update category")
+      // Revert local state on error
+      await queryClient.invalidateQueries({ queryKey: ["category-token"] })
+    }
   }
 
   // Toggle prioritize value between "yes" and "no"
@@ -127,11 +145,8 @@ export function CategoryTokenTable() {
         return (
           <EditableCell
             value={category.slct_name}
-            onSave={(value) => {
-              updateCategoryField(category.slct_id, "slct_name", value)
-              // Optionally auto-update slug when name changes
-              const newSlug = generateSlugFromName(value)
-              updateCategoryField(category.slct_id, "slct_slug", newSlug)
+            onSave={async (value) => {
+              await updateCategoryField(category.slct_id, "slct_name", value)
             }}
             className="font-medium"
           />
@@ -146,7 +161,9 @@ export function CategoryTokenTable() {
         return (
           <EditableCell
             value={category.slct_slug}
-            onSave={(value) => updateCategoryField(category.slct_id, "slct_slug", value)}
+            onSave={async (value) => {
+              await updateCategoryField(category.slct_id, "slct_slug", value)
+            }}
             className="text-muted-foreground"
           />
         )

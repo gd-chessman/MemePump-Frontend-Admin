@@ -23,7 +23,7 @@ export const createCategoryToken = async (data: any)=>{
 
 export const updateCategoryToken = async (data: any)=>{
     try {
-        const temp = await axiosClient.put(`/categories-token/${data.id}`, data)
+        const temp = await axiosClient.put(`/categories-token/${data.slct_id}`, data)
         return temp.data;
     } catch (error) {
         console.log(error)
