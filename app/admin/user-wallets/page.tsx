@@ -1,10 +1,19 @@
+"use client"
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { UserWalletTable } from "@/components/user-wallet-table"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Search, RefreshCw } from "lucide-react"
-
+import { getUserWallets } from "@/services/api/UserWalletsService"
+import { useQuery } from "@tanstack/react-query"
+import { useState } from "react"
 export default function UserWalletsPage() {
+  const [searchQuery, setSearchQuery] = useState('')
+  const { data: userWallets, refetch: refetchUserWallets } = useQuery({
+    queryKey: ["user-wallets", searchQuery],
+    queryFn: () => getUserWallets(searchQuery),
+  })
   return (
     <div className="flex flex-col space-y-6">
       <div className="flex flex-col space-y-2">
@@ -29,10 +38,16 @@ export default function UserWalletsPage() {
           <div className="flex items-center gap-2 mb-4">
             <div className="relative flex-1">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input type="search" placeholder="Search by ID or Telegram ID..." className="pl-8 w-full md:max-w-sm" />
+              <Input type="search" placeholder="Search by ID or Telegram ID..." className="pl-8 w-full md:max-w-sm"
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  refetchUserWallets();
+                }}
+              />
             </div>
           </div>
-          <UserWalletTable />
+          <UserWalletTable searchQuery={searchQuery} />
         </CardContent>
       </Card>
     </div>

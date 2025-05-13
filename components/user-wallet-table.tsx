@@ -46,10 +46,10 @@ interface UserWalletResponse {
 }
 
 
-export function UserWalletTable() {
+export function UserWalletTable({ searchQuery }: { searchQuery: string }) {
   const { data: userWallets, isLoading } = useQuery({
-    queryKey: ["user-wallets"],
-    queryFn: () => getUserWallets(),
+    queryKey: ["user-wallets", searchQuery],
+    queryFn: () => getUserWallets(searchQuery),
   })
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
