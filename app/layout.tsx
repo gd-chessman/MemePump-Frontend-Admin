@@ -15,12 +15,6 @@ const inter = Inter({
   variable: "--font-inter",
 })
 
-export const metadata: Metadata = {
-  title: "Admin Dashboard",
-  description: "Modern admin dashboard with light and dark mode",
-    generator: 'v0.dev'
-}
-
 export default function RootLayout({
   children,
 }: Readonly<{

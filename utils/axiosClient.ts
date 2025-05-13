@@ -21,9 +21,9 @@ axiosClient.interceptors.response.use(
   },
   (error) => {
     if (error.response && error.response.status === 401) {
-      console.error('Lỗi 401: Unauthorized');
+      console.warn('Lỗi 401: Unauthorized');
     }else if(error.code === "ERR_NETWORK"){
-      console.error("Máy chủ đang gặp sự cố !");
+      console.warn("Máy chủ đang gặp sự cố !");
     }
     return Promise.reject(error);
   }

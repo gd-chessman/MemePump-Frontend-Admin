@@ -5,9 +5,8 @@ export const login = async (item: any) => {
     try {
         const temp = await axiosClient.post(`/login`, item);
         localStorage.setItem("user", JSON.stringify(temp.data));
-        return temp.data;
+        return temp;
     } catch (e) {
-        console.log(e)
-        throw new Error("Không thể đăng nhập!")
+        throw e;
     }
 }

@@ -9,6 +9,7 @@ import { Eye, EyeOff, Lock, User, BarChart2, Users, Shield, Layers } from "lucid
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { AuthService } from "@/services/api"
 
 export default function LoginPage() {
   const [username, setUsername] = useState("")
@@ -29,14 +30,8 @@ export default function LoginPage() {
 
     try {
       setIsLoading(true)
-
-      // Simulate API call with timeout
-      console.log(username, password)
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-
-      // For demo purposes, hardcode a successful login with specific credentials
-      if (username === "admin" && password === "admin123") {
-        // Redirect to admin dashboard
+      const res = await AuthService.login({username, password})
+      if (res.status === 200) {
         router.push("/admin")
       } else {
         setError("Invalid username or password")
