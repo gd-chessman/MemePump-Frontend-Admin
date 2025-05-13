@@ -45,7 +45,7 @@ export function CategoryTokenTable() {
   const queryClient = useQueryClient()
   const { data: categoryToken, isLoading } = useQuery({
     queryKey: ["category-token"],
-    queryFn: getCategoryToken,
+    queryFn: () => getCategoryToken('', 1, 100),
   });
 
   const [data, setData] = useState<CategoryToken[]>([])
