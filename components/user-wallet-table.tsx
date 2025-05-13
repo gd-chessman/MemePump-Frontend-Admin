@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { Fragment, useState } from "react"
 import {
   type ColumnDef,
   type ColumnFiltersState,
@@ -155,9 +155,9 @@ export function UserWalletTable({ searchQuery }: { searchQuery: string }) {
             </TableHeader>
             <TableBody>
               {table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <>
-                    <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
+                table.getRowModel().rows.map((row, index) => (
+                  <Fragment key={index}>
+                    <TableRow data-state={row.getIsSelected() && "selected"}>
                       {row.getVisibleCells().map((cell) => (
                         <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
                       ))}
@@ -209,7 +209,7 @@ export function UserWalletTable({ searchQuery }: { searchQuery: string }) {
                         </TableCell>
                       </TableRow>
                     )}
-                  </>
+                  </Fragment>
                 ))
               ) : (
                 <TableRow>
