@@ -36,9 +36,12 @@ export default function LoginPage() {
       } else {
         setError("Invalid username or password")
       }
-    } catch (err) {
-      setError("An error occurred. Please try again.")
-      console.error(err)
+    } catch (err: any) {
+      if (err.status === 401) {
+        setError("Invalid username or password")
+      } else {
+        setError("An error occurred. Please try again.")
+      }
     } finally {
       setIsLoading(false)
     }
