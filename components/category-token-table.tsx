@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import {
   type ColumnDef,
   type ColumnFiltersState,
@@ -27,69 +27,41 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
+import { useQuery } from "@tanstack/react-query"
+import { getCategoryToken } from "@/services/api/CategorysTokenService"
 
 type CategoryToken = {
-  id: string
-  name: string
-  slug: string
-  prioritize: "yes" | "no"
-  status: "active" | "hidden"
-  createdAt: string
+  slct_id: number
+  slct_name: string
+  slct_slug: string
+  slct_prioritize: "yes" | "no"
+  sltc_status: "active" | "hidden"
+  slct_created_at: string
+  slct_updated_at: string
 }
 
-const initialData: CategoryToken[] = [
-  {
-    id: "1",
-    name: "NFT Collection",
-    slug: "nft-collection",
-    prioritize: "yes",
-    status: "active",
-    createdAt: "2023-05-15",
-  },
-  {
-    id: "2",
-    name: "Gaming Assets",
-    slug: "gaming-assets",
-    prioritize: "yes",
-    status: "active",
-    createdAt: "2023-06-22",
-  },
-  {
-    id: "3",
-    name: "Digital Art",
-    slug: "digital-art",
-    prioritize: "no",
-    status: "active",
-    createdAt: "2023-04-10",
-  },
-  {
-    id: "4",
-    name: "Virtual Real Estate",
-    slug: "virtual-real-estate",
-    prioritize: "no",
-    status: "hidden",
-    createdAt: "2023-07-05",
-  },
-  {
-    id: "5",
-    name: "Membership Tokens",
-    slug: "membership-tokens",
-    prioritize: "yes",
-    status: "active",
-    createdAt: "2023-08-18",
-  },
-]
-
 export function CategoryTokenTable() {
-  const [data, setData] = useState<CategoryToken[]>(initialData)
+  const { data: categoryToken, isLoading } = useQuery({
+    queryKey: ["category-token"],
+    queryFn: getCategoryToken,
+  });
+
+  const [data, setData] = useState<CategoryToken[]>([])
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [openAlert, setOpenAlert] = useState<{ [key: string]: boolean }>({})
 
-  const updateCategoryField = (id: string, field: keyof CategoryToken, value: string) => {
+  // Update data when API response changes
+  useEffect(() => {
+    if (categoryToken?.data) {
+      setData(categoryToken.data)
+    }
+  }, [categoryToken])
+
+  const updateCategoryField = (id: number, field: keyof CategoryToken, value: string) => {
     setData((prev) =>
       prev.map((category) => {
-        if (category.id === id) {
+        if (category.slct_id === id) {
           return { ...category, [field]: value }
         }
         return category
@@ -98,12 +70,12 @@ export function CategoryTokenTable() {
   }
 
   // Toggle prioritize value between "yes" and "no"
-  const togglePrioritize = (id: string) => {
+  const togglePrioritize = (id: number) => {
     setData((prev) =>
       prev.map((category) => {
-        if (category.id === id) {
-          const newValue = category.prioritize === "yes" ? "no" : "yes"
-          return { ...category, prioritize: newValue }
+        if (category.slct_id === id) {
+          const newValue = category.slct_prioritize === "yes" ? "no" : "yes"
+          return { ...category, slct_prioritize: newValue }
         }
         return category
       }),
@@ -111,12 +83,12 @@ export function CategoryTokenTable() {
   }
 
   // Toggle status value between "active" and "hidden"
-  const toggleStatus = (id: string) => {
+  const toggleStatus = (id: number) => {
     setData((prev) =>
       prev.map((category) => {
-        if (category.id === id) {
-          const newValue = category.status === "active" ? "hidden" : "active"
-          return { ...category, status: newValue }
+        if (category.slct_id === id) {
+          const newValue = category.sltc_status === "active" ? "hidden" : "active"
+          return { ...category, sltc_status: newValue }
         }
         return category
       }),
@@ -124,8 +96,8 @@ export function CategoryTokenTable() {
   }
 
   // Delete a category
-  const deleteCategory = (id: string) => {
-    setData((prev) => prev.filter((category) => category.id !== id))
+  const deleteCategory = (id: number) => {
+    setData((prev) => prev.filter((category) => category.slct_id !== id))
   }
 
   // Auto-generate slug from name
@@ -138,18 +110,18 @@ export function CategoryTokenTable() {
 
   const columns: ColumnDef<CategoryToken>[] = [
     {
-      accessorKey: "name",
+      accessorKey: "slct_name",
       header: "Category Name",
       cell: ({ row }) => {
         const category = row.original
         return (
           <EditableCell
-            value={category.name}
+            value={category.slct_name}
             onSave={(value) => {
-              updateCategoryField(category.id, "name", value)
+              updateCategoryField(category.slct_id, "slct_name", value)
               // Optionally auto-update slug when name changes
               const newSlug = generateSlugFromName(value)
-              updateCategoryField(category.id, "slug", newSlug)
+              updateCategoryField(category.slct_id, "slct_slug", newSlug)
             }}
             className="font-medium"
           />
@@ -157,25 +129,25 @@ export function CategoryTokenTable() {
       },
     },
     {
-      accessorKey: "slug",
+      accessorKey: "slct_slug",
       header: "Slug",
       cell: ({ row }) => {
         const category = row.original
         return (
           <EditableCell
-            value={category.slug}
-            onSave={(value) => updateCategoryField(category.id, "slug", value)}
+            value={category.slct_slug}
+            onSave={(value) => updateCategoryField(category.slct_id, "slct_slug", value)}
             className="text-muted-foreground"
           />
         )
       },
     },
     {
-      accessorKey: "prioritize",
+      accessorKey: "slct_prioritize",
       header: "Prioritize",
       cell: ({ row }) => {
         const category = row.original
-        const isPrioritized = category.prioritize === "yes"
+        const isPrioritized = category.slct_prioritize === "yes"
 
         return (
           <div className="flex justify-center">
@@ -190,7 +162,7 @@ export function CategoryTokenTable() {
                   ? "bg-emerald-950/30 text-emerald-400 border-emerald-800/50 hover:bg-emerald-600 hover:text-white hover:border-emerald-600"
                   : "bg-slate-950/30 text-slate-400 border-slate-800/50 hover:bg-slate-600 hover:text-white hover:border-slate-600"
               }`}
-              onClick={() => togglePrioritize(category.id)}
+              onClick={() => togglePrioritize(category.slct_id)}
             >
               {isPrioritized ? (
                 <CheckCircle2 className={`h-3.5 w-3.5 ${isPrioritized ? "text-emerald-500" : "text-slate-500"}`} />
@@ -204,11 +176,11 @@ export function CategoryTokenTable() {
       },
     },
     {
-      accessorKey: "status",
+      accessorKey: "sltc_status",
       header: "Status",
       cell: ({ row }) => {
         const category = row.original
-        const isActive = category.status === "active"
+        const isActive = category.sltc_status === "active"
 
         return (
           <div className="flex justify-center">
@@ -223,7 +195,7 @@ export function CategoryTokenTable() {
                   ? "bg-blue-950/30 text-blue-400 border-blue-800/50 hover:bg-blue-600 hover:text-white hover:border-blue-600"
                   : "bg-amber-950/30 text-amber-400 border-amber-800/50 hover:bg-amber-600 hover:text-white hover:border-amber-600"
               }`}
-              onClick={() => toggleStatus(category.id)}
+              onClick={() => toggleStatus(category.slct_id)}
             >
               {isActive ? (
                 <Eye className="h-3.5 w-3.5 text-blue-500" />
@@ -237,7 +209,7 @@ export function CategoryTokenTable() {
       },
     },
     {
-      accessorKey: "createdAt",
+      accessorKey: "slct_created_at",
       header: ({ column }) => {
         return (
           <Button
@@ -255,7 +227,7 @@ export function CategoryTokenTable() {
       id: "actions",
       cell: ({ row }) => {
         const category = row.original
-        const open = openAlert[category.id] || false
+        const open = openAlert[category.slct_id.toString()] || false
 
         return (
           <div className="flex items-center justify-end">
@@ -263,7 +235,7 @@ export function CategoryTokenTable() {
               variant="ghost"
               size="icon"
               className="h-8 w-8 p-0 text-destructive hover:text-destructive hover:bg-destructive/10"
-              onClick={() => setOpenAlert((prevState) => ({ ...prevState, [category.id]: true }))}
+              onClick={() => setOpenAlert((prevState) => ({ ...prevState, [category.slct_id.toString()]: true }))}
             >
               <Trash className="h-4 w-4" />
               <span className="sr-only">Delete</span>
@@ -271,26 +243,26 @@ export function CategoryTokenTable() {
 
             <AlertDialog
               open={open}
-              onOpenChange={(open) => setOpenAlert((prevState) => ({ ...prevState, [category.id]: open }))}
+              onOpenChange={(open) => setOpenAlert((prevState) => ({ ...prevState, [category.slct_id.toString()]: open }))}
             >
               <AlertDialogContent>
                 <AlertDialogHeader>
                   <AlertDialogTitle>Are you sure?</AlertDialogTitle>
                   <AlertDialogDescription>
-                    This will permanently delete the category "{category.name}". This action cannot be undone.
+                    This will permanently delete the category "{category.slct_name}". This action cannot be undone.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                   <AlertDialogCancel
-                    onClick={() => setOpenAlert((prevState) => ({ ...prevState, [category.id]: false }))}
+                    onClick={() => setOpenAlert((prevState) => ({ ...prevState, [category.slct_id.toString()]: false }))}
                   >
                     Cancel
                   </AlertDialogCancel>
                   <AlertDialogAction
                     className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                     onClick={() => {
-                      deleteCategory(category.id)
-                      setOpenAlert((prevState) => ({ ...prevState, [category.id]: false }))
+                      deleteCategory(category.slct_id)
+                      setOpenAlert((prevState) => ({ ...prevState, [category.slct_id.toString()]: false }))
                     }}
                   >
                     Delete
