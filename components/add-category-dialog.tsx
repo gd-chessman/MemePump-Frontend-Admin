@@ -1,7 +1,6 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import {
@@ -15,41 +14,41 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Plus } from "lucide-react"
+import { createCategoryToken } from "@/services/api/CategorysTokenService"
+import { useQueryClient } from "@tanstack/react-query"
+import { toast } from "react-toastify"
 
 export function AddCategoryDialog() {
+  const queryClient = useQueryClient()
   const [open, setOpen] = useState(false)
   const [name, setName] = useState("")
   const [slug, setSlug] = useState("")
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Here you would typically send the data to your API
-    console.log("Submitting new category:", {
-      name,
-      slug,
-      // Default values will be set on the server or in the API call
-      prioritize: "no", // Default value
-      status: "active", // Default value
-    })
+    setIsSubmitting(true)
 
-    // Reset form and close dialog
-    setName("")
-    setSlug("")
-    setOpen(false)
-  }
-
-  // Auto-generate slug from name
-  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newName = e.target.value
-    setName(newName)
-
-    // Generate slug: lowercase, replace spaces with hyphens, remove special chars
-    const newSlug = newName
-      .toLowerCase()
-      .replace(/\s+/g, "-")
-      .replace(/[^\w-]+/g, "")
-
-    setSlug(newSlug)
+    try {
+      await createCategoryToken({
+        slct_name: name,
+        slct_slug: slug
+      })
+      
+      // Invalidate and refetch the categories query
+      await queryClient.invalidateQueries({ queryKey: ["category-token"] })
+      toast.success("Category created successfully")
+      
+      // Reset form and close dialog
+      setName("")
+      setSlug("")
+      setOpen(false)
+    } catch (error) {
+      console.error("Error creating category:", error)
+      toast.error("Failed to create category")
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -74,7 +73,7 @@ export function AddCategoryDialog() {
                 <Input
                   id="name"
                   value={name}
-                  onChange={handleNameChange}
+                  onChange={(e) => setName(e.target.value)}
                   className="col-span-3"
                   placeholder="e.g. NFT Collection"
                   required
@@ -95,7 +94,9 @@ export function AddCategoryDialog() {
               </div>
             </div>
             <DialogFooter>
-              <Button type="submit">Save Category</Button>
+              <Button type="submit" disabled={isSubmitting}>
+                {isSubmitting ? "Saving..." : "Save Category"}
+              </Button>
             </DialogFooter>
           </form>
         </DialogContent>
