@@ -27,8 +27,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
-import { useQuery } from "@tanstack/react-query"
-import { getCategoryToken } from "@/services/api/CategorysTokenService"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
+import { getCategoryToken, deleteCategoryToken } from "@/services/api/CategorysTokenService"
+import { toast } from "react-toastify"
 
 type CategoryToken = {
   slct_id: number
@@ -41,6 +42,7 @@ type CategoryToken = {
 }
 
 export function CategoryTokenTable() {
+  const queryClient = useQueryClient()
   const { data: categoryToken, isLoading } = useQuery({
     queryKey: ["category-token"],
     queryFn: getCategoryToken,
@@ -96,8 +98,16 @@ export function CategoryTokenTable() {
   }
 
   // Delete a category
-  const deleteCategory = (id: number) => {
-    setData((prev) => prev.filter((category) => category.slct_id !== id))
+  const deleteCategory = async (id: number) => {
+    try {
+      await deleteCategoryToken(id.toString())
+      // Invalidate and refetch the categories query
+      await queryClient.invalidateQueries({ queryKey: ["category-token"] })
+      toast.success("Category deleted successfully")
+    } catch (error) {
+      console.error("Error deleting category:", error)
+      toast.error("Failed to delete category")
+    }
   }
 
   // Auto-generate slug from name
@@ -260,8 +270,8 @@ export function CategoryTokenTable() {
                   </AlertDialogCancel>
                   <AlertDialogAction
                     className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                    onClick={() => {
-                      deleteCategory(category.slct_id)
+                    onClick={async () => {
+                      await deleteCategory(category.slct_id)
                       setOpenAlert((prevState) => ({ ...prevState, [category.slct_id.toString()]: false }))
                     }}
                   >
