@@ -11,6 +11,7 @@ import { Separator } from "@/components/ui/separator"
 import { toast } from "sonner"
 import { useQuery } from "@tanstack/react-query"
 import { getSetting } from "@/services/api/SettingService"
+import { SettingService } from "@/services/api"
 
 export default function SettingsPage() {
   const { data: setting, isLoading } = useQuery({
@@ -39,8 +40,7 @@ export default function SettingsPage() {
 
   const handleUpdateGeneralSetting = async () => {
     try {
-      // Here you would typically make an API call to update the settings
-      console.log("Updating general settings:", generalSettings)
+      await SettingService.updateSetting(generalSettings)
       toast.success("Settings updated successfully")
     } catch (error) {
       console.error("Error updating settings:", error)
