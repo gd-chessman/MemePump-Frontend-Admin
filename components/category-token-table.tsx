@@ -221,7 +221,7 @@ export function CategoryTokenTable({ searchQuery }: { searchQuery: string }) {
         const isPrioritized = category.slct_prioritize === "yes"
 
         return (
-          <div className="flex justify-center">
+          <div className="flex">
             <Badge
               variant="outline"
               className={`cursor-pointer flex items-center gap-1 px-3 py-1 transition-colors duration-200 ${
@@ -254,7 +254,7 @@ export function CategoryTokenTable({ searchQuery }: { searchQuery: string }) {
         const isActive = category.sltc_status === "active"
 
         return (
-          <div className="flex justify-center">
+          <div className="flex">
             <Badge
               variant="outline"
               className={`cursor-pointer flex items-center gap-1 px-3 py-1 transition-colors duration-200 ${
