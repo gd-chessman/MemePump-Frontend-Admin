@@ -90,29 +90,73 @@ export function CategoryTokenTable() {
   }
 
   // Toggle prioritize value between "yes" and "no"
-  const togglePrioritize = (id: number) => {
-    setData((prev) =>
-      prev.map((category) => {
-        if (category.slct_id === id) {
-          const newValue = category.slct_prioritize === "yes" ? "no" : "yes"
-          return { ...category, slct_prioritize: newValue }
-        }
-        return category
-      }),
-    )
+  const togglePrioritize = async (id: number) => {
+    try {
+      // Update local state first for optimistic update
+      setData((prev) =>
+        prev.map((category) => {
+          if (category.slct_id === id) {
+            const newValue = category.slct_prioritize === "yes" ? "no" : "yes"
+            return { ...category, slct_prioritize: newValue }
+          }
+          return category
+        }),
+      )
+
+      // Get the new value
+      const category = data.find((c) => c.slct_id === id)
+      if (!category) return
+
+      // Call API to update
+      await updateCategoryToken({
+        slct_id: id.toString(),
+        slct_prioritize: category.slct_prioritize === "yes" ? "no" : "yes"
+      })
+
+      // Invalidate and refetch the categories query
+      await queryClient.invalidateQueries({ queryKey: ["category-token"] })
+      toast.success("Category prioritize updated successfully")
+    } catch (error) {
+      console.error("Error updating category prioritize:", error)
+      toast.error("Failed to update category prioritize")
+      // Revert local state on error
+      await queryClient.invalidateQueries({ queryKey: ["category-token"] })
+    }
   }
 
   // Toggle status value between "active" and "hidden"
-  const toggleStatus = (id: number) => {
-    setData((prev) =>
-      prev.map((category) => {
-        if (category.slct_id === id) {
-          const newValue = category.sltc_status === "active" ? "hidden" : "active"
-          return { ...category, sltc_status: newValue }
-        }
-        return category
-      }),
-    )
+  const toggleStatus = async (id: number) => {
+    try {
+      // Update local state first for optimistic update
+      setData((prev) =>
+        prev.map((category) => {
+          if (category.slct_id === id) {
+            const newValue = category.sltc_status === "active" ? "hidden" : "active"
+            return { ...category, sltc_status: newValue }
+          }
+          return category
+        }),
+      )
+
+      // Get the new value
+      const category = data.find((c) => c.slct_id === id)
+      if (!category) return
+
+      // Call API to update
+      await updateCategoryToken({
+        slct_id: id.toString(),
+        sltc_status: category.sltc_status === "active" ? "hidden" : "active"
+      })
+
+      // Invalidate and refetch the categories query
+      await queryClient.invalidateQueries({ queryKey: ["category-token"] })
+      toast.success("Category status updated successfully")
+    } catch (error) {
+      console.error("Error updating category status:", error)
+      toast.error("Failed to update category status")
+      // Revert local state on error
+      await queryClient.invalidateQueries({ queryKey: ["category-token"] })
+    }
   }
 
   // Delete a category
@@ -189,7 +233,7 @@ export function CategoryTokenTable() {
                   ? "bg-emerald-950/30 text-emerald-400 border-emerald-800/50 hover:bg-emerald-600 hover:text-white hover:border-emerald-600"
                   : "bg-slate-950/30 text-slate-400 border-slate-800/50 hover:bg-slate-600 hover:text-white hover:border-slate-600"
               }`}
-              onClick={() => togglePrioritize(category.slct_id)}
+              onClick={async () => await togglePrioritize(category.slct_id)}
             >
               {isPrioritized ? (
                 <CheckCircle2 className={`h-3.5 w-3.5 ${isPrioritized ? "text-emerald-500" : "text-slate-500"}`} />
@@ -222,7 +266,7 @@ export function CategoryTokenTable() {
                   ? "bg-blue-950/30 text-blue-400 border-blue-800/50 hover:bg-blue-600 hover:text-white hover:border-blue-600"
                   : "bg-amber-950/30 text-amber-400 border-amber-800/50 hover:bg-amber-600 hover:text-white hover:border-amber-600"
               }`}
-              onClick={() => toggleStatus(category.slct_id)}
+              onClick={async () => await toggleStatus(category.slct_id)}
             >
               {isActive ? (
                 <Eye className="h-3.5 w-3.5 text-blue-500" />
