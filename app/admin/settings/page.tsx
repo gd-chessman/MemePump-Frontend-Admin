@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
@@ -8,10 +8,49 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { Separator } from "@/components/ui/separator"
+import { toast } from "sonner"
+import { useQuery } from "@tanstack/react-query"
+import { getSetting } from "@/services/api/SettingService"
 
 export default function SettingsPage() {
+  const { data: setting, isLoading } = useQuery({
+    queryKey: ["setting"],
+    queryFn: getSetting,
+  });
+
   const [telegramNotifications, setTelegramNotifications] = useState(true)
   const [securityAlerts, setSecurityAlerts] = useState(true)
+  
+  const [generalSettings, setGeneralSettings] = useState({
+    appName: "",
+    logo: "",
+    telegramBot: ""
+  })
+
+  useEffect(() => {
+    if (setting) {
+      setGeneralSettings({
+        appName: setting.appName || "",
+        logo: setting.logo || "",
+        telegramBot: setting.telegramBot || ""
+      })
+    }
+  }, [setting])
+
+  const handleUpdateGeneralSetting = async () => {
+    try {
+      // Here you would typically make an API call to update the settings
+      console.log("Updating general settings:", generalSettings)
+      toast.success("Settings updated successfully")
+    } catch (error) {
+      console.error("Error updating settings:", error)
+      toast.error("Failed to update settings")
+    }
+  }
+
+  if (isLoading) {
+    return <div>Loading...</div>
+  }
 
   return (
     <div className="flex flex-col space-y-6">
@@ -36,7 +75,11 @@ export default function SettingsPage() {
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="appName">App Name</Label>
-                <Input id="appName" defaultValue="Admin Dashboard" />
+                <Input 
+                  id="appName" 
+                  value={generalSettings.appName}
+                  onChange={(e) => setGeneralSettings(prev => ({ ...prev, appName: e.target.value }))}
+                />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="logo">Logo</Label>
@@ -44,11 +87,15 @@ export default function SettingsPage() {
                   <div className="flex flex-col sm:flex-row gap-6 items-center">
                     <div className="relative flex-shrink-0">
                       <div className="h-24 w-24 rounded-md border-2 border-dashed border-primary/20 flex items-center justify-center bg-background overflow-hidden">
-                        <img
-                          src="/abstract-geometric-shapes.png"
-                          alt="Current logo"
-                          className="max-h-20 max-w-20 object-contain"
-                        />
+                        {generalSettings.logo ? (
+                          <img
+                            src={generalSettings.logo}
+                            alt="Current logo"
+                            className="max-h-20 max-w-20 object-contain"
+                          />
+                        ) : (
+                          <span className="text-muted-foreground">No logo</span>
+                        )}
                       </div>
                     </div>
                     <div className="flex flex-col gap-3 flex-grow">
@@ -65,6 +112,12 @@ export default function SettingsPage() {
                             id="logo-upload"
                             className="absolute inset-0 opacity-0 cursor-pointer"
                             accept="image/png, image/jpeg, image/svg+xml"
+                            onChange={(e) => {
+                              const file = e.target.files?.[0]
+                              if (file) {
+                                setGeneralSettings(prev => ({ ...prev, logo: file.name }))
+                              }
+                            }}
                           />
                           Upload Logo
                         </Button>
@@ -75,14 +128,19 @@ export default function SettingsPage() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="telegramBot">Telegram Bot</Label>
-                <Input id="telegramBot" placeholder="Enter your Telegram bot token" />
+                <Input 
+                  id="telegramBot" 
+                  placeholder="Enter your Telegram bot token"
+                  value={generalSettings.telegramBot}
+                  onChange={(e) => setGeneralSettings(prev => ({ ...prev, telegramBot: e.target.value }))}
+                />
                 <p className="text-sm text-muted-foreground">
                   Create a bot on Telegram via @BotFather and paste the token here.
                 </p>
               </div>
             </CardContent>
             <CardFooter className="flex justify-end">
-              <Button>Save Changes</Button>
+              <Button onClick={handleUpdateGeneralSetting}>Save Changes</Button>
             </CardFooter>
           </Card>
         </TabsContent>
