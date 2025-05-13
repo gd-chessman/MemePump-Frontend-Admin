@@ -8,8 +8,14 @@ import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { useRouter } from "next/navigation"
+import { useQuery } from "@tanstack/react-query"
+import { getMyInfor } from "@/services/api/UserAdminService"
 
 export function AdminHeader() {
+  const { data: myInfor} = useQuery({
+    queryKey: ["my-infor"],
+    queryFn: getMyInfor,
+  });
   const [isAvatarMenuOpen, setIsAvatarMenuOpen] = useState(false)
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false)
   const avatarMenuRef = useRef<HTMLDivElement>(null)
@@ -192,8 +198,8 @@ export function AdminHeader() {
                     <AvatarFallback className="bg-primary/10 text-primary">AD</AvatarFallback>
                   </Avatar>
                   <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium leading-none">Admin User</p>
-                    <p className="text-xs leading-none text-muted-foreground">admin@example.com</p>
+                    <p className="text-sm font-medium leading-none">{myInfor?.username}</p>
+                    <p className="text-xs leading-none text-muted-foreground">{myInfor?.email}</p>
                   </div>
                 </div>
 
@@ -208,7 +214,7 @@ export function AdminHeader() {
                     </div>
                     <div className="flex flex-col space-y-1 rounded-md bg-muted p-2">
                       <span className="text-xs font-medium">Role</span>
-                      <span className="text-xs font-medium">Administrator</span>
+                      <span className="text-xs font-medium uppercase">{myInfor?.role}</span>
                     </div>
                   </div>
                 </div>
