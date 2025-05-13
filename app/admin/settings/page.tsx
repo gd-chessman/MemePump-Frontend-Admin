@@ -32,7 +32,7 @@ export default function SettingsPage() {
     if (setting) {
       setGeneralSettings({
         appName: setting.appName || "",
-        logo: null,
+        logo: setting.logo || null,
         telegramBot: setting.telegramBot || ""
       })
     }
@@ -57,6 +57,8 @@ export default function SettingsPage() {
   if (isLoading) {
     return <div>Loading...</div>
   }
+
+  console.log(generalSettings)
 
   return (
     <div className="flex flex-col space-y-6">
@@ -95,7 +97,9 @@ export default function SettingsPage() {
                       <div className="h-24 w-24 rounded-md border-2 border-dashed border-primary/20 flex items-center justify-center bg-background overflow-hidden">
                         {generalSettings.logo ? (
                           <img
-                            src={URL.createObjectURL(generalSettings.logo)}
+                            src={typeof generalSettings.logo === 'string' 
+                              ? `${process.env.NEXT_PUBLIC_API_URL}${generalSettings.logo}`
+                              : URL.createObjectURL(generalSettings.logo)}
                             alt="Current logo"
                             className="max-h-20 max-w-20 object-contain"
                           />
