@@ -28,7 +28,7 @@ export default function UserWalletsPage() {
               <CardTitle>User Wallet List</CardTitle>
               <CardDescription>View and manage user wallets and their associated accounts.</CardDescription>
             </div>
-            <Button variant="outline" size="sm" className="flex items-center gap-1">
+            <Button variant="outline" size="sm" className="flex items-center gap-1" onClick={() => refetchUserWallets()}>
               <RefreshCw className="h-4 w-4" />
               <span>Refresh</span>
             </Button>
