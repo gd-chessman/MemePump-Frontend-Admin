@@ -138,87 +138,89 @@ export function UserWalletTable({ searchQuery }: { searchQuery: string }) {
   return (
     <div className="space-y-4">
       <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-                    </TableHead>
-                  )
-                })}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <>
-                  <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
-                    ))}
-                  </TableRow>
-                  {expandedRows[row.original.uw_id] && (
-                    <TableRow>
-                      <TableCell colSpan={columns.length} className="p-0">
-                        <div className="p-4 bg-muted/30">
-                          <h4 className="text-sm font-medium mb-2">Wallet Authorizations</h4>
-                          <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
-                            {row.original.wallet_auths.map((wallet) => (
-                              <Card key={wallet.wa_id} className="overflow-hidden">
-                                <CardContent className="p-0">
-                                  <div className="flex items-start p-4">
-                                    <div
-                                      className={`flex h-9 w-9 items-center justify-center rounded-full mr-3 ${
-                                        wallet.wa_type === "main"
-                                          ? "bg-emerald-100 text-emerald-600 dark:bg-emerald-950/50 dark:text-emerald-400"
-                                          : "bg-blue-100 text-blue-600 dark:bg-blue-950/50 dark:text-blue-400"
-                                      }`}
-                                    >
-                                      <Wallet className="h-5 w-5" />
-                                    </div>
-                                    <div className="flex-1">
-                                      <div className="flex items-center justify-between">
-                                        <h5 className="font-medium text-sm">{wallet.wa_name}</h5>
-                                        <Badge
-                                          variant="outline"
-                                          className={`text-xs ${
-                                            wallet.wa_type === "main"
-                                              ? "bg-emerald-50 text-emerald-600 border-emerald-200 dark:bg-emerald-950/30 dark:text-emerald-400 dark:border-emerald-800/50"
-                                              : "bg-blue-50 text-blue-600 border-blue-200 dark:bg-blue-950/30 dark:text-blue-400 dark:border-blue-800/50"
-                                          }`}
-                                        >
-                                          {wallet.wa_type}
-                                        </Badge>
-                                      </div>
-                                      <div className="text-xs text-muted-foreground mt-1">
-                                        Wallet ID: {wallet.wa_wallet_id}
-                                      </div>
-                                      <div className="text-xs text-muted-foreground">Auth ID: {wallet.wa_id}</div>
-                                    </div>
-                                  </div>
-                                </CardContent>
-                              </Card>
-                            ))}
-                          </div>
-                        </div>
-                      </TableCell>
+        <div className="max-h-[25rem] overflow-auto">
+          <Table>
+            <TableHeader className="sticky top-0 bg-background z-10">
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => {
+                    return (
+                      <TableHead key={header.id}>
+                        {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                      </TableHead>
+                    )
+                  })}
+                </TableRow>
+              ))}
+            </TableHeader>
+            <TableBody>
+              {table.getRowModel().rows?.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <>
+                    <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
+                      {row.getVisibleCells().map((cell) => (
+                        <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+                      ))}
                     </TableRow>
-                  )}
-                </>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
-                  No results.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
+                    {expandedRows[row.original.uw_id] && (
+                      <TableRow>
+                        <TableCell colSpan={columns.length} className="p-0">
+                          <div className="p-4 bg-muted/30">
+                            <h4 className="text-sm font-medium mb-2">Wallet Authorizations</h4>
+                            <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+                              {row.original.wallet_auths.map((wallet) => (
+                                <Card key={wallet.wa_id} className="overflow-hidden">
+                                  <CardContent className="p-0">
+                                    <div className="flex items-start p-4">
+                                      <div
+                                        className={`flex h-9 w-9 items-center justify-center rounded-full mr-3 ${
+                                          wallet.wa_type === "main"
+                                            ? "bg-emerald-100 text-emerald-600 dark:bg-emerald-950/50 dark:text-emerald-400"
+                                            : "bg-blue-100 text-blue-600 dark:bg-blue-950/50 dark:text-blue-400"
+                                        }`}
+                                      >
+                                        <Wallet className="h-5 w-5" />
+                                      </div>
+                                      <div className="flex-1">
+                                        <div className="flex items-center justify-between">
+                                          <h5 className="font-medium text-sm">{wallet.wa_name}</h5>
+                                          <Badge
+                                            variant="outline"
+                                            className={`text-xs ${
+                                              wallet.wa_type === "main"
+                                                ? "bg-emerald-50 text-emerald-600 border-emerald-200 dark:bg-emerald-950/30 dark:text-emerald-400 dark:border-emerald-800/50"
+                                                : "bg-blue-50 text-blue-600 border-blue-200 dark:bg-blue-950/30 dark:text-blue-400 dark:border-blue-800/50"
+                                            }`}
+                                          >
+                                            {wallet.wa_type}
+                                          </Badge>
+                                        </div>
+                                        <div className="text-xs text-muted-foreground mt-1">
+                                          Wallet ID: {wallet.wa_wallet_id}
+                                        </div>
+                                        <div className="text-xs text-muted-foreground">Auth ID: {wallet.wa_id}</div>
+                                      </div>
+                                    </div>
+                                  </CardContent>
+                                </Card>
+                              ))}
+                            </div>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={columns.length} className="h-24 text-center">
+                    No results.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
       </div>
     </div>
   )
