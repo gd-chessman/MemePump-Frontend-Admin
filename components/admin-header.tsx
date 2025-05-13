@@ -16,6 +16,7 @@ export function AdminHeader() {
   const { data: myInfor} = useQuery({
     queryKey: ["my-infor"],
     queryFn: getMyInfor,
+    refetchOnMount: true,
   });
   const [isAvatarMenuOpen, setIsAvatarMenuOpen] = useState(false)
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false)
@@ -189,7 +190,7 @@ export function AdminHeader() {
             >
               <Avatar className="h-9 w-9 border-2 border-primary/20">
                 <AvatarImage src="/abstract-geometric-shapes.png" alt="User" />
-                <AvatarFallback className="bg-primary/10 text-primary">AD</AvatarFallback>
+                <AvatarFallback className="bg-primary/10 text-primary">{myInfor?.username.charAt(0).toUpperCase()}</AvatarFallback>
               </Avatar>
             </Button>
 
@@ -201,7 +202,7 @@ export function AdminHeader() {
                 <div className="flex items-center gap-4 p-3">
                   <Avatar className="h-12 w-12 border-2 border-primary/20">
                     <AvatarImage src="/abstract-geometric-shapes.png" alt="User" />
-                    <AvatarFallback className="bg-primary/10 text-primary">AD</AvatarFallback>
+                    <AvatarFallback className="bg-primary/10 text-primary">{myInfor?.username.charAt(0).toUpperCase()}</AvatarFallback>
                   </Avatar>
                   <div className="flex flex-col space-y-1">
                     <p className="text-sm font-medium leading-none">{myInfor?.username}</p>

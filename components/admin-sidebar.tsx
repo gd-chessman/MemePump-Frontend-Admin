@@ -22,6 +22,8 @@ import {
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { cn } from "@/lib/utils"
+import { getMyInfor } from "@/services/api/UserAdminService"
+import { useQuery } from "@tanstack/react-query"
 
 interface NavItem {
   title: string
@@ -36,11 +38,11 @@ const navItems: NavItem[] = [
     href: "/admin",
     icon: LayoutDashboard,
   },
-  {
-    title: "Users",
-    href: "/admin/users",
-    icon: Users,
-  },
+  // {
+  //   title: "Users",
+  //   href: "/admin/users",
+  //   icon: Users,
+  // },
   {
     title: "User Wallets",
     href: "/admin/user-wallets",
@@ -69,6 +71,11 @@ const navItems: NavItem[] = [
 ]
 
 export function AdminSidebar() {
+  const { data: myInfor} = useQuery({
+    queryKey: ["my-infor"],
+    queryFn: getMyInfor,
+    refetchOnMount: true,
+  });
   const [isOpen, setIsOpen] = useState(false)
   const [isCollapsed, setIsCollapsed] = useState(false)
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null)
@@ -197,11 +204,11 @@ export function AdminSidebar() {
           <div className="border-t border-slate-800 p-4">
             <div className="flex items-center gap-3 rounded-lg bg-white/5 p-3">
               <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary">
-                <span className="text-sm font-medium text-primary-foreground">AD</span>
+                <span className="text-sm font-medium text-primary-foreground">{myInfor?.username.charAt(0).toUpperCase()}</span>
               </div>
               <div className="flex flex-col">
-                <p className="text-sm font-medium text-white">Admin User</p>
-                <p className="text-xs text-white/60">admin@example.com</p>
+                <p className="text-sm font-medium text-white">{myInfor?.username}</p>
+                <p className="text-xs text-white/60">{myInfor?.email}</p>
               </div>
             </div>
           </div>
@@ -210,7 +217,7 @@ export function AdminSidebar() {
           <div className="border-t border-slate-800 p-2">
             <div className="flex items-center justify-center py-3">
               <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary">
-                <span className="text-sm font-medium text-primary-foreground">AD</span>
+                <span className="text-sm font-medium text-primary-foreground">{myInfor?.username.charAt(0).toUpperCase()}</span>
               </div>
             </div>
           </div>
