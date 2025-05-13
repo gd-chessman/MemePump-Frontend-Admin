@@ -41,11 +41,11 @@ type CategoryToken = {
   slct_updated_at: string
 }
 
-export function CategoryTokenTable() {
+export function CategoryTokenTable({ searchQuery }: { searchQuery: string }) {
   const queryClient = useQueryClient()
-  const { data: categoryToken, isLoading } = useQuery({
-    queryKey: ["category-token"],
-    queryFn: () => getCategoryToken('', 1, 100),
+  const { data: categoryToken, refetch: refetchCategoryToken } = useQuery({
+    queryKey: ["category-token", searchQuery],
+    queryFn: () => getCategoryToken(searchQuery, 1, 100),
   });
 
   const [data, setData] = useState<CategoryToken[]>([])
