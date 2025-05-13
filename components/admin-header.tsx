@@ -10,6 +10,7 @@ import { ThemeToggle } from "@/components/theme-toggle"
 import { useRouter } from "next/navigation"
 import { useQuery } from "@tanstack/react-query"
 import { getMyInfor } from "@/services/api/UserAdminService"
+import { logout } from "@/services/api/AuthService"
 
 export function AdminHeader() {
   const { data: myInfor} = useQuery({
@@ -57,6 +58,11 @@ export function AdminHeader() {
   const handleSettingsClick = () => {
     router.push("/admin/settings")
     setIsAvatarMenuOpen(false)
+  }
+
+  const handleLogout = async () => {
+    await logout()
+    router.push("/login")
   }
 
   // System notifications data
@@ -231,7 +237,7 @@ export function AdminHeader() {
 
                 <div className="h-px bg-muted my-1"></div>
 
-                <button className="flex w-full items-center px-3 py-2 text-sm rounded-md text-destructive hover:bg-destructive/10">
+                <button className="flex w-full items-center px-3 py-2 text-sm rounded-md text-destructive hover:bg-destructive/10" onClick={handleLogout}>
                   <LogOut className="mr-2 h-4 w-4" />
                   <span>Log Out</span>
                 </button>

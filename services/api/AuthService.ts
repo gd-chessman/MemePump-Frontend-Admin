@@ -10,3 +10,13 @@ export const login = async (item: any) => {
         throw e;
     }
 }
+
+export const logout = async () => {
+    try {
+        await axiosClient.post('/logout');
+        localStorage.removeItem('user');
+        return true;
+    } catch (e) {
+        throw e;
+    }
+}
