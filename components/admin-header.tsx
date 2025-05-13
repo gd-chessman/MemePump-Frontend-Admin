@@ -189,7 +189,7 @@ export function AdminHeader() {
               onClick={() => setIsAvatarMenuOpen(!isAvatarMenuOpen)}
             >
               <Avatar className="h-9 w-9 border-2 border-primary/20 bg-primary/10 text-primary flex items-center justify-center">
-                {myInfor?.username.charAt(0).toUpperCase()}
+                {myInfor?.username?.charAt(0).toUpperCase()}
               </Avatar>
             </Button>
 
@@ -200,7 +200,7 @@ export function AdminHeader() {
               >
                 <div className="flex items-center gap-4 p-3">
                   <Avatar className="h-12 w-12 border-2 border-primary/20 bg-primary/10 text-primary flex items-center justify-center">
-                    {myInfor?.username.charAt(0).toUpperCase()}
+                    {myInfor?.username?.charAt(0).toUpperCase()}
                   </Avatar>
                   <div className="flex flex-col space-y-1">
                     <p className="text-sm font-medium leading-none">{myInfor?.username}</p>

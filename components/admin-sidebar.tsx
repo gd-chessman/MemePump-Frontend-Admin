@@ -204,7 +204,7 @@ export function AdminSidebar() {
           <div className="border-t border-slate-800 p-4">
             <div className="flex items-center gap-3 rounded-lg bg-white/5 p-3">
               <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary">
-                <span className="text-sm font-medium text-primary-foreground">{myInfor?.username.charAt(0).toUpperCase()}</span>
+                <span className="text-sm font-medium text-primary-foreground">{myInfor?.username?.charAt(0).toUpperCase()}</span>
               </div>
               <div className="flex flex-col">
                 <p className="text-sm font-medium text-white">{myInfor?.username}</p>
