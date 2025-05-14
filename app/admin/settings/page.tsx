@@ -59,7 +59,7 @@ export default function SettingsPage() {
         formData.append("logo", generalSettings.logo);
       }
       await SettingService.updateSetting(formData);
-      console.warn("Settings updated successfully");
+      console.log("Settings updated successfully");
     } catch (error) {
       console.warn("Error updating settings:", error);
     }
@@ -71,7 +71,7 @@ export default function SettingsPage() {
       !passwords.newPassword ||
       !passwords.confirmPassword
     ) {
-      console.error("Please fill in all password fields");
+      console.warn("Please fill in all password fields");
       return;
     }
 
@@ -85,7 +85,7 @@ export default function SettingsPage() {
         currentPassword: passwords.currentPassword,
         newPassword: passwords.newPassword,
       });
-      console.warn("Password changed successfully");
+      console.log("Password changed successfully");
       setPasswords({
         currentPassword: "",
         newPassword: "",
