@@ -15,7 +15,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
-import { toast } from "sonner";
 import { useQuery } from "@tanstack/react-query";
 import { getSetting } from "@/services/api/SettingService";
 import { SettingService } from "@/services/api";
@@ -260,9 +259,6 @@ export default function SettingsPage() {
                 />
               </div>
             </CardContent>
-            <CardFooter className="flex justify-end">
-              <Button>Save Changes</Button>
-            </CardFooter>
           </Card>
         </TabsContent>
 
