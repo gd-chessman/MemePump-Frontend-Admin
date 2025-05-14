@@ -1,17 +1,24 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Switch } from "@/components/ui/switch"
-import { Separator } from "@/components/ui/separator"
-import { toast } from "sonner"
-import { useQuery } from "@tanstack/react-query"
-import { getSetting } from "@/services/api/SettingService"
-import { SettingService } from "@/services/api"
+import { useState, useEffect } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { Separator } from "@/components/ui/separator";
+import { toast } from "sonner";
+import { useQuery } from "@tanstack/react-query";
+import { getSetting } from "@/services/api/SettingService";
+import { SettingService } from "@/services/api";
 
 export default function SettingsPage() {
   const { data: setting, isLoading } = useQuery({
@@ -19,69 +26,78 @@ export default function SettingsPage() {
     queryFn: getSetting,
   });
 
-  const [telegramNotifications, setTelegramNotifications] = useState(true)
-  const [securityAlerts, setSecurityAlerts] = useState(true)
-  
+  const [telegramNotifications, setTelegramNotifications] = useState(true);
+  const [securityAlerts, setSecurityAlerts] = useState(true);
+
   const [generalSettings, setGeneralSettings] = useState({
     appName: "",
     logo: null as File | null,
-    telegramBot: ""
-  })
+    telegramBot: "",
+  });
 
   const [passwords, setPasswords] = useState({
     currentPassword: "",
     newPassword: "",
-    confirmPassword: ""
-  })
+    confirmPassword: "",
+  });
 
   useEffect(() => {
     if (setting) {
       setGeneralSettings({
         appName: setting.appName || "",
         logo: setting.logo || null,
-        telegramBot: setting.telegramBot || ""
-      })
+        telegramBot: setting.telegramBot || "",
+      });
     }
-  }, [setting])
+  }, [setting]);
 
   const handleUpdateGeneralSetting = async () => {
     try {
-      const formData = new FormData()
-      formData.append('appName', generalSettings.appName)
-      formData.append('telegramBot', generalSettings.telegramBot)
+      const formData = new FormData();
+      formData.append("appName", generalSettings.appName);
+      formData.append("telegramBot", generalSettings.telegramBot);
       if (generalSettings.logo) {
-        formData.append('logo', generalSettings.logo)
+        formData.append("logo", generalSettings.logo);
       }
-      await SettingService.updateSetting(formData)
-      toast.success("Settings updated successfully")
+      await SettingService.updateSetting(formData);
+      toast.success("Settings updated successfully");
     } catch (error) {
-      console.error("Error updating settings:", error)
-      toast.error("Failed to update settings")
+      console.error("Error updating settings:", error);
+      toast.error("Failed to update settings");
     }
-  }
+  };
 
   const handlePasswordChange = async () => {
+    if (
+      !passwords.currentPassword ||
+      !passwords.newPassword ||
+      !passwords.confirmPassword
+    ) {
+      console.error("Please fill in all password fields");
+      return;
+    }
+
     if (passwords.newPassword !== passwords.confirmPassword) {
-      toast.error("New password and confirm password do not match")
-      return
+      toast.error("New password and confirm password do not match");
+      return;
     }
 
     try {
       await SettingService.changePassword({
         currentPassword: passwords.currentPassword,
-        newPassword: passwords.newPassword
-      })
-      toast.success("Password changed successfully")
+        newPassword: passwords.newPassword,
+      });
+      toast.success("Password changed successfully");
       setPasswords({
         currentPassword: "",
         newPassword: "",
-        confirmPassword: ""
-      })
+        confirmPassword: "",
+      });
     } catch (error) {
-      console.error("Error changing password:", error)
-      toast.error("Failed to change password")
+      console.error("Error changing password:", error);
+      toast.error("Failed to change password");
     }
-  }
+  };
 
   if (isLoading) {
     return null;
@@ -91,7 +107,9 @@ export default function SettingsPage() {
     <div className="flex flex-col space-y-6">
       <div className="flex flex-col space-y-2">
         <h2 className="text-3xl font-bold tracking-tight">Settings</h2>
-        <p className="text-muted-foreground">Manage your account settings and preferences.</p>
+        <p className="text-muted-foreground">
+          Manage your account settings and preferences.
+        </p>
       </div>
 
       <Tabs defaultValue="general" className="space-y-4">
@@ -105,15 +123,22 @@ export default function SettingsPage() {
           <Card className="dashboard-card">
             <CardHeader>
               <CardTitle>General Settings</CardTitle>
-              <CardDescription>Manage your basic account settings</CardDescription>
+              <CardDescription>
+                Manage your basic account settings
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="appName">App Name</Label>
-                <Input 
-                  id="appName" 
+                <Input
+                  id="appName"
                   value={generalSettings.appName}
-                  onChange={(e) => setGeneralSettings(prev => ({ ...prev, appName: e.target.value }))}
+                  onChange={(e) =>
+                    setGeneralSettings((prev) => ({
+                      ...prev,
+                      appName: e.target.value,
+                    }))
+                  }
                 />
               </div>
               <div className="space-y-2">
@@ -124,9 +149,11 @@ export default function SettingsPage() {
                       <div className="h-24 w-24 rounded-md border-2 border-dashed border-primary/20 flex items-center justify-center bg-background overflow-hidden">
                         {generalSettings.logo ? (
                           <img
-                            src={typeof generalSettings.logo === 'string' 
-                              ? `${process.env.NEXT_PUBLIC_API_URL}${generalSettings.logo}`
-                              : URL.createObjectURL(generalSettings.logo)}
+                            src={
+                              typeof generalSettings.logo === "string"
+                                ? `${process.env.NEXT_PUBLIC_API_URL}${generalSettings.logo}`
+                                : URL.createObjectURL(generalSettings.logo)
+                            }
                             alt="Current logo"
                             className="max-h-20 max-w-20 object-contain"
                           />
@@ -139,20 +166,28 @@ export default function SettingsPage() {
                       <div className="space-y-1">
                         <p className="text-sm font-medium">Upload a new logo</p>
                         <p className="text-xs text-muted-foreground">
-                          Recommended size: 512x512px. Max file size: 2MB. Supported formats: PNG, JPG, SVG
+                          Recommended size: 512x512px. Max file size: 2MB.
+                          Supported formats: PNG, JPG, SVG
                         </p>
                       </div>
                       <div className="flex gap-2">
-                        <Button variant="secondary" size="sm" className="relative">
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          className="relative"
+                        >
                           <input
                             type="file"
                             id="logo-upload"
                             className="absolute inset-0 opacity-0 cursor-pointer"
                             accept="image/png, image/jpeg, image/svg+xml"
                             onChange={(e) => {
-                              const file = e.target.files?.[0]
+                              const file = e.target.files?.[0];
                               if (file) {
-                                setGeneralSettings(prev => ({ ...prev, logo: file }))
+                                setGeneralSettings((prev) => ({
+                                  ...prev,
+                                  logo: file,
+                                }));
                               }
                             }}
                           />
@@ -165,14 +200,20 @@ export default function SettingsPage() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="telegramBot">Telegram Bot</Label>
-                <Input 
-                  id="telegramBot" 
+                <Input
+                  id="telegramBot"
                   placeholder="Enter your Telegram bot token"
                   value={generalSettings.telegramBot}
-                  onChange={(e) => setGeneralSettings(prev => ({ ...prev, telegramBot: e.target.value }))}
+                  onChange={(e) =>
+                    setGeneralSettings((prev) => ({
+                      ...prev,
+                      telegramBot: e.target.value,
+                    }))
+                  }
                 />
                 <p className="text-sm text-muted-foreground">
-                  Create a bot on Telegram via @BotFather and paste the token here.
+                  Create a bot on Telegram via @BotFather and paste the token
+                  here.
                 </p>
               </div>
             </CardContent>
@@ -186,13 +227,19 @@ export default function SettingsPage() {
           <Card className="dashboard-card">
             <CardHeader>
               <CardTitle>Notification Settings</CardTitle>
-              <CardDescription>Manage how you receive notifications</CardDescription>
+              <CardDescription>
+                Manage how you receive notifications
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
-                  <Label htmlFor="telegram-notifications">Telegram Notifications</Label>
-                  <p className="text-sm text-muted-foreground">Receive notifications via Telegram bot</p>
+                  <Label htmlFor="telegram-notifications">
+                    Telegram Notifications
+                  </Label>
+                  <p className="text-sm text-muted-foreground">
+                    Receive notifications via Telegram bot
+                  </p>
                 </div>
                 <Switch
                   id="telegram-notifications"
@@ -204,9 +251,15 @@ export default function SettingsPage() {
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
                   <Label htmlFor="security-alerts">Security Alerts</Label>
-                  <p className="text-sm text-muted-foreground">Receive alerts about security incidents</p>
+                  <p className="text-sm text-muted-foreground">
+                    Receive alerts about security incidents
+                  </p>
                 </div>
-                <Switch id="security-alerts" checked={securityAlerts} onCheckedChange={setSecurityAlerts} />
+                <Switch
+                  id="security-alerts"
+                  checked={securityAlerts}
+                  onCheckedChange={setSecurityAlerts}
+                />
               </div>
             </CardContent>
             <CardFooter className="flex justify-end">
@@ -221,41 +274,66 @@ export default function SettingsPage() {
               <CardTitle>Security Settings</CardTitle>
               <CardDescription>Manage your account security</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="current-password">Current Password</Label>
-                <Input 
-                  id="current-password" 
-                  type="password"
-                  value={passwords.currentPassword}
-                  onChange={(e) => setPasswords(prev => ({ ...prev, currentPassword: e.target.value }))}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="new-password">New Password</Label>
-                <Input 
-                  id="new-password" 
-                  type="password"
-                  value={passwords.newPassword}
-                  onChange={(e) => setPasswords(prev => ({ ...prev, newPassword: e.target.value }))}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="confirm-password">Confirm Password</Label>
-                <Input 
-                  id="confirm-password" 
-                  type="password"
-                  value={passwords.confirmPassword}
-                  onChange={(e) => setPasswords(prev => ({ ...prev, confirmPassword: e.target.value }))}
-                />
-              </div>
-            </CardContent>
-            <CardFooter className="flex justify-end">
-              <Button onClick={handlePasswordChange}>Save Changes</Button>
-            </CardFooter>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                handlePasswordChange();
+              }}
+            >
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="current-password">Current Password</Label>
+                  <Input
+                    id="current-password"
+                    type="password"
+                    required
+                    value={passwords.currentPassword}
+                    onChange={(e) =>
+                      setPasswords((prev) => ({
+                        ...prev,
+                        currentPassword: e.target.value,
+                      }))
+                    }
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="new-password">New Password</Label>
+                  <Input
+                    id="new-password"
+                    type="password"
+                    required
+                    value={passwords.newPassword}
+                    onChange={(e) =>
+                      setPasswords((prev) => ({
+                        ...prev,
+                        newPassword: e.target.value,
+                      }))
+                    }
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="confirm-password">Confirm Password</Label>
+                  <Input
+                    id="confirm-password"
+                    type="password"
+                    required
+                    value={passwords.confirmPassword}
+                    onChange={(e) =>
+                      setPasswords((prev) => ({
+                        ...prev,
+                        confirmPassword: e.target.value,
+                      }))
+                    }
+                  />
+                </div>
+              </CardContent>
+              <CardFooter className="flex justify-end">
+                <Button type="submit">Save Changes</Button>
+              </CardFooter>
+            </form>
           </Card>
         </TabsContent>
       </Tabs>
     </div>
-  )
+  );
 }
