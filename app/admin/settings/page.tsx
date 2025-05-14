@@ -28,6 +28,12 @@ export default function SettingsPage() {
     telegramBot: ""
   })
 
+  const [passwords, setPasswords] = useState({
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: ""
+  })
+
   useEffect(() => {
     if (setting) {
       setGeneralSettings({
@@ -51,6 +57,29 @@ export default function SettingsPage() {
     } catch (error) {
       console.error("Error updating settings:", error)
       toast.error("Failed to update settings")
+    }
+  }
+
+  const handlePasswordChange = async () => {
+    if (passwords.newPassword !== passwords.confirmPassword) {
+      toast.error("New password and confirm password do not match")
+      return
+    }
+
+    try {
+      await SettingService.changePassword({
+        currentPassword: passwords.currentPassword,
+        newPassword: passwords.newPassword
+      })
+      toast.success("Password changed successfully")
+      setPasswords({
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: ""
+      })
+    } catch (error) {
+      console.error("Error changing password:", error)
+      toast.error("Failed to change password")
     }
   }
 
@@ -195,19 +224,34 @@ export default function SettingsPage() {
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="current-password">Current Password</Label>
-                <Input id="current-password" type="password" />
+                <Input 
+                  id="current-password" 
+                  type="password"
+                  value={passwords.currentPassword}
+                  onChange={(e) => setPasswords(prev => ({ ...prev, currentPassword: e.target.value }))}
+                />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="new-password">New Password</Label>
-                <Input id="new-password" type="password" />
+                <Input 
+                  id="new-password" 
+                  type="password"
+                  value={passwords.newPassword}
+                  onChange={(e) => setPasswords(prev => ({ ...prev, newPassword: e.target.value }))}
+                />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="confirm-password">Confirm Password</Label>
-                <Input id="confirm-password" type="password" />
+                <Input 
+                  id="confirm-password" 
+                  type="password"
+                  value={passwords.confirmPassword}
+                  onChange={(e) => setPasswords(prev => ({ ...prev, confirmPassword: e.target.value }))}
+                />
               </div>
             </CardContent>
             <CardFooter className="flex justify-end">
-              <Button>Save Changes</Button>
+              <Button onClick={handlePasswordChange}>Save Changes</Button>
             </CardFooter>
           </Card>
         </TabsContent>
