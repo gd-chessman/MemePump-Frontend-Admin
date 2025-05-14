@@ -135,99 +135,106 @@ export default function SettingsPage() {
                 Manage your basic account settings
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="appName">App Name</Label>
-                <Input
-                  id="appName"
-                  value={generalSettings.appName}
-                  onChange={(e) =>
-                    setGeneralSettings((prev) => ({
-                      ...prev,
-                      appName: e.target.value,
-                    }))
-                  }
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="logo">Logo</Label>
-                <div className="border rounded-md p-4 bg-muted/30">
-                  <div className="flex flex-col sm:flex-row gap-6 items-center">
-                    <div className="relative flex-shrink-0">
-                      <div className="h-24 w-24 rounded-md border-2 border-dashed border-primary/20 flex items-center justify-center bg-background overflow-hidden">
-                        {generalSettings.logo ? (
-                          <img
-                            src={
-                              typeof generalSettings.logo === "string"
-                                ? `${process.env.NEXT_PUBLIC_API_URL}${generalSettings.logo}`
-                                : URL.createObjectURL(generalSettings.logo)
-                            }
-                            alt="Current logo"
-                            className="max-h-20 max-w-20 object-contain"
-                          />
-                        ) : (
-                          <span className="text-muted-foreground">No logo</span>
-                        )}
-                      </div>
-                    </div>
-                    <div className="flex flex-col gap-3 flex-grow">
-                      <div className="space-y-1">
-                        <p className="text-sm font-medium">Upload a new logo</p>
-                        <p className="text-xs text-muted-foreground">
-                          Recommended size: 512x512px. Max file size: 2MB.
-                          Supported formats: PNG, JPG, SVG
-                        </p>
-                      </div>
-                      <div className="flex gap-2">
-                        <Button
-                          variant="secondary"
-                          size="sm"
-                          className="relative"
-                        >
-                          <input
-                            type="file"
-                            id="logo-upload"
-                            className="absolute inset-0 opacity-0 cursor-pointer"
-                            accept="image/png, image/jpeg, image/svg+xml"
-                            onChange={(e) => {
-                              const file = e.target.files?.[0];
-                              if (file) {
-                                setGeneralSettings((prev) => ({
-                                  ...prev,
-                                  logo: file,
-                                }));
+            <form onSubmit={(e) => {
+              e.preventDefault();
+              handleUpdateGeneralSetting();
+            }}>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="appName">App Name</Label>
+                  <Input
+                    id="appName"
+                    value={generalSettings.appName}
+                    onChange={(e) =>
+                      setGeneralSettings((prev) => ({
+                        ...prev,
+                        appName: e.target.value,
+                      }))
+                    }
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="logo">Logo</Label>
+                  <div className="border rounded-md p-4 bg-muted/30">
+                    <div className="flex flex-col sm:flex-row gap-6 items-center">
+                      <div className="relative flex-shrink-0">
+                        <div className="h-24 w-24 rounded-md border-2 border-dashed border-primary/20 flex items-center justify-center bg-background overflow-hidden">
+                          {generalSettings.logo ? (
+                            <img
+                              src={
+                                typeof generalSettings.logo === "string"
+                                  ? `${process.env.NEXT_PUBLIC_API_URL}${generalSettings.logo}`
+                                  : URL.createObjectURL(generalSettings.logo)
                               }
-                            }}
-                          />
-                          Upload Logo
-                        </Button>
+                              alt="Current logo"
+                              className="max-h-20 max-w-20 object-contain"
+                            />
+                          ) : (
+                            <span className="text-muted-foreground">No logo</span>
+                          )}
+                        </div>
+                      </div>
+                      <div className="flex flex-col gap-3 flex-grow">
+                        <div className="space-y-1">
+                          <p className="text-sm font-medium">Upload a new logo</p>
+                          <p className="text-xs text-muted-foreground">
+                            Recommended size: 512x512px. Max file size: 2MB.
+                            Supported formats: PNG, JPG, SVG
+                          </p>
+                        </div>
+                        <div className="flex gap-2">
+                          <Button
+                            variant="secondary"
+                            size="sm"
+                            className="relative"
+                          >
+                            <input
+                              type="file"
+                              id="logo-upload"
+                              className="absolute inset-0 opacity-0 cursor-pointer"
+                              accept="image/png, image/jpeg, image/svg+xml"
+                              onChange={(e) => {
+                                const file = e.target.files?.[0];
+                                if (file) {
+                                  setGeneralSettings((prev) => ({
+                                    ...prev,
+                                    logo: file,
+                                  }));
+                                }
+                              }}
+                            />
+                            Upload Logo
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="telegramBot">Telegram Bot</Label>
-                <Input
-                  id="telegramBot"
-                  placeholder="Enter your Telegram bot token"
-                  value={generalSettings.telegramBot}
-                  onChange={(e) =>
-                    setGeneralSettings((prev) => ({
-                      ...prev,
-                      telegramBot: e.target.value,
-                    }))
-                  }
-                />
-                <p className="text-sm text-muted-foreground">
-                  Create a bot on Telegram via @BotFather and paste the token
-                  here.
-                </p>
-              </div>
-            </CardContent>
-            <CardFooter className="flex justify-end">
-              <Button onClick={handleUpdateGeneralSetting}>Save Changes</Button>
-            </CardFooter>
+                <div className="space-y-2">
+                  <Label htmlFor="telegramBot">Telegram Bot</Label>
+                  <Input
+                    id="telegramBot"
+                    placeholder="Enter your Telegram bot token"
+                    value={generalSettings.telegramBot}
+                    onChange={(e) =>
+                      setGeneralSettings((prev) => ({
+                        ...prev,
+                        telegramBot: e.target.value,
+                      }))
+                    }
+                    required
+                  />
+                  <p className="text-sm text-muted-foreground">
+                    Create a bot on Telegram via @BotFather and paste the token
+                    here.
+                  </p>
+                </div>
+              </CardContent>
+              <CardFooter className="flex justify-end">
+                <Button type="submit">Save Changes</Button>
+              </CardFooter>
+            </form>
           </Card>
         </TabsContent>
 
