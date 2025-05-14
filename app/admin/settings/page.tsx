@@ -81,8 +81,8 @@ export default function SettingsPage() {
     }
 
     if (passwords.newPassword !== passwords.confirmPassword) {
-      console.warn("New password and confirm password do not match");
-      toast.error("New password and confirm password do not match");
+      console.warn("New password and confirmation do not match");
+      toast.error("New password and confirmation do not match");
       return;
     }
 
@@ -98,9 +98,12 @@ export default function SettingsPage() {
         newPassword: "",
         confirmPassword: "",
       });
-    } catch (error) {
-      console.warn("Error changing password:", error);
-      toast.error("Error changing password");
+    } catch (error: any) {
+      if( error.status === 401) {
+        toast.error("Current password is incorrect");
+      } else {
+        toast.error("Error changing password");
+      }
     }
   };
 

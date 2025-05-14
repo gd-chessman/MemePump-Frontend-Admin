@@ -10,10 +10,19 @@ import { useQuery } from "@tanstack/react-query"
 import { useState } from "react"
 export default function UserWalletsPage() {
   const [searchQuery, setSearchQuery] = useState('')
+  const [isRefreshing, setIsRefreshing] = useState(false)
   const { data: userWallets, refetch: refetchUserWallets } = useQuery({
     queryKey: ["user-wallets", searchQuery],
     queryFn: () => getUserWallets(searchQuery),
   })
+
+  const handleRefresh = async () => {
+    setIsRefreshing(true)
+    setTimeout(() => {
+      setIsRefreshing(false)
+    }, 1000)
+  }
+
   return (
     <div className="flex flex-col space-y-6">
       <div className="flex flex-col space-y-2">
@@ -28,8 +37,8 @@ export default function UserWalletsPage() {
               <CardTitle>User Wallet List</CardTitle>
               <CardDescription>View and manage user wallets and their associated accounts.</CardDescription>
             </div>
-            <Button variant="outline" size="sm" className="flex items-center gap-1" onClick={() => refetchUserWallets()}>
-              <RefreshCw className="h-4 w-4" />
+            <Button variant="outline" size="sm" className="flex items-center gap-1" onClick={handleRefresh}>
+              <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
               <span>Refresh</span>
             </Button>
           </div>
