@@ -55,10 +55,8 @@ export default function SettingsPage() {
   }
 
   if (isLoading) {
-    return <div>Loading...</div>
+    return null;
   }
-
-  console.log(generalSettings)
 
   return (
     <div className="flex flex-col space-y-6">
