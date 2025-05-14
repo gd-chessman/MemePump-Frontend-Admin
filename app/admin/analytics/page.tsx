@@ -264,7 +264,7 @@ export default function AnalyticsPage() {
                 <CardDescription>Distribution of active users by type</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="h-[300px]">
+                <div className="h-[18.75rem]">
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
                       <Pie
@@ -352,7 +352,7 @@ export default function AnalyticsPage() {
               <CardTitle>Active Connections</CardTitle>
               <CardDescription>All current active connections to the system</CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-0 lg:p-6">
               <div className="rounded-md border">
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
@@ -408,7 +408,7 @@ export default function AnalyticsPage() {
                 <CardTitle>Active User Sessions</CardTitle>
                 <CardDescription>Details of all active user sessions and tabs</CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="p-0 lg:p-6">
                 <div className="space-y-6">
                   {Object.entries(data.userTabs).map(([key, tab]) => (
                     <div key={key} className="rounded-lg border p-4">
@@ -431,8 +431,8 @@ export default function AnalyticsPage() {
                               Last active: {getTimeDifference(tab.lastActive)}
                             </span>
                           </div>
-                          <div className="flex flex-col items-center justify-center rounded-md border px-3 py-2">
-                            <span className="text-2xl font-bold">{tab.tabsCount}</span>
+                          <div className="flex gap-2 items-center justify-center rounded-md border px-3 py-2">
+                            <span className="text-xl font-bold">{tab.tabsCount}</span>
                             <span className="text-xs text-muted-foreground">Tabs</span>
                           </div>
                         </div>
