@@ -206,15 +206,6 @@ export default function AnalyticsPage() {
           <h2 className="text-3xl font-bold tracking-tight">Realtime Analytics</h2>
           <div className="flex items-center gap-2">
             <span className="text-sm text-muted-foreground">Last updated: {lastUpdated.toLocaleTimeString()}</span>
-            <Button
-              variant="outline"
-              size="sm"
-              disabled={isLoading}
-              className="flex items-center gap-1"
-            >
-              <RefreshCw className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`} />
-              <span>Refresh</span>
-            </Button>
           </div>
         </div>
         <p className="text-muted-foreground">Live monitoring of user activity and connections.</p>
@@ -227,7 +218,7 @@ export default function AnalyticsPage() {
             <div>
               <p className="stat-label">Total Users</p>
               <p className="stat-value">{data.total}</p>
-              <p className="stat-change flex items-center gap-1">
+              <p className="stat-change flex items-center gap-1 text-emerald-500">
                 <Activity className="h-3 w-3" />
                 <span>Active now</span>
               </p>
@@ -244,7 +235,7 @@ export default function AnalyticsPage() {
               <div>
                 <p className="stat-label">{type.name} Users</p>
                 <p className="stat-value">{type.value}</p>
-                <p className="stat-change flex items-center gap-1">
+                <p className="stat-change flex items-center gap-1 text-emerald-500">
                   <Clock className="h-3 w-3" />
                   <span>Active now</span>
                 </p>
