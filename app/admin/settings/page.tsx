@@ -13,8 +13,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import { Separator } from "@/components/ui/separator";
 import { useQuery } from "@tanstack/react-query";
 import { getSetting } from "@/services/api/SettingService";
 import { SettingService } from "@/services/api";
@@ -25,9 +23,6 @@ export default function SettingsPage() {
     queryKey: ["setting"],
     queryFn: getSetting,
   });
-
-  const [telegramNotifications, setTelegramNotifications] = useState(true);
-  const [securityAlerts, setSecurityAlerts] = useState(true);
 
   const [generalSettings, setGeneralSettings] = useState({
     appName: "",
@@ -121,9 +116,8 @@ export default function SettingsPage() {
       </div>
 
       <Tabs defaultValue="general" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-3 lg:w-auto">
+        <TabsList className="grid w-full grid-cols-2 lg:w-auto">
           <TabsTrigger value="general">General</TabsTrigger>
-          <TabsTrigger value="notifications">Notifications</TabsTrigger>
           <TabsTrigger value="security">Security</TabsTrigger>
         </TabsList>
 
@@ -235,48 +229,6 @@ export default function SettingsPage() {
                 <Button type="submit">Save Changes</Button>
               </CardFooter>
             </form>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="notifications" className="space-y-4">
-          <Card className="dashboard-card">
-            <CardHeader>
-              <CardTitle>Notification Settings</CardTitle>
-              <CardDescription>
-                Manage how you receive notifications
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label htmlFor="telegram-notifications">
-                    Telegram Notifications
-                  </Label>
-                  <p className="text-sm text-muted-foreground">
-                    Receive notifications via Telegram bot
-                  </p>
-                </div>
-                <Switch
-                  id="telegram-notifications"
-                  checked={telegramNotifications}
-                  onCheckedChange={setTelegramNotifications}
-                />
-              </div>
-              <Separator />
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label htmlFor="security-alerts">Security Alerts</Label>
-                  <p className="text-sm text-muted-foreground">
-                    Receive alerts about security incidents
-                  </p>
-                </div>
-                <Switch
-                  id="security-alerts"
-                  checked={securityAlerts}
-                  onCheckedChange={setSecurityAlerts}
-                />
-              </div>
-            </CardContent>
           </Card>
         </TabsContent>
 
