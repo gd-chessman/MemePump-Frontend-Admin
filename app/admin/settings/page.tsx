@@ -60,10 +60,9 @@ export default function SettingsPage() {
         formData.append("logo", generalSettings.logo);
       }
       await SettingService.updateSetting(formData);
-      toast.success("Settings updated successfully");
+      console.warn("Settings updated successfully");
     } catch (error) {
-      console.error("Error updating settings:", error);
-      toast.error("Failed to update settings");
+      console.warn("Error updating settings:", error);
     }
   };
 
@@ -78,7 +77,7 @@ export default function SettingsPage() {
     }
 
     if (passwords.newPassword !== passwords.confirmPassword) {
-      toast.error("New password and confirm password do not match");
+      console.warn("New password and confirm password do not match");
       return;
     }
 
@@ -87,15 +86,14 @@ export default function SettingsPage() {
         currentPassword: passwords.currentPassword,
         newPassword: passwords.newPassword,
       });
-      toast.success("Password changed successfully");
+      console.warn("Password changed successfully");
       setPasswords({
         currentPassword: "",
         newPassword: "",
         confirmPassword: "",
       });
     } catch (error) {
-      console.error("Error changing password:", error);
-      toast.error("Failed to change password");
+      console.warn("Error changing password:", error);
     }
   };
 
