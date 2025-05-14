@@ -204,9 +204,6 @@ export default function AnalyticsPage() {
       <div className="flex flex-col space-y-2">
         <div className="flex items-center justify-between">
           <h2 className="text-3xl font-bold tracking-tight">Realtime Analytics</h2>
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-muted-foreground">Last updated: {lastUpdated.toLocaleTimeString()}</span>
-          </div>
         </div>
         <p className="text-muted-foreground">Live monitoring of user activity and connections.</p>
       </div>
