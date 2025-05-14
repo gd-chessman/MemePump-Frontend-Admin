@@ -354,45 +354,47 @@ export default function AnalyticsPage() {
             </CardHeader>
             <CardContent>
               <div className="rounded-md border">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b bg-muted/50">
-                      <th className="h-12 px-4 text-left font-medium">Client ID</th>
-                      <th className="h-12 px-4 text-left font-medium">Wallet ID</th>
-                      <th className="h-12 px-4 text-left font-medium">User Type</th>
-                      <th className="h-12 px-4 text-left font-medium">Device</th>
-                      <th className="h-12 px-4 text-left font-medium">IP</th>
-                      <th className="h-12 px-4 text-left font-medium">Last Active</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {data.connections.map((connection) => (
-                      <tr key={connection.clientId} className="border-b transition-colors hover:bg-muted/50">
-                        <td className="p-4 align-middle font-mono text-xs">{connection.clientId}</td>
-                        <td className="p-4 align-middle">{connection.walletId}</td>
-                        <td className="p-4 align-middle">
-                          <Badge className={getUserTypeColor(connection.walletAuth || "guest")}>
-                            {connection.walletAuth || "Guest"}
-                          </Badge>
-                        </td>
-                        <td className="p-4 align-middle">
-                          <div className="flex items-center gap-2">
-                            {connection.device && (
-                              <>
-                                {getDeviceIcon(connection.device.device)}
-                                <span>{connection.device.browser}</span>
-                              </>
-                            )}
-                          </div>
-                        </td>
-                        <td className="p-4 align-middle font-mono">{connection.ip}</td>
-                        <td className="p-4 align-middle text-muted-foreground">
-                          {getTimeDifference(connection.lastActive)}
-                        </td>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b bg-muted/50">
+                        <th className="h-12 px-4 text-left font-medium whitespace-nowrap">Client ID</th>
+                        <th className="h-12 px-4 text-left font-medium whitespace-nowrap">Wallet ID</th>
+                        <th className="h-12 px-4 text-left font-medium whitespace-nowrap">User Type</th>
+                        <th className="h-12 px-4 text-left font-medium whitespace-nowrap">Device</th>
+                        <th className="h-12 px-4 text-left font-medium whitespace-nowrap">IP</th>
+                        <th className="h-12 px-4 text-left font-medium whitespace-nowrap">Last Active</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {data.connections.map((connection) => (
+                        <tr key={connection.clientId} className="border-b transition-colors hover:bg-muted/50">
+                          <td className="p-4 align-middle font-mono text-xs whitespace-nowrap">{connection.clientId}</td>
+                          <td className="p-4 align-middle whitespace-nowrap">{connection.walletId}</td>
+                          <td className="p-4 align-middle whitespace-nowrap">
+                            <Badge className={getUserTypeColor(connection.walletAuth || "guest")}>
+                              {connection.walletAuth || "Guest"}
+                            </Badge>
+                          </td>
+                          <td className="p-4 align-middle whitespace-nowrap">
+                            <div className="flex items-center gap-2">
+                              {connection.device && (
+                                <>
+                                  {getDeviceIcon(connection.device.device)}
+                                  <span>{connection.device.browser}</span>
+                                </>
+                              )}
+                            </div>
+                          </td>
+                          <td className="p-4 align-middle font-mono whitespace-nowrap">{connection.ip}</td>
+                          <td className="p-4 align-middle text-muted-foreground whitespace-nowrap">
+                            {getTimeDifference(connection.lastActive)}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </CardContent>
           </Card>
