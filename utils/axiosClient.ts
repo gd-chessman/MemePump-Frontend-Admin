@@ -1,5 +1,4 @@
 import axios from 'axios';
-import {toast} from "react-toastify";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 const axiosClient = axios.create({
@@ -23,6 +22,7 @@ axiosClient.interceptors.response.use(
     if (error.response && error.response.status === 401) {
       console.warn('Lỗi 401: Unauthorized');
       window.location.href = "/login";
+      localStorage.removeItem('user')
     }else if(error.code === "ERR_NETWORK"){
       console.warn("Máy chủ đang gặp sự cố !");
     }
