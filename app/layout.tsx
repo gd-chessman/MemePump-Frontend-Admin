@@ -6,6 +6,7 @@ import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState } from "react"
+import { Toaster } from "sonner";
 
 
 // Configure Inter font with all required weights
@@ -41,6 +42,7 @@ export default function RootLayout({
             {children}
           </QueryClientProvider>
         </ThemeProvider>
+        <Toaster position="top-center" />
       </body>
     </html>
   )

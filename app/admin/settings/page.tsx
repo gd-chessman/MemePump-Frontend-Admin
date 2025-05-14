@@ -18,6 +18,7 @@ import { Separator } from "@/components/ui/separator";
 import { useQuery } from "@tanstack/react-query";
 import { getSetting } from "@/services/api/SettingService";
 import { SettingService } from "@/services/api";
+import { toast } from "sonner";
 
 export default function SettingsPage() {
   const { data: setting, isLoading, refetch: refetchSetting } = useQuery({
@@ -60,6 +61,7 @@ export default function SettingsPage() {
       }
       await SettingService.updateSetting(formData);
       refetchSetting();
+      toast.success("Settings updated successfully");
       console.log("Settings updated successfully");
     } catch (error) {
       console.warn("Error updating settings:", error);
@@ -87,6 +89,7 @@ export default function SettingsPage() {
         newPassword: passwords.newPassword,
       });
       console.log("Password changed successfully");
+      toast.success("Password changed successfully");
       setPasswords({
         currentPassword: "",
         newPassword: "",
