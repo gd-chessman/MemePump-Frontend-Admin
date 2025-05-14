@@ -22,6 +22,7 @@ axiosClient.interceptors.response.use(
   (error) => {
     if (error.response && error.response.status === 401) {
       console.warn('Lỗi 401: Unauthorized');
+      window.location.href = "/login";
     }else if(error.code === "ERR_NETWORK"){
       console.warn("Máy chủ đang gặp sự cố !");
     }
