@@ -24,6 +24,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { cn } from "@/lib/utils"
 import { getMyInfor } from "@/services/api/UserAdminService"
 import { useQuery } from "@tanstack/react-query"
+import { getSetting } from "@/services/api/SettingService"
 
 interface NavItem {
   title: string
@@ -76,6 +77,10 @@ export function AdminSidebar() {
     queryFn: getMyInfor,
     refetchOnMount: true,
   });
+  const { data: setting, isLoading } = useQuery({
+    queryKey: ["setting"],
+    queryFn: getSetting,
+  });
   const [isOpen, setIsOpen] = useState(false)
   const [isCollapsed, setIsCollapsed] = useState(false)
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null)
@@ -125,9 +130,9 @@ export function AdminSidebar() {
         <div className="flex h-14 items-center border-b border-slate-800 px-6 justify-between relative">
           <Link href="/admin" className={cn("flex items-center gap-2", isCollapsed && "justify-center")}>
             <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary">
-              <Home className="h-4 w-4 text-primary-foreground" />
+              <img src={`${process.env.NEXT_PUBLIC_API_URL}${setting?.logo}`} alt="logo" className="size-8 rounded" />
             </div>
-            {!isCollapsed && <span className="text-lg font-bold text-white">Admin Panel</span>}
+            {!isCollapsed && <span className="text-lg font-bold text-white whitespace-nowrap">Admin Panel</span>}
           </Link>
           <Button
             variant="ghost"
