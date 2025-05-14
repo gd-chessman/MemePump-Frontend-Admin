@@ -4,6 +4,7 @@ import { persist } from 'zustand/middleware'
 interface User {
   id: string
   email: string
+  wallet_id: number
   // Thêm các thông tin user khác nếu cần
 }
 
@@ -52,5 +53,6 @@ export const useAuth = () => {
     login,
     logout,
     checkAuth,
+    payloadToken: user ? { wallet_id: user.wallet_id } : null
   }
 } 
