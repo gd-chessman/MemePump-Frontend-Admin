@@ -272,13 +272,25 @@ export default function AnalyticsPage() {
                         outerRadius={80}
                         fill="#8884d8"
                         dataKey="value"
-                        label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
                       >
                         {userTypeData.map((entry, index) => (
                           <Cell key={`cell-${index}`} fill={entry.color} />
                         ))}
                       </Pie>
                       <Tooltip formatter={(value) => [`${value} users`, "Count"]} />
+                      <Legend 
+                        layout="horizontal" 
+                        verticalAlign="bottom" 
+                        align="center"
+                        formatter={(value, entry) => {
+                          const percentage = entry.payload ? ((entry.payload.value / data.total) * 100).toFixed(0) : '0';
+                          return (
+                            <span style={{ color: '#000' }}>
+                              {value} ({percentage}%)
+                            </span>
+                          );
+                        }}
+                      />
                     </PieChart>
                   </ResponsiveContainer>
                 </div>
