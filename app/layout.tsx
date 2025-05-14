@@ -32,6 +32,9 @@ export default function RootLayout({
     
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <title>{process.env.NEXT_PUBLIC_APP_NAME}</title>
+      </head>
       <body className={`${inter.variable} ${inter.className}`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <QueryClientProvider client={queryClient}>
