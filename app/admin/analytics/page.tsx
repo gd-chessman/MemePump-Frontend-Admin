@@ -132,10 +132,8 @@ export default function AnalyticsPage() {
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date())
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isConnected, setIsConnected] = useState(false)
-  const { user } = useAuth()
 
   useEffect(() => {
-    // if (!user?.wallet_id) return
 
     // Connect to WebSocket server
     const socket = io(`${process.env.NEXT_PUBLIC_API_URL}/admin`, {
