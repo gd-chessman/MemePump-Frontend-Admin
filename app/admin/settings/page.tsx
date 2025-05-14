@@ -20,7 +20,7 @@ import { getSetting } from "@/services/api/SettingService";
 import { SettingService } from "@/services/api";
 
 export default function SettingsPage() {
-  const { data: setting, isLoading } = useQuery({
+  const { data: setting, isLoading, refetch: refetchSetting } = useQuery({
     queryKey: ["setting"],
     queryFn: getSetting,
   });
@@ -59,6 +59,7 @@ export default function SettingsPage() {
         formData.append("logo", generalSettings.logo);
       }
       await SettingService.updateSetting(formData);
+      refetchSetting();
       console.log("Settings updated successfully");
     } catch (error) {
       console.warn("Error updating settings:", error);
