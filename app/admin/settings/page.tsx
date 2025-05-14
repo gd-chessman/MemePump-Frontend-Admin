@@ -65,6 +65,7 @@ export default function SettingsPage() {
       console.log("Settings updated successfully");
     } catch (error) {
       console.warn("Error updating settings:", error);
+      toast.error("Error updating settings"); 
     }
   };
 
@@ -75,11 +76,13 @@ export default function SettingsPage() {
       !passwords.confirmPassword
     ) {
       console.warn("Please fill in all password fields");
+      toast.error("Please fill in all password fields");
       return;
     }
 
     if (passwords.newPassword !== passwords.confirmPassword) {
       console.warn("New password and confirm password do not match");
+      toast.error("New password and confirm password do not match");
       return;
     }
 
@@ -97,6 +100,7 @@ export default function SettingsPage() {
       });
     } catch (error) {
       console.warn("Error changing password:", error);
+      toast.error("Error changing password");
     }
   };
 
