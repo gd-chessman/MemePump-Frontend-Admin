@@ -12,9 +12,9 @@ export const getListWallets = async (search: string = '', page: number = 1, limi
     }
 }
 
-export const updateListWalletsAuth = async (walletId: string) => {
+export const updateListWalletsAuth = async (walletId: string, item: any) => {
     try {
-        const temp = await axiosClient.put(`/list-wallets/${walletId}/auth`)
+        const temp = await axiosClient.put(`/list-wallets/${walletId}/auth`, item)
         return temp.data;
     } catch (error) {
         console.log(error)

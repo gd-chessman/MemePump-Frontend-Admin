@@ -17,8 +17,8 @@ import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
-import { useQuery } from "@tanstack/react-query"
-import { getListWallets } from "@/services/api/ListWalletsService"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
+import { getListWallets, updateListWalletsAuth } from "@/services/api/ListWalletsService"
 
 // Define types based on the provided JSON structure
 interface WalletAuth {
@@ -50,6 +50,7 @@ interface UserWalletResponse {
 
 
 export function ListWalletsTable({ searchQuery }: { searchQuery: string }) {
+  const queryClient = useQueryClient()
   const { data: listWallets, isLoading } = useQuery({
     queryKey: ["list-wallets", searchQuery],
     queryFn: () => getListWallets(searchQuery),
@@ -63,6 +64,18 @@ export function ListWalletsTable({ searchQuery }: { searchQuery: string }) {
       ...prev,
       [walletId]: !prev[walletId],
     }))
+  }
+
+  const handleUpdateAuth = async (walletId: number, currentAuth: string) => {
+    try {
+      await updateListWalletsAuth(walletId.toString(), {
+        wallet_auth: currentAuth === "master" ? "member" : "master"
+      })
+      // Invalidate and refetch the list
+      queryClient.invalidateQueries({ queryKey: ["list-wallets"] })
+    } catch (error) {
+      console.error("Failed to update wallet auth:", error)
+    }
   }
 
   const columns: ColumnDef<UserWallet>[] = [
@@ -96,12 +109,22 @@ export function ListWalletsTable({ searchQuery }: { searchQuery: string }) {
       cell: ({ row }) => {
         const authType = row.getValue("wallet_auth") as string
         return (
-          <Badge
-            variant="outline"
-            className="bg-blue-50 text-blue-600 border-blue-200 dark:bg-blue-950/30 dark:text-blue-400 dark:border-blue-800/50"
-          >
-            {authType}
-          </Badge>
+          <div className="flex items-center gap-2">
+            <Badge
+              variant="outline"
+              className="bg-blue-50 text-blue-600 border-blue-200 dark:bg-blue-950/30 dark:text-blue-400 dark:border-blue-800/50"
+            >
+              {authType}
+            </Badge>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => handleUpdateAuth(row.original.wallet_id, authType)}
+              className="h-6 px-2"
+            >
+              Change
+            </Button>
+          </div>
         )
       },
     },
