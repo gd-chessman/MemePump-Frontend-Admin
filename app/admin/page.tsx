@@ -1,13 +1,32 @@
 "use client"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { DashboardCharts } from "@/components/dashboard-charts"
-import { RecentSales } from "@/components/recent-sales"
 import { Overview } from "@/components/overview"
 import { ArrowUpRight, Users, CreditCard, Activity, Monitor, Smartphone, Tablet } from "lucide-react"
 import { useEffect, useState } from "react"
 import { io } from "socket.io-client"
 import { Badge } from "@/components/ui/badge"
+
+import {
+  Area,
+  AreaChart,
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Cell,
+  Legend,
+  Line,
+  LineChart,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts"
+
+
+const COLORS = ["hsl(var(--chart-1))", "hsl(var(--chart-2))", "hsl(var(--chart-3))", "hsl(var(--chart-4))"]
 
 // Define types for analytics data
 interface AnalyticsData {
@@ -19,7 +38,19 @@ interface AnalyticsData {
   anonymous: number
   devices: {
     deviceTypes: Record<string, number>
+    browsers: Record<string, number>
+    os: Record<string, number>
   }
+  connections: Array<{
+    clientId: string
+    walletId: number
+    lastActive: number
+    device?: {
+      browser: string
+      os: string
+      device: string
+    }
+  }>
 }
 
 export default function AdminDashboard() {
@@ -31,8 +62,11 @@ export default function AdminDashboard() {
     normal: 0,
     anonymous: 0,
     devices: {
-      deviceTypes: {}
-    }
+      deviceTypes: {},
+      browsers: {},
+      os: {}
+    },
+    connections: []
   })
 
   useEffect(() => {
@@ -66,6 +100,24 @@ export default function AdminDashboard() {
         return <Monitor className="h-4 w-4" />
     }
   }
+
+  // Transform device data for charts
+  const deviceDistributionData = Object.entries(analyticsData.devices.deviceTypes).map(([name, value]) => ({
+    name,
+    value: (value / analyticsData.total) * 100 || 0
+  }))
+
+  // Transform browser data for charts
+  const browserData = Object.entries(analyticsData.devices.browsers).map(([name, value]) => ({
+    name,
+    value
+  }))
+
+  // Transform OS data for charts
+  const osData = Object.entries(analyticsData.devices.os).map(([name, value]) => ({
+    name,
+    value
+  }))
 
   return (
     <div className="flex flex-col space-y-6">
@@ -167,7 +219,232 @@ export default function AdminDashboard() {
           </div>
         </TabsContent>
         <TabsContent value="analytics" className="space-y-4">
-          <DashboardCharts />
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+            <Card className="col-span-4 dashboard-card">
+              <CardHeader className="pb-2">
+                <CardTitle>Traffic Analysis</CardTitle>
+                <CardDescription>Real-time traffic by device type and browser</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Tabs defaultValue="area">
+                  <TabsList className="mb-4">
+                    <TabsTrigger value="area">Area</TabsTrigger>
+                    <TabsTrigger value="line">Line</TabsTrigger>
+                  </TabsList>
+                  <TabsContent value="area">
+                    <ResponsiveContainer width="100%" height={400}>
+                      <AreaChart
+                        data={browserData}
+                        margin={{
+                          top: 20,
+                          right: 30,
+                          left: 20,
+                          bottom: 5,
+                        }}
+                      >
+                        <defs>
+                          <linearGradient id="browserGradient" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="hsl(var(--chart-1))" stopOpacity={0.8}/>
+                            <stop offset="95%" stopColor="hsl(var(--chart-1))" stopOpacity={0.1}/>
+                          </linearGradient>
+                          <linearGradient id="osGradient" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="hsl(var(--chart-2))" stopOpacity={0.8}/>
+                            <stop offset="95%" stopColor="hsl(var(--chart-2))" stopOpacity={0.1}/>
+                          </linearGradient>
+                        </defs>
+                        <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.2} />
+                        <XAxis 
+                          dataKey="name" 
+                          stroke="hsl(var(--muted-foreground))"
+                          tick={{ fill: "hsl(var(--muted-foreground))" }}
+                        />
+                        <YAxis 
+                          stroke="hsl(var(--muted-foreground))"
+                          tick={{ fill: "hsl(var(--muted-foreground))" }}
+                        />
+                        <Tooltip
+                          contentStyle={{
+                            backgroundColor: "hsl(var(--card))",
+                            borderColor: "hsl(var(--border))",
+                            borderRadius: "0.5rem",
+                            boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
+                          }}
+                          cursor={{ fill: "hsl(var(--muted))" }}
+                        />
+                        <Legend />
+                        <Area
+                          type="monotone"
+                          dataKey="value"
+                          stroke="hsl(var(--chart-1))"
+                          fill="url(#browserGradient)"
+                          strokeWidth={2}
+                          animationDuration={1500}
+                          animationBegin={0}
+                        />
+                      </AreaChart>
+                    </ResponsiveContainer>
+                  </TabsContent>
+                  <TabsContent value="line">
+                    <ResponsiveContainer width="100%" height={400}>
+                      <LineChart
+                        data={osData}
+                        margin={{
+                          top: 20,
+                          right: 30,
+                          left: 20,
+                          bottom: 5,
+                        }}
+                      >
+                        <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.2} />
+                        <XAxis 
+                          dataKey="name" 
+                          stroke="hsl(var(--muted-foreground))"
+                          tick={{ fill: "hsl(var(--muted-foreground))" }}
+                        />
+                        <YAxis 
+                          stroke="hsl(var(--muted-foreground))"
+                          tick={{ fill: "hsl(var(--muted-foreground))" }}
+                        />
+                        <Tooltip
+                          contentStyle={{
+                            backgroundColor: "hsl(var(--card))",
+                            borderColor: "hsl(var(--border))",
+                            borderRadius: "0.5rem",
+                            boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
+                          }}
+                          cursor={{ fill: "hsl(var(--muted))" }}
+                        />
+                        <Legend />
+                        <Line
+                          type="monotone"
+                          dataKey="value"
+                          stroke="hsl(var(--chart-2))"
+                          strokeWidth={2}
+                          dot={{ 
+                            fill: "hsl(var(--chart-2))",
+                            strokeWidth: 2,
+                            r: 4
+                          }}
+                          activeDot={{ 
+                            fill: "hsl(var(--chart-2))",
+                            stroke: "hsl(var(--background))",
+                            strokeWidth: 2,
+                            r: 6
+                          }}
+                          animationDuration={1500}
+                          animationBegin={0}
+                        />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </TabsContent>
+                </Tabs>
+              </CardContent>
+            </Card>
+            <Card className="col-span-3 dashboard-card">
+              <CardHeader className="pb-2">
+                <CardTitle>Device Distribution</CardTitle>
+                <CardDescription>Current device type distribution</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="h-[400px] flex items-center justify-center">
+                  <ResponsiveContainer width="100%" height={300}>
+                    <PieChart>
+                      <defs>
+                        {COLORS.map((color, index) => (
+                          <linearGradient key={index} id={`gradient-${index}`} x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor={color} stopOpacity={0.8}/>
+                            <stop offset="95%" stopColor={color} stopOpacity={0.2}/>
+                          </linearGradient>
+                        ))}
+                      </defs>
+                      <Pie
+                        data={deviceDistributionData}
+                        cx="50%"
+                        cy="50%"
+                        labelLine={false}
+                        label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(1)}%`}
+                        outerRadius={100}
+                        innerRadius={60}
+                        fill="hsl(var(--chart-1))"
+                        dataKey="value"
+                        animationDuration={1500}
+                        animationBegin={0}
+                      >
+                        {deviceDistributionData.map((entry, index) => (
+                          <Cell 
+                            key={`cell-${index}`} 
+                            fill={`url(#gradient-${index % COLORS.length})`}
+                            stroke="hsl(var(--background))"
+                            strokeWidth={2}
+                          />
+                        ))}
+                      </Pie>
+                      <Tooltip
+                        formatter={(value: number) => `${value.toFixed(1)}%`}
+                        contentStyle={{
+                          backgroundColor: "hsl(var(--card))",
+                          borderColor: "hsl(var(--border))",
+                          borderRadius: "0.5rem",
+                          boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
+                        }}
+                      />
+                      <Legend 
+                        layout="horizontal" 
+                        verticalAlign="bottom" 
+                        align="center"
+                        formatter={(value, entry) => (
+                          <span style={{ color: "hsl(var(--foreground))" }}>
+                            {value}
+                          </span>
+                        )}
+                      />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+          <Card className="dashboard-card">
+            <CardHeader>
+              <CardTitle>Active Connections</CardTitle>
+              <CardDescription>Current active user connections</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="rounded-md border">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b bg-muted/50">
+                        <th className="h-12 px-4 text-left font-medium">Client ID</th>
+                        <th className="h-12 px-4 text-left font-medium">Wallet ID</th>
+                        <th className="h-12 px-4 text-left font-medium">Device</th>
+                        <th className="h-12 px-4 text-left font-medium">Last Active</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {analyticsData.connections.map((connection) => (
+                        <tr key={connection.clientId} className="border-b transition-colors hover:bg-muted/50">
+                          <td className="p-4 align-middle font-mono text-xs">{connection.clientId}</td>
+                          <td className="p-4 align-middle">{connection.walletId}</td>
+                          <td className="p-4 align-middle">
+                            {connection.device && (
+                              <div className="flex items-center gap-2">
+                                {getDeviceIcon(connection.device.device)}
+                                <span>{connection.device.browser}</span>
+                              </div>
+                            )}
+                          </td>
+                          <td className="p-4 align-middle text-muted-foreground">
+                            {new Date(connection.lastActive).toLocaleTimeString()}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
         <TabsContent value="reports" className="space-y-4">
           <Card className="dashboard-card">
