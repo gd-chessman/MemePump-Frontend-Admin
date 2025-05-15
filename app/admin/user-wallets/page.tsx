@@ -18,6 +18,7 @@ export default function UserWalletsPage() {
 
   const handleRefresh = async () => {
     setIsRefreshing(true)
+    await refetchUserWallets()
     setTimeout(() => {
       setIsRefreshing(false)
     }, 1000)
