@@ -194,7 +194,7 @@ export default function AdminDashboard() {
                 <Overview />
               </CardContent>
             </Card>
-            <Card className="col-span-3 dashboard-card">
+            <Card className="col-span-4 lg:col-span-3 dashboard-card">
               <CardHeader className="pb-2">
                 <CardTitle>User Distribution</CardTitle>
                 <CardDescription>Current user type distribution</CardDescription>
