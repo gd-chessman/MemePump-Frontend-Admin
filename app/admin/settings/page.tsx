@@ -75,6 +75,24 @@ export default function SettingsPage() {
       return;
     }
 
+    if (passwords.currentPassword.length < 4) {
+      console.warn("Current password must be at least 4 characters long");
+      toast.error("Current password must be at least 4 characters long");
+      return;
+    }
+
+    if (passwords.newPassword.length < 4) {
+      console.warn("New password must be at least 4 characters long");
+      toast.error("New password must be at least 4 characters long");
+      return;
+    }
+
+    if (passwords.confirmPassword.length < 4) {
+      console.warn("Confirm password must be at least 4 characters long");
+      toast.error("Confirm password must be at least 4 characters long");
+      return;
+    }
+
     if (passwords.newPassword !== passwords.confirmPassword) {
       console.warn("New password and confirmation do not match");
       toast.error("New password and confirmation do not match");
