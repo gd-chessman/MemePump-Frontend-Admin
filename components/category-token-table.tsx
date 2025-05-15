@@ -372,7 +372,7 @@ export function CategoryTokenTable({ searchQuery }: { searchQuery: string }) {
   return (
     <div className="space-y-4">
       <div className="rounded-md border">
-        <div className="max-h-[25rem] overflow-auto">
+        <div className="max-h-[32rem] overflow-auto">
           <Table>
             <TableHeader className="sticky top-0 bg-background z-10">
               {table.getHeaderGroups().map((headerGroup) => (
