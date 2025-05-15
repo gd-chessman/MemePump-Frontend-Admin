@@ -12,13 +12,15 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
-import { ChevronDown, ChevronRight, Wallet, CheckCircle2, XCircle } from "lucide-react"
+import { ChevronDown, ChevronRight, Wallet, CheckCircle2, XCircle, Copy, Check } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { getListWallets, updateListWalletsAuth } from "@/services/api/ListWalletsService"
+import { truncateString } from "@/utils/format"
+import { toast } from "react-toastify"
 
 // Define types based on the provided JSON structure
 interface WalletAuth {
@@ -58,6 +60,7 @@ export function ListWalletsTable({ searchQuery }: { searchQuery: string }) {
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [expandedRows, setExpandedRows] = useState<Record<number, boolean>>({})
+  const [copiedAddress, setCopiedAddress] = useState<string | null>(null)
 
   const toggleRow = (walletId: number) => {
     setExpandedRows((prev) => ({
@@ -75,6 +78,17 @@ export function ListWalletsTable({ searchQuery }: { searchQuery: string }) {
       queryClient.invalidateQueries({ queryKey: ["list-wallets"] })
     } catch (error) {
       console.error("Failed to update wallet auth:", error)
+    }
+  }
+
+  const copyToClipboard = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text)
+      setCopiedAddress(text)
+      toast.success("Address copied to clipboard")
+      setTimeout(() => setCopiedAddress(null), 2000)
+    } catch (err) {
+      toast.error("Failed to copy address")
     }
   }
 
@@ -212,11 +226,39 @@ export function ListWalletsTable({ searchQuery }: { searchQuery: string }) {
                                   <div className="space-y-2">
                                     <div>
                                       <span className="text-sm font-medium">Solana Address:</span>
-                                      <p className="text-sm text-muted-foreground break-all">{row.original.wallet_solana_address}</p>
+                                      <div className="flex items-center gap-2">
+                                        <p className="text-sm text-muted-foreground break-all">{truncateString(row.original.wallet_solana_address, 14)}</p>
+                                        <Button
+                                          variant="ghost"
+                                          size="icon"
+                                          className="h-6 w-6"
+                                          onClick={() => copyToClipboard(row.original.wallet_solana_address)}
+                                        >
+                                          {copiedAddress === row.original.wallet_solana_address ? (
+                                            <Check className="h-3.5 w-3.5 text-emerald-500" />
+                                          ) : (
+                                            <Copy className="h-3.5 w-3.5" />
+                                          )}
+                                        </Button>
+                                      </div>
                                     </div>
                                     <div>
                                       <span className="text-sm font-medium">ETH Address:</span>
-                                      <p className="text-sm text-muted-foreground break-all">{row.original.wallet_eth_address}</p>
+                                      <div className="flex items-center gap-2">
+                                        <p className="text-sm text-muted-foreground break-all">{truncateString(row.original.wallet_eth_address, 14)}</p>
+                                        <Button
+                                          variant="ghost"
+                                          size="icon"
+                                          className="h-6 w-6"
+                                          onClick={() => copyToClipboard(row.original.wallet_eth_address)}
+                                        >
+                                          {copiedAddress === row.original.wallet_eth_address ? (
+                                            <Check className="h-3.5 w-3.5 text-emerald-500" />
+                                          ) : (
+                                            <Copy className="h-3.5 w-3.5" />
+                                          )}
+                                        </Button>
+                                      </div>
                                     </div>
                                     <div>
                                       <span className="text-sm font-medium">Status:</span>

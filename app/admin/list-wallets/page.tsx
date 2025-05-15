@@ -27,7 +27,7 @@ export default function UserWalletsPage() {
   return (
     <div className="flex flex-col space-y-6">
       <div className="flex flex-col space-y-2">
-        <h2 className="text-3xl font-bold tracking-tight">User Wallets</h2>
+        <h2 className="text-3xl font-bold tracking-tight">List Wallets</h2>
         <p className="text-muted-foreground">Manage user wallets and their authorizations.</p>
       </div>
 
@@ -35,7 +35,7 @@ export default function UserWalletsPage() {
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle>User Wallet List</CardTitle>
+              <CardTitle>List Wallets</CardTitle>
               <CardDescription>View and manage user wallets and their associated accounts.</CardDescription>
             </div>
             <Button variant="outline" size="sm" className="flex items-center gap-1" onClick={handleRefresh}>
