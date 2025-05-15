@@ -18,7 +18,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 import { useQuery } from "@tanstack/react-query"
-import { getUserWallets } from "@/services/api/UserWalletsService"
+import { getListWallets } from "@/services/api/ListWalletsService"
 
 // Define types based on the provided JSON structure
 interface WalletAuth {
@@ -49,10 +49,10 @@ interface UserWalletResponse {
 }
 
 
-export function UserWalletTable({ searchQuery }: { searchQuery: string }) {
-  const { data: userWallets, isLoading } = useQuery({
-    queryKey: ["user-wallets", searchQuery],
-    queryFn: () => getUserWallets(searchQuery),
+export function ListWalletsTable({ searchQuery }: { searchQuery: string }) {
+  const { data: listWallets, isLoading } = useQuery({
+    queryKey: ["list-wallets", searchQuery],
+    queryFn: () => getListWallets(searchQuery),
   })
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
@@ -130,7 +130,7 @@ export function UserWalletTable({ searchQuery }: { searchQuery: string }) {
   ]
 
   const table = useReactTable({
-    data: userWallets?.data ?? [],
+    data: listWallets?.data ?? [],
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,

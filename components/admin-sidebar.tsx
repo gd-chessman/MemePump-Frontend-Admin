@@ -45,8 +45,8 @@ const navItems: NavItem[] = [
   //   icon: Users,
   // },
   {
-    title: "User Wallets",
-    href: "/admin/user-wallets",
+    title: "List Wallets",
+    href: "/admin/list-wallets",
     icon: Wallet,
   },
   {

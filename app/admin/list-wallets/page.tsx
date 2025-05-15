@@ -1,24 +1,24 @@
 "use client"
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { UserWalletTable } from "@/components/user-wallet-table"
+import { ListWalletsTable } from "@/components/list-wallets-table"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Search, RefreshCw } from "lucide-react"
-import { getUserWallets } from "@/services/api/UserWalletsService"
+import { getListWallets } from "@/services/api/ListWalletsService"
 import { useQuery } from "@tanstack/react-query"
 import { useState } from "react"
 export default function UserWalletsPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [isRefreshing, setIsRefreshing] = useState(false)
-  const { data: userWallets, refetch: refetchUserWallets } = useQuery({
-    queryKey: ["user-wallets", searchQuery],
-    queryFn: () => getUserWallets(searchQuery),
+  const { data: listWallets, refetch: refetchListWallets } = useQuery({
+    queryKey: ["list-wallets", searchQuery],
+    queryFn: () => getListWallets(searchQuery),
   })
 
   const handleRefresh = async () => {
     setIsRefreshing(true)
-    await refetchUserWallets()
+    await refetchListWallets()
     setTimeout(() => {
       setIsRefreshing(false)
     }, 1000)
@@ -52,12 +52,12 @@ export default function UserWalletsPage() {
                 value={searchQuery}
                 onChange={(e) => {
                   setSearchQuery(e.target.value);
-                  refetchUserWallets();
+                  refetchListWallets();
                 }}
               />
             </div>
           </div>
-          <UserWalletTable searchQuery={searchQuery} />
+          <ListWalletsTable searchQuery={searchQuery} />
         </CardContent>
       </Card>
     </div>
