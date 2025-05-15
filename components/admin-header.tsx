@@ -132,7 +132,7 @@ export function AdminHeader() {
               onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
             >
               <Bell className="h-5 w-5" />
-              <Badge className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full p-0 text-xs">
+              <Badge className="absolute right-0 top-0 flex h-5 w-5 items-center justify-center rounded-full p-0 text-xs">
                 {notifications.length}
               </Badge>
             </Button>
