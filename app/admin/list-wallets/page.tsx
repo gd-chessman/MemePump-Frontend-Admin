@@ -48,7 +48,7 @@ export default function UserWalletsPage() {
           <div className="flex items-center gap-2 mb-4">
             <div className="relative flex-1">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input type="search" placeholder="Search by ID or Telegram ID..." className="pl-8 w-full md:max-w-sm"
+              <Input type="search" placeholder="Search by Wallet ID or Nickname ..." className="pl-8 w-full md:max-w-sm"
                 value={searchQuery}
                 onChange={(e) => {
                   setSearchQuery(e.target.value);
