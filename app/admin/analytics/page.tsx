@@ -137,9 +137,9 @@ export default function AnalyticsPage() {
 
     // Connect to WebSocket server
     const socket = io(`${process.env.NEXT_PUBLIC_API_URL}/admin`, {
-      // query: {
-      //   walletId: user.wallet_id
-      // },
+      query: {
+        keyAdmin: 'ws-admin-key'
+      },
       transports: ['websocket', 'polling'],
       path: '/socket.io'
     })
