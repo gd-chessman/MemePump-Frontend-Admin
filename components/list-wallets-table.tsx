@@ -12,7 +12,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
-import { ChevronDown, ChevronRight, Wallet } from "lucide-react"
+import { ChevronDown, ChevronRight, Wallet, CheckCircle2, XCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
@@ -108,22 +108,25 @@ export function ListWalletsTable({ searchQuery }: { searchQuery: string }) {
       header: "Auth Type",
       cell: ({ row }) => {
         const authType = row.getValue("wallet_auth") as string
+        const isMaster = authType === "master"
+
         return (
-          <div className="flex items-center gap-2">
+          <div className="flex">
             <Badge
               variant="outline"
-              className="bg-blue-50 text-blue-600 border-blue-200 dark:bg-blue-950/30 dark:text-blue-400 dark:border-blue-800/50"
-            >
-              {authType}
-            </Badge>
-            <Button
-              variant="ghost"
-              size="sm"
+              className={`cursor-pointer flex items-center gap-1 px-3 py-1 transition-colors duration-200 ${
+                isMaster
+                  ? "bg-emerald-50 text-emerald-600 border-emerald-200 hover:bg-emerald-500 hover:text-white hover:border-emerald-500"
+                  : "bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-500 hover:text-white hover:border-slate-500"
+              } dark:${
+                isMaster
+                  ? "bg-emerald-950/30 text-emerald-400 border-emerald-800/50 hover:bg-emerald-600 hover:text-white hover:border-emerald-600"
+                  : "bg-slate-950/30 text-slate-400 border-slate-800/50 hover:bg-slate-600 hover:text-white hover:border-slate-600"
+              }`}
               onClick={() => handleUpdateAuth(row.original.wallet_id, authType)}
-              className="h-6 px-2"
             >
-              Change
-            </Button>
+              <span>{isMaster ? "Master" : "Member"}</span>
+            </Badge>
           </div>
         )
       },
