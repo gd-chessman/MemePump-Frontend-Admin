@@ -14,7 +14,7 @@ export const getListWallets = async (search: string = '', page: number = 1, limi
 
 export const updateListWalletsAuth = async (walletId: string) => {
     try {
-        const temp = await axiosClient.get(`/list-wallets/${walletId}/auth`)
+        const temp = await axiosClient.put(`/list-wallets/${walletId}/auth`)
         return temp.data;
     } catch (error) {
         console.log(error)
