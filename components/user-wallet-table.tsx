@@ -26,15 +26,18 @@ interface WalletAuth {
   wa_user_id: number
   wa_wallet_id: number
   wa_type: string
-  wa_name: string
+  wa_name: string | null
 }
 
 interface UserWallet {
-  uw_id: number
-  uw_telegram_id: string
-  uw_phone: string | null
-  uw_email: string | null
-  uw_password: string | null
+  wallet_id: number
+  wallet_solana_address: string
+  wallet_eth_address: string
+  wallet_auth: string
+  wallet_stream: string | null
+  wallet_status: boolean
+  wallet_nick_name: string | null
+  wallet_country: string | null
   wallet_auths: WalletAuth[]
 }
 
@@ -55,10 +58,10 @@ export function UserWalletTable({ searchQuery }: { searchQuery: string }) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [expandedRows, setExpandedRows] = useState<Record<number, boolean>>({})
 
-  const toggleRow = (uwId: number) => {
+  const toggleRow = (walletId: number) => {
     setExpandedRows((prev) => ({
       ...prev,
-      [uwId]: !prev[uwId],
+      [walletId]: !prev[walletId],
     }))
   }
 
@@ -68,51 +71,61 @@ export function UserWalletTable({ searchQuery }: { searchQuery: string }) {
       header: () => null,
       cell: ({ row }) => {
         const userWallet = row.original
-        const isExpanded = expandedRows[userWallet.uw_id] || false
+        const isExpanded = expandedRows[userWallet.wallet_id] || false
 
         return (
-          <Button variant="ghost" size="icon" className="h-8 w-8 p-0" onClick={() => toggleRow(userWallet.uw_id)}>
+          <Button variant="ghost" size="icon" className="h-8 w-8 p-0" onClick={() => toggleRow(userWallet.wallet_id)}>
             {isExpanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
           </Button>
         )
       },
     },
     {
-      accessorKey: "uw_id",
-      header: "User ID",
-      cell: ({ row }) => <div className="font-medium">{row.getValue("uw_id")}</div>,
+      accessorKey: "wallet_id",
+      header: "Wallet ID",
+      cell: ({ row }) => <div className="font-medium">{row.getValue("wallet_id")}</div>,
     },
     {
-      accessorKey: "uw_telegram_id",
-      header: "Telegram ID",
-      cell: ({ row }) => <div>{row.getValue("uw_telegram_id")}</div>,
+      accessorKey: "wallet_nick_name",
+      header: "Nickname",
+      cell: ({ row }) => <div>{row.getValue("wallet_nick_name") || "N/A"}</div>,
     },
     {
-      accessorKey: "wallet_count",
-      header: "Wallets",
+      accessorKey: "wallet_auth",
+      header: "Auth Type",
       cell: ({ row }) => {
-        const walletCount = row.original.wallet_auths.length
-        const mainWallet = row.original.wallet_auths.find((w) => w.wa_type === "main")
-
+        const authType = row.getValue("wallet_auth") as string
         return (
-          <div className="flex items-center gap-2">
-            <Badge
-              variant="outline"
-              className="bg-blue-50 text-blue-600 border-blue-200 dark:bg-blue-950/30 dark:text-blue-400 dark:border-blue-800/50"
-            >
-              {walletCount} {walletCount === 1 ? "wallet" : "wallets"}
-            </Badge>
-            {mainWallet && (
-              <Badge
-                variant="outline"
-                className="bg-emerald-50 text-emerald-600 border-emerald-200 dark:bg-emerald-950/30 dark:text-emerald-400 dark:border-emerald-800/50"
-              >
-                Main: {mainWallet.wa_name}
-              </Badge>
-            )}
-          </div>
+          <Badge
+            variant="outline"
+            className="bg-blue-50 text-blue-600 border-blue-200 dark:bg-blue-950/30 dark:text-blue-400 dark:border-blue-800/50"
+          >
+            {authType}
+          </Badge>
         )
       },
+    },
+    {
+      accessorKey: "wallet_stream",
+      header: "Stream",
+      cell: ({ row }) => {
+        const stream = row.getValue("wallet_stream") as string | null
+        return stream ? (
+          <Badge
+            variant="outline"
+            className="bg-emerald-50 text-emerald-600 border-emerald-200 dark:bg-emerald-950/30 dark:text-emerald-400 dark:border-emerald-800/50"
+          >
+            {stream}
+          </Badge>
+        ) : (
+          "N/A"
+        )
+      },
+    },
+    {
+      accessorKey: "wallet_country",
+      header: "Country",
+      cell: ({ row }) => <div>{row.getValue("wallet_country") || "N/A"}</div>,
     },
   ]
 
@@ -162,48 +175,39 @@ export function UserWalletTable({ searchQuery }: { searchQuery: string }) {
                         <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
                       ))}
                     </TableRow>
-                    {expandedRows[row.original.uw_id] && (
+                    {expandedRows[row.original.wallet_id] && (
                       <TableRow>
                         <TableCell colSpan={columns.length} className="p-0">
                           <div className="p-4 bg-muted/30">
-                            <h4 className="text-sm font-medium mb-2">Wallet Authorizations</h4>
+                            <h4 className="text-sm font-medium mb-2">Wallet Details</h4>
                             <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
-                              {row.original.wallet_auths.map((wallet) => (
-                                <Card key={wallet.wa_id} className="overflow-hidden">
-                                  <CardContent className="p-0">
-                                    <div className="flex items-start p-4">
-                                      <div
-                                        className={`flex h-9 w-9 items-center justify-center rounded-full mr-3 ${
-                                          wallet.wa_type === "main"
-                                            ? "bg-emerald-100 text-emerald-600 dark:bg-emerald-950/50 dark:text-emerald-400"
-                                            : "bg-blue-100 text-blue-600 dark:bg-blue-950/50 dark:text-blue-400"
+                              <Card className="overflow-hidden">
+                                <CardContent className="p-4">
+                                  <div className="space-y-2">
+                                    <div>
+                                      <span className="text-sm font-medium">Solana Address:</span>
+                                      <p className="text-sm text-muted-foreground break-all">{row.original.wallet_solana_address}</p>
+                                    </div>
+                                    <div>
+                                      <span className="text-sm font-medium">ETH Address:</span>
+                                      <p className="text-sm text-muted-foreground break-all">{row.original.wallet_eth_address}</p>
+                                    </div>
+                                    <div>
+                                      <span className="text-sm font-medium">Status:</span>
+                                      <Badge
+                                        variant="outline"
+                                        className={`ml-2 ${
+                                          row.original.wallet_status
+                                            ? "bg-emerald-50 text-emerald-600 border-emerald-200 dark:bg-emerald-950/30 dark:text-emerald-400 dark:border-emerald-800/50"
+                                            : "bg-red-50 text-red-600 border-red-200 dark:bg-red-950/30 dark:text-red-400 dark:border-red-800/50"
                                         }`}
                                       >
-                                        <Wallet className="h-5 w-5" />
-                                      </div>
-                                      <div className="flex-1">
-                                        <div className="flex items-center justify-between">
-                                          <h5 className="font-medium text-sm">{wallet.wa_name}</h5>
-                                          <Badge
-                                            variant="outline"
-                                            className={`text-xs ${
-                                              wallet.wa_type === "main"
-                                                ? "bg-emerald-50 text-emerald-600 border-emerald-200 dark:bg-emerald-950/30 dark:text-emerald-400 dark:border-emerald-800/50"
-                                                : "bg-blue-50 text-blue-600 border-blue-200 dark:bg-blue-950/30 dark:text-blue-400 dark:border-blue-800/50"
-                                            }`}
-                                          >
-                                            {wallet.wa_type}
-                                          </Badge>
-                                        </div>
-                                        <div className="text-xs text-muted-foreground mt-1">
-                                          Wallet ID: {wallet.wa_wallet_id}
-                                        </div>
-                                        <div className="text-xs text-muted-foreground">Auth ID: {wallet.wa_id}</div>
-                                      </div>
+                                        {row.original.wallet_status ? "Active" : "Inactive"}
+                                      </Badge>
                                     </div>
-                                  </CardContent>
-                                </Card>
-                              ))}
+                                  </div>
+                                </CardContent>
+                              </Card>
                             </div>
                           </div>
                         </TableCell>
