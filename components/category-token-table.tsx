@@ -367,6 +367,11 @@ export function CategoryTokenTable({ searchQuery }: { searchQuery: string }) {
       sorting,
       columnFilters,
     },
+    initialState: {
+      pagination: {
+        pageSize: 100,
+      },
+    },
   })
 
   return (

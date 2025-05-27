@@ -178,6 +178,11 @@ export function ListWalletsTable({ searchQuery }: { searchQuery: string }) {
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    initialState: {
+      pagination: {
+        pageSize: 100,
+      },
+    },
     state: {
       sorting,
       columnFilters,
