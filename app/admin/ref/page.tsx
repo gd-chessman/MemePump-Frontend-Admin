@@ -10,7 +10,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useQuery } from "@tanstack/react-query"
 import { getReferentSettings, updatReferentSettings } from "@/services/api/ReferentSettings"
-import { getReferentLevelRewards } from "@/services/api/ReferentLevelRewards"
+import { getReferentLevelRewards, updateReferentLevelRewards } from "@/services/api/ReferentLevelRewards"
 
 interface ReferralLevel {
   level: number
@@ -99,6 +99,46 @@ export default function ReferralSettings() {
     }
   }
 
+  const handlePercentageChange = async (levelId: number, value: string, currentLevel: number) => {
+    const numValue = parseFloat(value)
+    if (isNaN(numValue) || numValue < 0 || numValue > 100) {
+      toast.error('Percentage must be between 0 and 100')
+      return
+    }
+
+    // Find the current level's data
+    const currentLevelData = referentLevelRewards?.find(r => r.rlr_level === currentLevel)
+    if (!currentLevelData) return
+
+    // Check if the new value is greater than the previous level's percentage
+    const previousLevel = referentLevelRewards?.find(r => r.rlr_level === currentLevel - 1)
+    if (previousLevel && numValue > parseFloat(previousLevel.rlr_percentage)) {
+      toast.error(`Level ${currentLevel} percentage cannot be greater than Level ${currentLevel - 1}`)
+      return
+    }
+
+    // Check if the new value is less than the next level's percentage
+    const nextLevel = referentLevelRewards?.find(r => r.rlr_level === currentLevel + 1)
+    if (nextLevel && numValue < parseFloat(nextLevel.rlr_percentage)) {
+      toast.error(`Level ${currentLevel} percentage cannot be less than Level ${currentLevel + 1}`)
+      return
+    }
+
+    setIsLoading(true)
+    setError(null)
+
+    try {
+      await updateReferentLevelRewards(levelId, { rlr_percentage: numValue })
+      await refetchReferentLevelRewards()
+      toast.success('Percentage updated successfully')
+    } catch (err) {
+      setError('Failed to update percentage')
+      toast.error('Failed to update percentage')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   return (
     <div className="flex flex-col space-y-6">
       <div className="flex flex-col space-y-2">
@@ -155,20 +195,36 @@ export default function ReferralSettings() {
             </div>
 
             <div className="space-y-4">
-              {levels.slice(0, maxLevel).map((level) => (
-                <div key={level.level} className="flex items-center space-x-4">
-                  <Label className="w-24">Level {level.level}</Label>
-                  <div className="flex items-center space-x-2">
-                    <Input
-                      type="number"
-                      value={level.percentage}
-                      disabled
-                      className="w-32"
-                    />
-                    <span className="text-muted-foreground">%</span>
+              {levels.slice(0, maxLevel).map((level) => {
+                const rewardData = referentLevelRewards?.find(r => r.rlr_level === level.level)
+                const handleUpdate = (value: string) => {
+                  if (rewardData) {
+                    handlePercentageChange(rewardData.rlr_id, value, level.level)
+                  }
+                }
+                return (
+                  <div key={level.level} className="flex items-center space-x-4">
+                    <Label className="w-24">Level {level.level}</Label>
+                    <div className="flex items-center space-x-2">
+                      <Input
+                        type="number"
+                        defaultValue={level.percentage}
+                        onBlur={(e) => handleUpdate(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            handleUpdate(e.currentTarget.value)
+                          }
+                        }}
+                        min="0"
+                        max="100"
+                        step="0.1"
+                        className="w-32"
+                      />
+                      <span className="text-muted-foreground">%</span>
+                    </div>
                   </div>
-                </div>
-              ))}
+                )
+              })}
             </div>
           </div>
         </CardContent>

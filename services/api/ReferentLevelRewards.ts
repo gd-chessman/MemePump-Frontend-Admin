@@ -10,3 +10,13 @@ export const getReferentLevelRewards = async () => {
         return [];
     }
 }
+
+export const updateReferentLevelRewards = async ( id: any, data: any) => {
+    try {
+        const temp = await axiosClient.put(`/referent-level-rewards/${id}`, data)
+        return temp.data;
+    } catch (error) {
+        console.log(error)
+        throw error;
+    }
+}
