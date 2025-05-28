@@ -83,6 +83,11 @@ export default function ReferralSettings() {
       return
     }
 
+    // Check if the new value is the same as current value
+    if (newMaxLevel === maxLevel) {
+      return
+    }
+
     setIsLoading(true)
     setError(null)
 
@@ -109,6 +114,11 @@ export default function ReferralSettings() {
     // Find the current level's data
     const currentLevelData = referentLevelRewards?.find(r => r.rlr_level === currentLevel)
     if (!currentLevelData) return
+
+    // Check if the new value is the same as current value
+    if (numValue === parseFloat(currentLevelData.rlr_percentage)) {
+      return
+    }
 
     // Check if the new value is greater than the previous level's percentage
     const previousLevel = referentLevelRewards?.find(r => r.rlr_level === currentLevel - 1)
