@@ -59,11 +59,11 @@ const navItems: NavItem[] = [
     href: "/admin/analytics",
     icon: BarChart3,
   },
-  // {
-  //   title: "Reports",
-  //   href: "/admin/reports",
-  //   icon: FileText,
-  // },
+  {
+    title: "Referral",
+    href: "/admin/ref",
+    icon: FileText,
+  },
   {
     title: "Settings",
     href: "/admin/settings",
