@@ -12,7 +12,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
-import { ArrowUpDown, Trash, CheckCircle2, XCircle, Eye, EyeOff } from "lucide-react"
+import { ArrowUpDown, Trash, CheckCircle2, XCircle, Eye, EyeOff, Pencil } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { EditableCell } from "@/components/editable-cell"
@@ -27,6 +27,16 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { getCategoryToken, deleteCategoryToken, updateCategoryToken } from "@/services/api/CategorysTokenService"
 import { toast } from "react-toastify"
@@ -52,6 +62,8 @@ export function CategoryTokenTable({ searchQuery }: { searchQuery: string }) {
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [openAlert, setOpenAlert] = useState<{ [key: string]: boolean }>({})
+  const [openEditModal, setOpenEditModal] = useState<{ [key: string]: boolean }>({})
+  const [editForm, setEditForm] = useState<{ [key: string]: { name: string; slug: string } }>({})
 
   // Update data when API response changes
   useEffect(() => {
@@ -180,6 +192,36 @@ export function CategoryTokenTable({ searchQuery }: { searchQuery: string }) {
       .replace(/[^\w-]+/g, "")
   }
 
+  // Add this function to handle edit form changes
+  const handleEditFormChange = (id: number, field: 'name' | 'slug', value: string) => {
+    setEditForm(prev => ({
+      ...prev,
+      [id]: {
+        ...prev[id],
+        [field]: value
+      }
+    }))
+  }
+
+  // Add this function to handle edit submission
+  const handleEditSubmit = async (id: number) => {
+    try {
+      const formData = editForm[id]
+      if (!formData) return
+
+      // Update name
+      await updateCategoryField(id, "slct_name", formData.name)
+      // Update slug
+      await updateCategoryField(id, "slct_slug", formData.slug)
+
+      setOpenEditModal(prev => ({ ...prev, [id]: false }))
+      toast.success("Category updated successfully")
+    } catch (error) {
+      console.error("Error updating category:", error)
+      toast.error("Failed to update category")
+    }
+  }
+
   const columns: ColumnDef<CategoryToken>[] = [
     {
       accessorKey: "slct_name",
@@ -306,9 +348,33 @@ export function CategoryTokenTable({ searchQuery }: { searchQuery: string }) {
       cell: ({ row }) => {
         const category = row.original
         const open = openAlert[category.slct_id.toString()] || false
+        const openEdit = openEditModal[category.slct_id.toString()] || false
+
+        // Initialize edit form when opening modal
+        useEffect(() => {
+          if (openEdit && !editForm[category.slct_id]) {
+            setEditForm(prev => ({
+              ...prev,
+              [category.slct_id]: {
+                name: category.slct_name,
+                slug: category.slct_slug
+              }
+            }))
+          }
+        }, [openEdit, category.slct_id])
 
         return (
-          <div className="flex items-center justify-end">
+          <div className="flex items-center justify-end gap-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 p-0 text-blue-600 hover:text-blue-700 hover:bg-blue-100"
+              onClick={() => setOpenEditModal(prev => ({ ...prev, [category.slct_id.toString()]: true }))}
+            >
+              <Pencil className="h-4 w-4" />
+              <span className="sr-only">Edit</span>
+            </Button>
+
             <Button
               variant="ghost"
               size="icon"
@@ -318,6 +384,50 @@ export function CategoryTokenTable({ searchQuery }: { searchQuery: string }) {
               <Trash className="h-4 w-4" />
               <span className="sr-only">Delete</span>
             </Button>
+
+            {/* Edit Modal */}
+            <Dialog open={openEdit} onOpenChange={(open) => setOpenEditModal(prev => ({ ...prev, [category.slct_id.toString()]: open }))}>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Edit Category</DialogTitle>
+                  <DialogDescription>
+                    Make changes to the category details here. Click save when you're done.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="grid gap-4 py-4">
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="name" className="text-right">
+                      Name
+                    </Label>
+                    <Input
+                      id="name"
+                      value={editForm[category.slct_id]?.name || ''}
+                      onChange={(e) => handleEditFormChange(category.slct_id, 'name', e.target.value)}
+                      className="col-span-3"
+                    />
+                  </div>
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="slug" className="text-right">
+                      Slug
+                    </Label>
+                    <Input
+                      id="slug"
+                      value={editForm[category.slct_id]?.slug || ''}
+                      onChange={(e) => handleEditFormChange(category.slct_id, 'slug', e.target.value)}
+                      className="col-span-3"
+                    />
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button variant="outline" onClick={() => setOpenEditModal(prev => ({ ...prev, [category.slct_id.toString()]: false }))}>
+                    Cancel
+                  </Button>
+                  <Button onClick={() => handleEditSubmit(category.slct_id)}>
+                    Save changes
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
 
             <AlertDialog
               open={open}
