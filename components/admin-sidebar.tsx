@@ -30,6 +30,7 @@ interface NavItem {
   title: string
   href: string
   icon: React.ElementType
+  color: string
   submenu?: { title: string; href: string }[]
 }
 
@@ -38,36 +39,43 @@ const navItems: NavItem[] = [
     title: "Dashboard",
     href: "/admin",
     icon: LayoutDashboard,
+    color: "text-blue-400 hover:text-blue-300",
   },
   // {
   //   title: "Users",
   //   href: "/admin/users",
   //   icon: Users,
+  //   color: "text-purple-400 hover:text-purple-300",
   // },
   {
     title: "List Wallets",
     href: "/admin/list-wallets",
     icon: Wallet,
+    color: "text-emerald-400 hover:text-emerald-300",
   },
   {
     title: "Categorys Token",
     href: "/admin/categories-token",
     icon: Tag,
+    color: "text-amber-400 hover:text-amber-300",
   },
   {
     title: "Analytics",
     href: "/admin/analytics",
     icon: BarChart3,
+    color: "text-purple-400 hover:text-purple-300",
   },
   {
     title: "Referral",
     href: "/admin/ref",
     icon: FileText,
+    color: "text-cyan-400 hover:text-cyan-300",
   },
   {
     title: "Settings",
     href: "/admin/settings",
     icon: Settings,
+    color: "text-slate-400 hover:text-slate-300",
   },
 ]
 
@@ -122,7 +130,7 @@ export function AdminSidebar() {
       </Button>
       <aside
         className={cn(
-          "bg-slate-900 z-40 shrink-0 h-screen flex flex-col md:sticky fixed top-0 left-0 transition-all duration-300 ease-in-out border-r border-slate-800",
+          "bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 z-40 shrink-0 h-screen flex flex-col md:sticky fixed top-0 left-0 transition-all duration-300 ease-in-out border-r border-slate-700/50 shadow-2xl",
           isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0",
           isCollapsed ? "w-20" : "w-64",
         )}
@@ -158,7 +166,11 @@ export function AdminSidebar() {
                         isCollapsed && "justify-center px-0",
                       )}
                     >
-                      <item.icon className={cn("sidebar-icon", isActive(item) && "sidebar-active-icon")} />
+                      <item.icon className={cn(
+                        "sidebar-icon transition-all duration-200 hover:scale-110",
+                        item.color,
+                        isActive(item) && "sidebar-active-icon"
+                      )} />
                       {!isCollapsed && (
                         <>
                           <span className="flex-1">{item.title}</span>
@@ -197,7 +209,11 @@ export function AdminSidebar() {
                     )}
                     title={isCollapsed ? item.title : undefined}
                   >
-                    <item.icon className={cn("sidebar-icon", pathname === item.href && "sidebar-active-icon")} />
+                    <item.icon className={cn(
+                      "sidebar-icon transition-all duration-200 hover:scale-110",
+                      item.color,
+                      pathname === item.href && "sidebar-active-icon"
+                    )} />
                     {!isCollapsed && <span>{item.title}</span>}
                   </Link>
                 )}

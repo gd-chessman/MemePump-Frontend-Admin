@@ -32,7 +32,7 @@ export default function RootLayout({
     }));
     
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className="dark">
       <head>
         <title>{process.env.NEXT_PUBLIC_APP_NAME}</title>
         <link rel="icon" href={`${process.env.NEXT_PUBLIC_API_URL}/uploads/logo.jpg`} type="image/jpeg" />
