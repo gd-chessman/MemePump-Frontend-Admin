@@ -13,10 +13,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
+import { Avatar } from "@/components/ui/avatar";
 import { useQuery } from "@tanstack/react-query";
 import { getSetting } from "@/services/api/SettingService";
 import { SettingService } from "@/services/api";
 import { toast } from "sonner";
+import { getMyInfor } from "@/services/api/UserAdminService";
+
 
 export default function SettingsPage() {
   const { data: setting, isLoading, refetch: refetchSetting } = useQuery({
@@ -24,10 +28,10 @@ export default function SettingsPage() {
     queryFn: getSetting,
   });
 
-  const [generalSettings, setGeneralSettings] = useState({
-    appName: "",
-    logo: null as File | null,
-    telegramBot: "",
+  const { data: myInfor} = useQuery({
+    queryKey: ["my-infor"],
+    queryFn: getMyInfor,
+    refetchOnMount: true,
   });
 
   const [passwords, setPasswords] = useState({
@@ -35,34 +39,6 @@ export default function SettingsPage() {
     newPassword: "",
     confirmPassword: "",
   });
-
-  useEffect(() => {
-    if (setting) {
-      setGeneralSettings({
-        appName: setting.appName || "",
-        logo: setting.logo || null,
-        telegramBot: setting.telegramBot || "",
-      });
-    }
-  }, [setting]);
-
-  const handleUpdateGeneralSetting = async () => {
-    try {
-      const formData = new FormData();
-      formData.append("appName", generalSettings.appName);
-      formData.append("telegramBot", generalSettings.telegramBot);
-      if (generalSettings.logo) {
-        formData.append("logo", generalSettings.logo);
-      }
-      await SettingService.updateSetting(formData);
-      refetchSetting();
-      toast.success("Settings updated successfully");
-      console.log("Settings updated successfully");
-    } catch (error) {
-      console.warn("Error updating settings:", error);
-      toast.error("Error updating settings"); 
-    }
-  };
 
   const handlePasswordChange = async () => {
     if (
@@ -120,6 +96,16 @@ export default function SettingsPage() {
     }
   };
 
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
+
   if (isLoading) {
     return null;
   }
@@ -133,120 +119,71 @@ export default function SettingsPage() {
         </p>
       </div>
 
-      <Tabs defaultValue="general" className="space-y-4">
+      <Tabs defaultValue="profile" className="space-y-4">
         <TabsList className="grid w-full grid-cols-2 lg:w-auto">
-          <TabsTrigger value="general">General</TabsTrigger>
+          <TabsTrigger value="profile">Profile</TabsTrigger>
           <TabsTrigger value="security">Security</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="general" className="space-y-4">
+        <TabsContent value="profile" className="space-y-4">
           <Card className="dashboard-card">
             <CardHeader>
-              <CardTitle>General Settings</CardTitle>
+              <CardTitle>Profile Information</CardTitle>
               <CardDescription>
-                Manage your basic account settings
+                Your account details and information
               </CardDescription>
             </CardHeader>
-            <form onSubmit={(e) => {
-              e.preventDefault();
-              handleUpdateGeneralSetting();
-            }}>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="appName">App Name</Label>
-                  <Input
-                    id="appName"
-                    value={generalSettings.appName}
-                    onChange={(e) =>
-                      setGeneralSettings((prev) => ({
-                        ...prev,
-                        appName: e.target.value,
-                      }))
-                    }
-                    required
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="logo">Logo</Label>
-                  <div className="border rounded-md p-4 bg-muted/30">
-                    <div className="flex flex-col sm:flex-row gap-6 items-center">
-                      <div className="relative flex-shrink-0">
-                        <div className="h-24 w-24 rounded-md border-2 border-dashed border-primary/20 flex items-center justify-center bg-background overflow-hidden">
-                          {generalSettings.logo ? (
-                            <img
-                              src={
-                                typeof generalSettings.logo === "string"
-                                  ? `${process.env.NEXT_PUBLIC_API_URL}${generalSettings.logo}`
-                                  : URL.createObjectURL(generalSettings.logo)
-                              }
-                              alt="Current logo"
-                              className="max-h-20 max-w-20 object-contain"
-                            />
-                          ) : (
-                            <span className="text-muted-foreground">No logo</span>
-                          )}
-                        </div>
-                      </div>
-                      <div className="flex flex-col gap-3 flex-grow">
-                        <div className="space-y-1">
-                          <p className="text-sm font-medium">Upload a new logo</p>
-                          <p className="text-xs text-muted-foreground">
-                            Recommended size: 512x512px. Max file size: 2MB.
-                            Supported formats: PNG, JPG, SVG
-                          </p>
-                        </div>
-                        <div className="flex gap-2">
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            className="relative"
-                          >
-                            <input
-                              type="file"
-                              id="logo-upload"
-                              className="absolute inset-0 opacity-0 cursor-pointer"
-                              accept="image/png, image/jpeg, image/svg+xml"
-                              onChange={(e) => {
-                                const file = e.target.files?.[0];
-                                if (file) {
-                                  setGeneralSettings((prev) => ({
-                                    ...prev,
-                                    logo: file,
-                                  }));
-                                }
-                              }}
-                            />
-                            Upload Logo
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="telegramBot">Telegram Bot</Label>
-                  <Input
-                    id="telegramBot"
-                    placeholder="Enter your Telegram bot token"
-                    value={generalSettings.telegramBot}
-                    onChange={(e) =>
-                      setGeneralSettings((prev) => ({
-                        ...prev,
-                        telegramBot: e.target.value,
-                      }))
-                    }
-                    required
-                  />
-                  <p className="text-sm text-muted-foreground">
-                    Create a bot on Telegram via @BotFather and paste the token
-                    here.
-                  </p>
-                </div>
-              </CardContent>
-              <CardFooter className="flex justify-end">
-                <Button type="submit">Save Changes</Button>
-              </CardFooter>
-            </form>
+            <CardContent className="space-y-4 flex flex-col items-center">
+              <div className="space-y-2 w-full max-w-lg">
+                <Label htmlFor="username">Username</Label>
+                <Input
+                  id="username"
+                  value={myInfor?.username || ''}
+                  disabled
+                  className="bg-slate-600/30 border-slate-500/50 text-slate-100"
+                />
+              </div>
+              
+              <div className="space-y-2 w-full max-w-lg">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  value={myInfor?.email || ''}
+                  disabled
+                  className="bg-slate-600/30 border-slate-500/50 text-slate-100"
+                />
+              </div>
+              
+              <div className="space-y-2 w-full max-w-lg">
+                <Label htmlFor="role">Role</Label>
+                <Input
+                  id="role"
+                  value={myInfor?.role || ''}
+                  disabled
+                  className="bg-slate-600/30 border-slate-500/50 text-slate-100"
+                />
+              </div>
+              
+              <div className="space-y-2 w-full max-w-lg">
+                <Label htmlFor="created-at">Account Created</Label>
+                <Input
+                  id="created-at"
+                  value={myInfor?.createdAt ? formatDate(myInfor.createdAt) : 'N/A'}
+                  disabled
+                  className="bg-slate-600/30 border-slate-500/50 text-slate-100"
+                />
+              </div>
+              
+              <div className="space-y-2 w-full max-w-lg">
+                <Label htmlFor="updated-at">Last Updated</Label>
+                <Input
+                  id="updated-at"
+                  value={myInfor?.updatedAt ? formatDate(myInfor.updatedAt) : 'N/A'}
+                  disabled
+                  className="bg-slate-600/30 border-slate-500/50 text-slate-100"
+                />
+              </div>
+            </CardContent>
           </Card>
         </TabsContent>
 
@@ -262,8 +199,8 @@ export default function SettingsPage() {
                 handlePasswordChange();
               }}
             >
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
+              <CardContent className="space-y-4 flex flex-col items-center">
+                <div className="space-y-2 w-full max-w-lg">
                   <Label htmlFor="current-password">Current Password</Label>
                   <Input
                     id="current-password"
@@ -276,9 +213,10 @@ export default function SettingsPage() {
                         currentPassword: e.target.value,
                       }))
                     }
+                    className="bg-slate-600/30 border-slate-500/50 text-slate-100"
                   />
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-2 w-full max-w-lg">
                   <Label htmlFor="new-password">New Password</Label>
                   <Input
                     id="new-password"
@@ -291,9 +229,10 @@ export default function SettingsPage() {
                         newPassword: e.target.value,
                       }))
                     }
+                    className="bg-slate-600/30 border-slate-500/50 text-slate-100"
                   />
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-2 w-full max-w-lg">
                   <Label htmlFor="confirm-password">Confirm Password</Label>
                   <Input
                     id="confirm-password"
@@ -306,6 +245,7 @@ export default function SettingsPage() {
                         confirmPassword: e.target.value,
                       }))
                     }
+                    className="bg-slate-600/30 border-slate-500/50 text-slate-100"
                   />
                 </div>
               </CardContent>

@@ -128,18 +128,15 @@ export function ListWalletsTable({ searchQuery }: { searchQuery: string }) {
           <div className="flex">
             <Badge
               variant="outline"
-              className={`cursor-pointer flex items-center gap-1 px-3 py-1 transition-colors duration-200 ${
+              className={`cursor-pointer flex items-center gap-1 px-2 py-1 rounded-full font-medium text-xs transition-all duration-300 shadow-sm hover:shadow-md ${
                 isMaster
-                  ? "bg-emerald-50 text-emerald-600 border-emerald-200 hover:bg-emerald-500 hover:text-white hover:border-emerald-500"
-                  : "bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-500 hover:text-white hover:border-slate-500"
-              } dark:${
-                isMaster
-                  ? "bg-emerald-950/30 text-emerald-400 border-emerald-800/50 hover:bg-emerald-600 hover:text-white hover:border-emerald-600"
-                  : "bg-slate-950/30 text-slate-400 border-slate-800/50 hover:bg-slate-600 hover:text-white hover:border-slate-600"
+                  ? "bg-gradient-to-r from-emerald-500 to-emerald-600 text-white border-emerald-500 hover:from-emerald-600 hover:to-emerald-700 hover:scale-105"
+                  : "bg-gradient-to-r from-slate-500 to-slate-600 text-white border-slate-500 hover:from-slate-600 hover:to-slate-700 hover:scale-105"
               }`}
               onClick={() => handleUpdateAuth(row.original.wallet_id, authType)}
             >
-              <span>{isMaster ? "Master" : "Member"}</span>
+              <div className={`w-1.5 h-1.5 rounded-full ${isMaster ? 'bg-emerald-200' : 'bg-slate-200'}`}></div>
+              <span className="uppercase tracking-wide">{isMaster ? "Master" : "Member"}</span>
             </Badge>
           </div>
         )
