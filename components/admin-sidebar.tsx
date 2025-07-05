@@ -102,14 +102,12 @@ export function AdminSidebar() {
     setIsCollapsed(!isCollapsed)
   }
 
-  // Check if the current path matches the nav item or any of its subitems
   const isActive = (item: NavItem) => {
     if (pathname === item.href) return true
     if (item.submenu && item.submenu.some((subitem) => pathname === subitem.href)) return true
     return false
   }
 
-  // Open submenu if current path is in a submenu
   useEffect(() => {
     navItems.forEach((item) => {
       if (item.submenu && item.submenu.some((subitem) => pathname === subitem.href)) {
@@ -130,120 +128,58 @@ export function AdminSidebar() {
       </Button>
       <aside
         className={cn(
-          "bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 z-40 shrink-0 h-screen flex flex-col md:sticky fixed top-0 left-0 transition-all duration-300 ease-in-out border-r border-slate-700/50 shadow-2xl",
+          "fixed inset-y-0 left-0 z-40 w-64 backdrop-blur-xl border-r border-slate-700/50 transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0 flex flex-col",
           isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0",
           isCollapsed ? "w-20" : "w-64",
         )}
       >
-        <div className="flex h-14 items-center border-b border-slate-800 px-6 justify-between relative">
-          <Link href="/admin" className={cn("flex items-center gap-2", isCollapsed && "justify-center")}>
-            <div className="flex h-8 w-8 items-center justify-center rounded-md">
-              <img src="/logo.png" alt="logo" className="size-8 rounded" />
-            </div>
-            {!isCollapsed && <span className="text-lg font-bold text-white whitespace-nowrap">Admin Panel</span>}
-          </Link>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={toggleCollapse}
-            className="hidden md:flex absolute right-0 h-8 w-4 p-0 bg-slate-900 border border-slate-800 rounded-md text-slate-400 hover:text-white hover:bg-slate-800 z-50"
-            aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-          >
-            {isCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
-          </Button>
+        <div className="flex-shrink-0">
+          <div className="flex items-center gap-3 h-16 px-6 border-b border-slate-700/50">
+            <img src="/logo.png" className="h-8 w-8 rounded-lg" alt="logo" />
+            <span className="text-base font-semibold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent uppercase tracking-wide">MEMEPUMP</span>
+          </div>
         </div>
-        <ScrollArea className="flex-1">
-          <nav className={cn("grid gap-1 py-4", isCollapsed ? "px-1" : "px-2")}>
-            {navItems.map((item) => (
-              <div key={item.title}>
-                {item.submenu ? (
-                  <>
-                    <button
-                      onClick={() => toggleSubmenu(item.title)}
-                      className={cn(
-                        "sidebar-item w-full text-left",
-                        isActive(item) ? "sidebar-item-active" : "sidebar-item-inactive",
-                        isCollapsed && "justify-center px-0",
-                      )}
-                    >
-                      <item.icon className={cn(
-                        "sidebar-icon transition-all duration-200 hover:scale-110",
-                        item.color,
-                        isActive(item) && "sidebar-active-icon"
-                      )} />
-                      {!isCollapsed && (
-                        <>
-                          <span className="flex-1">{item.title}</span>
-                          {openSubmenu === item.title ? (
-                            <ChevronDown className="h-4 w-4" />
-                          ) : (
-                            <ChevronRight className="h-4 w-4" />
-                          )}
-                        </>
-                      )}
-                    </button>
-                    {openSubmenu === item.title && !isCollapsed && (
-                      <div className="ml-4 mt-1 grid gap-1 pl-4 border-l border-slate-800">
-                        {item.submenu.map((subitem) => (
-                          <Link
-                            key={subitem.href}
-                            href={subitem.href}
-                            className={cn(
-                              "sidebar-item",
-                              pathname === subitem.href ? "sidebar-item-active" : "sidebar-item-inactive",
-                            )}
-                          >
-                            <span>{subitem.title}</span>
-                          </Link>
-                        ))}
-                      </div>
-                    )}
-                  </>
-                ) : (
-                  <Link
-                    href={item.href}
-                    className={cn(
-                      "sidebar-item",
-                      pathname === item.href ? "sidebar-item-active" : "sidebar-item-inactive",
-                      isCollapsed && "justify-center px-0",
-                    )}
-                    title={isCollapsed ? item.title : undefined}
-                  >
-                    <item.icon className={cn(
-                      "sidebar-icon transition-all duration-200 hover:scale-110",
-                      item.color,
-                      pathname === item.href && "sidebar-active-icon"
-                    )} />
-                    {!isCollapsed && <span>{item.title}</span>}
-                  </Link>
-                )}
-              </div>
-            ))}
-          </nav>
-        </ScrollArea>
-        {!isCollapsed && (
-          <div className="border-t border-slate-800 p-4">
-            <div className="flex items-center gap-3 rounded-lg bg-white/5 p-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary">
-                <span className="text-sm font-medium text-primary-foreground">{myInfor?.username?.charAt(0).toUpperCase()}</span>
-              </div>
+        
+        <nav className="flex-1 mt-6 flex flex-col gap-1 px-2 overflow-y-auto">
+          {navItems.map(item => (
+            <Link
+              key={item.title}
+              href={item.href}
+              className={cn(
+                "flex items-center gap-3 px-4 py-2.5 rounded-lg font-medium text-white transition-all group text-sm",
+                isActive(item)
+                  ? "bg-gradient-to-r from-cyan-600/20 to-purple-600/20 text-cyan-300 border border-cyan-500/30 shadow-lg shadow-cyan-500/10"
+                  : "text-slate-300 hover:bg-slate-800/50 hover:text-cyan-200",
+                isCollapsed && "justify-center px-0"
+              )}
+            >
+              <item.icon className={cn(
+                "h-5 w-5 mr-2 transition-colors",
+                item.color,
+                isActive(item) && "text-cyan-300"
+              )} />
+              {!isCollapsed && <span>{item.title}</span>}
+            </Link>
+          ))}
+        </nav>
+        
+        <div className="flex-shrink-0 p-4 border-t border-slate-700/50">
+          <div className="flex items-center gap-3 rounded-xl bg-[#23284A] p-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-r from-cyan-500 to-purple-500 text-white font-bold text-lg shadow-lg shadow-cyan-500/25">
+              {myInfor?.username?.charAt(0).toUpperCase()}
+            </div>
+            {!isCollapsed && (
               <div className="flex flex-col">
-                <p className="text-sm font-medium text-white">{myInfor?.username}</p>
-                <p className="text-xs text-white/60">{myInfor?.email}</p>
+                <span className="text-sm font-medium text-slate-200">{myInfor?.username}</span>
+                <span className="text-xs text-slate-400 uppercase">Admin</span>
               </div>
-            </div>
+            )}
           </div>
-        )}
-        {isCollapsed && (
-          <div className="border-t border-slate-800 p-2">
-            <div className="flex items-center justify-center py-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary">
-                <span className="text-sm font-medium text-primary-foreground">{myInfor?.username.charAt(0).toUpperCase()}</span>
-              </div>
-            </div>
-          </div>
-        )}
+        </div>
       </aside>
+      {isOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden" onClick={() => setIsOpen(false)} />
+      )}
     </>
   )
 }
