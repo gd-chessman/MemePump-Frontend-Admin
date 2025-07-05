@@ -25,6 +25,7 @@ import { cn } from "@/lib/utils"
 import { getMyInfor } from "@/services/api/UserAdminService"
 import { useQuery } from "@tanstack/react-query"
 import { getSetting } from "@/services/api/SettingService"
+import { useLang } from "@/lang/useLang"
 
 interface NavItem {
   title: string
@@ -34,52 +35,54 @@ interface NavItem {
   submenu?: { title: string; href: string }[]
 }
 
-const navItems: NavItem[] = [
-  {
-    title: "Dashboard",
-    href: "/dashboard",
-    icon: LayoutDashboard,
-    color: "text-blue-400 hover:text-blue-300",
-  },
-  // {
-  //   title: "Users",
-  //   href: "/admin/users",
-  //   icon: Users,
-  //   color: "text-purple-400 hover:text-purple-300",
-  // },
-  {
-    title: "List Wallets",
-    href: "/list-wallets",
-    icon: Wallet,
-    color: "text-emerald-400 hover:text-emerald-300",
-  },
-  {
-    title: "Categorys Token",
-    href: "/categories-token",
-    icon: Tag,
-    color: "text-amber-400 hover:text-amber-300",
-  },
-  {
-    title: "Analytics",
-    href: "/analytics",
-    icon: BarChart3,
-    color: "text-purple-400 hover:text-purple-300",
-  },
-  {
-    title: "Referral",
-    href: "/ref",
-    icon: FileText,
-    color: "text-cyan-400 hover:text-cyan-300",
-  },
-  {
-    title: "Settings",
-    href: "/settings",
-    icon: Settings,
-    color: "text-slate-400 hover:text-slate-300",
-  },
-]
-
 export function AdminSidebar() {
+  const { t } = useLang()
+  
+  const navItems: NavItem[] = [
+    {
+      title: t("navigation.dashboard"),
+      href: "/dashboard",
+      icon: LayoutDashboard,
+      color: "text-blue-400 hover:text-blue-300",
+    },
+    // {
+    //   title: "Users",
+    //   href: "/admin/users",
+    //   icon: Users,
+    //   color: "text-purple-400 hover:text-purple-300",
+    // },
+    {
+      title: t("navigation.listWallets"),
+      href: "/list-wallets",
+      icon: Wallet,
+      color: "text-emerald-400 hover:text-emerald-300",
+    },
+    {
+      title: t("navigation.categoriesToken"),
+      href: "/categories-token",
+      icon: Tag,
+      color: "text-amber-400 hover:text-amber-300",
+    },
+    {
+      title: t("navigation.analytics"),
+      href: "/analytics",
+      icon: BarChart3,
+      color: "text-purple-400 hover:text-purple-300",
+    },
+    {
+      title: t("navigation.referral"),
+      href: "/ref",
+      icon: FileText,
+      color: "text-cyan-400 hover:text-cyan-300",
+    },
+    {
+      title: t("navigation.settings"),
+      href: "/settings",
+      icon: Settings,
+      color: "text-slate-400 hover:text-slate-300",
+    },
+  ]
+
   const { data: myInfor} = useQuery({
     queryKey: ["my-infor"],
     queryFn: getMyInfor,
@@ -170,7 +173,7 @@ export function AdminSidebar() {
             {!isCollapsed && (
               <div className="flex flex-col">
                 <span className="text-sm font-medium text-slate-200">{myInfor?.username}</span>
-                <span className="text-xs text-slate-400 uppercase">Admin</span>
+                <span className="text-xs text-slate-400 uppercase">{t("navigation.admin")}</span>
               </div>
             )}
           </div>

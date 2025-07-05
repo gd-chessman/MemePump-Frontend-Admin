@@ -257,5 +257,27 @@
         "success": {
             "passwordChanged": "Password changed successfully"
         }
+    },
+    "navigation": {
+        "dashboard": "Dashboard",
+        "listWallets": "List Wallets",
+        "categoriesToken": "Categories Token",
+        "analytics": "Analytics",
+        "referral": "Referral",
+        "settings": "Settings",
+        "admin": "Admin"
+    },
+    "header": {
+        "accountInformation": "ACCOUNT INFORMATION",
+        "status": "Status",
+        "role": "Role",
+        "active": "Active",
+        "settings": "Settings",
+        "logOut": "Log Out"
+    },
+    "languageSelector": {
+        "currentLanguage": "Current language",
+        "label": "Search language...",
+        "noLanguageFound": "No language found."
     }
 }
