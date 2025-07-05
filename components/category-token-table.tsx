@@ -40,6 +40,7 @@ import { Label } from "@/components/ui/label"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { getCategoryToken, deleteCategoryToken, updateCategoryToken } from "@/services/api/CategorysTokenService"
 import { toast } from "react-toastify"
+import { useLang } from "@/lang/useLang"
 
 type CategoryToken = {
   slct_id: number
@@ -52,6 +53,7 @@ type CategoryToken = {
 }
 
 export function CategoryTokenTable({ searchQuery }: { searchQuery: string }) {
+  const { t } = useLang()
   const queryClient = useQueryClient()
   const { data: categoryToken, refetch: refetchCategoryToken } = useQuery({
     queryKey: ["category-token", searchQuery],
@@ -92,10 +94,10 @@ export function CategoryTokenTable({ searchQuery }: { searchQuery: string }) {
 
       // Invalidate and refetch the categories query
       await queryClient.invalidateQueries({ queryKey: ["category-token"] })
-      toast.success("Category updated successfully")
+      toast.success(t('categories-token.table.categoryUpdated'))
     } catch (error) {
       console.error("Error updating category:", error)
-      toast.error("Failed to update category")
+      toast.error(t('categories-token.table.updateFailed'))
       // Revert local state on error
       await queryClient.invalidateQueries({ queryKey: ["category-token"] })
     }
@@ -127,10 +129,10 @@ export function CategoryTokenTable({ searchQuery }: { searchQuery: string }) {
 
       // Invalidate and refetch the categories query
       await queryClient.invalidateQueries({ queryKey: ["category-token"] })
-      toast.success("Category prioritize updated successfully")
+      toast.success(t('categories-token.table.prioritizeUpdated'))
     } catch (error) {
       console.error("Error updating category prioritize:", error)
-      toast.error("Failed to update category prioritize")
+      toast.error(t('categories-token.table.prioritizeFailed'))
       // Revert local state on error
       await queryClient.invalidateQueries({ queryKey: ["category-token"] })
     }
@@ -162,10 +164,10 @@ export function CategoryTokenTable({ searchQuery }: { searchQuery: string }) {
 
       // Invalidate and refetch the categories query
       await queryClient.invalidateQueries({ queryKey: ["category-token"] })
-      toast.success("Category status updated successfully")
+      toast.success(t('categories-token.table.statusUpdated'))
     } catch (error) {
       console.error("Error updating category status:", error)
-      toast.error("Failed to update category status")
+      toast.error(t('categories-token.table.statusFailed'))
       // Revert local state on error
       await queryClient.invalidateQueries({ queryKey: ["category-token"] })
     }
@@ -177,10 +179,10 @@ export function CategoryTokenTable({ searchQuery }: { searchQuery: string }) {
       await deleteCategoryToken(id.toString())
       // Invalidate and refetch the categories query
       await queryClient.invalidateQueries({ queryKey: ["category-token"] })
-      toast.success("Category deleted successfully")
+      toast.success(t('categories-token.table.categoryDeleted'))
     } catch (error) {
       console.error("Error deleting category:", error)
-      toast.error("Failed to delete category")
+      toast.error(t('categories-token.table.deleteFailed'))
     }
   }
 
@@ -215,17 +217,17 @@ export function CategoryTokenTable({ searchQuery }: { searchQuery: string }) {
       await updateCategoryField(id, "slct_slug", formData.slug)
 
       setOpenEditModal(prev => ({ ...prev, [id]: false }))
-      toast.success("Category updated successfully")
+      toast.success(t('categories-token.table.categoryUpdated'))
     } catch (error) {
       console.error("Error updating category:", error)
-      toast.error("Failed to update category")
+      toast.error(t('categories-token.table.updateFailed'))
     }
   }
 
   const columns: ColumnDef<CategoryToken>[] = [
     {
       accessorKey: "slct_name",
-      header: "Category Name",
+      header: t('categories-token.table.name'),
       cell: ({ row }) => {
         const category = row.original
         return (
@@ -241,7 +243,7 @@ export function CategoryTokenTable({ searchQuery }: { searchQuery: string }) {
     },
     {
       accessorKey: "slct_slug",
-      header: "Slug",
+      header: t('categories-token.table.slug'),
       cell: ({ row }) => {
         const category = row.original
         return (
@@ -257,7 +259,7 @@ export function CategoryTokenTable({ searchQuery }: { searchQuery: string }) {
     },
     {
       accessorKey: "slct_prioritize",
-      header: "Prioritize",
+      header: t('categories-token.table.prioritize'),
       cell: ({ row }) => {
         const category = row.original
         const isPrioritized = category.slct_prioritize === "yes"
@@ -282,7 +284,7 @@ export function CategoryTokenTable({ searchQuery }: { searchQuery: string }) {
               ) : (
                 <XCircle className="h-3.5 w-3.5 text-slate-500" />
               )}
-              <span>{isPrioritized ? "Yes" : "No"}</span>
+              <span>{isPrioritized ? t('categories-token.table.yes') : t('categories-token.table.no')}</span>
             </Badge>
           </div>
         )
@@ -290,7 +292,7 @@ export function CategoryTokenTable({ searchQuery }: { searchQuery: string }) {
     },
     {
       accessorKey: "sltc_status",
-      header: "Status",
+      header: t('categories-token.table.status'),
       cell: ({ row }) => {
         const category = row.original
         const isActive = category.sltc_status === "active"
@@ -315,7 +317,7 @@ export function CategoryTokenTable({ searchQuery }: { searchQuery: string }) {
               ) : (
                 <EyeOff className="h-3.5 w-3.5 text-amber-500" />
               )}
-              <span>{isActive ? "Active" : "Hidden"}</span>
+              <span>{isActive ? t('categories-token.table.active') : t('categories-token.table.hidden')}</span>
             </Badge>
           </div>
         )
@@ -330,7 +332,7 @@ export function CategoryTokenTable({ searchQuery }: { searchQuery: string }) {
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
             className="p-0 hover:bg-transparent"
           >
-            Created Date
+            {t('categories-token.table.createdAt')}
             <ArrowUpDown className="ml-2 h-4 w-4" />
           </Button>
         )
@@ -372,7 +374,7 @@ export function CategoryTokenTable({ searchQuery }: { searchQuery: string }) {
               onClick={() => setOpenEditModal(prev => ({ ...prev, [category.slct_id.toString()]: true }))}
             >
               <Pencil className="h-4 w-4" />
-              <span className="sr-only">Edit</span>
+              <span className="sr-only">{t('categories-token.table.edit')}</span>
             </Button>
 
             <Button
@@ -382,22 +384,22 @@ export function CategoryTokenTable({ searchQuery }: { searchQuery: string }) {
               onClick={() => setOpenAlert((prevState) => ({ ...prevState, [category.slct_id.toString()]: true }))}
             >
               <Trash className="h-4 w-4" />
-              <span className="sr-only">Delete</span>
+              <span className="sr-only">{t('categories-token.table.delete')}</span>
             </Button>
 
             {/* Edit Modal */}
             <Dialog open={openEdit} onOpenChange={(open) => setOpenEditModal(prev => ({ ...prev, [category.slct_id.toString()]: open }))}>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>Edit Category</DialogTitle>
+                  <DialogTitle>{t('categories-token.table.editCategory')}</DialogTitle>
                   <DialogDescription>
-                    Make changes to the category details here. Click save when you're done.
+                    {t('categories-token.table.editDescription')}
                   </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
                   <div className="grid grid-cols-4 items-center gap-4">
                     <Label htmlFor="name" className="text-right">
-                      Name
+                      {t('categories-token.table.nameLabel')}
                     </Label>
                     <Input
                       id="name"
@@ -408,7 +410,7 @@ export function CategoryTokenTable({ searchQuery }: { searchQuery: string }) {
                   </div>
                   <div className="grid grid-cols-4 items-center gap-4">
                     <Label htmlFor="slug" className="text-right">
-                      Slug
+                      {t('categories-token.table.slugLabel')}
                     </Label>
                     <Input
                       id="slug"
@@ -420,10 +422,10 @@ export function CategoryTokenTable({ searchQuery }: { searchQuery: string }) {
                 </div>
                 <DialogFooter>
                   <Button variant="outline" onClick={() => setOpenEditModal(prev => ({ ...prev, [category.slct_id.toString()]: false }))}>
-                    Cancel
+                    {t('categories-token.table.cancel')}
                   </Button>
                   <Button onClick={() => handleEditSubmit(category.slct_id)}>
-                    Save changes
+                    {t('categories-token.table.save')}
                   </Button>
                 </DialogFooter>
               </DialogContent>
@@ -435,16 +437,16 @@ export function CategoryTokenTable({ searchQuery }: { searchQuery: string }) {
             >
               <AlertDialogContent>
                 <AlertDialogHeader>
-                  <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                  <AlertDialogTitle>{t('categories-token.table.deleteConfirmTitle')}</AlertDialogTitle>
                   <AlertDialogDescription>
-                    This will permanently delete the category "{category.slct_name}". This action cannot be undone.
+                    {t('categories-token.table.deleteConfirmDescription')}
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                   <AlertDialogCancel
                     onClick={() => setOpenAlert((prevState) => ({ ...prevState, [category.slct_id.toString()]: false }))}
                   >
-                    Cancel
+                    {t('categories-token.table.cancel')}
                   </AlertDialogCancel>
                   <AlertDialogAction
                     className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
@@ -453,7 +455,7 @@ export function CategoryTokenTable({ searchQuery }: { searchQuery: string }) {
                       setOpenAlert((prevState) => ({ ...prevState, [category.slct_id.toString()]: false }))
                     }}
                   >
-                    Delete
+                    {t('categories-token.table.delete')}
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
@@ -514,7 +516,7 @@ export function CategoryTokenTable({ searchQuery }: { searchQuery: string }) {
               ) : (
                 <TableRow>
                   <TableCell colSpan={columns.length} className="h-24 text-center">
-                    No results.
+                    {t('categories-token.table.noData')}
                   </TableCell>
                 </TableRow>
               )}

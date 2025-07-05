@@ -17,8 +17,10 @@ import { Plus } from "lucide-react"
 import { createCategoryToken } from "@/services/api/CategorysTokenService"
 import { useQueryClient } from "@tanstack/react-query"
 import { toast } from "react-toastify"
+import { useLang } from "@/lang/useLang"
 
 export function AddCategoryDialog() {
+  const { t } = useLang()
   const queryClient = useQueryClient()
   const [open, setOpen] = useState(false)
   const [name, setName] = useState("")
@@ -37,7 +39,7 @@ export function AddCategoryDialog() {
       
       // Invalidate and refetch the categories query
       await queryClient.invalidateQueries({ queryKey: ["category-token"] })
-      toast.success("Category created successfully")
+      toast.success(t('categories-token.table.categoryAdded'))
       
       // Reset form and close dialog
       setName("")
@@ -45,7 +47,7 @@ export function AddCategoryDialog() {
       setOpen(false)
     } catch (error) {
       console.error("Error creating category:", error)
-      toast.error("Failed to create category")
+      toast.error(t('categories-token.table.addFailed'))
     } finally {
       setIsSubmitting(false)
     }
@@ -55,20 +57,20 @@ export function AddCategoryDialog() {
     <>
       <Button className="flex items-center gap-1" onClick={() => setOpen(true)}>
         <Plus className="h-4 w-4" />
-        <span>Add New</span>
+        <span>{t('categories-token.table.addNew')}</span>
       </Button>
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="sm:max-w-[425px]">
           <form onSubmit={handleSubmit}>
             <DialogHeader>
-              <DialogTitle>Add New Category</DialogTitle>
-              <DialogDescription>Create a new token category.</DialogDescription>
+              <DialogTitle>{t('categories-token.table.addCategory')}</DialogTitle>
+              <DialogDescription>{t('categories-token.table.addDescription')}</DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="name" className="text-right">
-                  Name
+                  {t('categories-token.table.nameLabel')}
                 </Label>
                 <Input
                   id="name"
@@ -81,7 +83,7 @@ export function AddCategoryDialog() {
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="slug" className="text-right">
-                  Slug
+                  {t('categories-token.table.slugLabel')}
                 </Label>
                 <Input
                   id="slug"
@@ -95,7 +97,7 @@ export function AddCategoryDialog() {
             </div>
             <DialogFooter>
               <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? "Saving..." : "Save Category"}
+                {isSubmitting ? t('categories-token.table.loading') : t('categories-token.table.save')}
               </Button>
             </DialogFooter>
           </form>

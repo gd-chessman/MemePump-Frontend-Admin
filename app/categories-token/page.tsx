@@ -7,8 +7,10 @@ import { AddCategoryDialog } from "@/components/add-category-dialog"
 import { useQuery } from "@tanstack/react-query"
 import { getCategoryToken } from "@/services/api/CategorysTokenService"
 import { useState } from "react"
+import { useLang } from "@/lang/useLang"
 
 export default function CategoriesTokenPage() {
+  const { t } = useLang()
   const [searchQuery, setSearchQuery] = useState("");
 
   const { data: categoryToken, refetch: refetchCategoryToken } = useQuery({
@@ -18,16 +20,16 @@ export default function CategoriesTokenPage() {
   return (
     <div className="flex flex-col space-y-6">
       <div className="flex flex-col space-y-2">
-        <h2 className="text-3xl font-bold tracking-tight">Categories Token</h2>
-        <p className="text-muted-foreground">Manage token categories in your system.</p>
+        <h2 className="text-3xl font-bold tracking-tight">{t('categories-token.pageTitle')}</h2>
+        <p className="text-muted-foreground">{t('categories-token.description')}</p>
       </div>
 
       <Card className="dashboard-card">
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle>Categories Token List</CardTitle>
-              <CardDescription>A list of all token categories in your system.</CardDescription>
+              <CardTitle>{t('categories-token.cardTitle')}</CardTitle>
+              <CardDescription>{t('categories-token.cardDescription')}</CardDescription>
             </div>
             <div>
               <AddCategoryDialog />
@@ -40,7 +42,7 @@ export default function CategoriesTokenPage() {
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input 
                 type="search" 
-                placeholder="Search categories..." 
+                placeholder={t('categories-token.searchPlaceholder')} 
                 className="pl-8 w-full md:max-w-sm"
                 value={searchQuery}
                 onChange={(e) => {
