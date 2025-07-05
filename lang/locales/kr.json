@@ -1,0 +1,20 @@
+{
+    "dashboard": {
+        "title": "대시보드"
+    },
+    "list-wallets": {
+        "title": "지갑 목록"
+    },
+    "categories-token": {
+        "title": "토큰 분류"
+    },
+    "analytics": {
+        "title": "분석"
+    },
+    "ref": {
+        "title": "추천"
+    },
+    "settings": {
+        "title": "설정"
+    }
+}

@@ -1,0 +1,20 @@
+{
+    "dashboard": {
+        "title": "Bảng điều khiển"
+    },
+    "list-wallets": {
+        "title": "Danh sách ví"
+    },
+    "categories-token": {
+        "title": "Phân loại token"
+    },
+    "analytics": {
+        "title": "Phân tích"
+    },
+    "ref": {
+        "title": "Giới thiệu"
+    },
+    "settings": {
+        "title": "Cài đặt"
+    }
+}

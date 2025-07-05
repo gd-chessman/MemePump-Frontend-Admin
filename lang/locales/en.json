@@ -1,0 +1,20 @@
+{
+    "dashboard": {
+        "title": "Dashboard"
+    },
+    "list-wallets": {
+        "title": "List Wallets"
+    },
+    "categories-token": {
+        "title": "Categories Token"
+    },
+    "analytics": {
+        "title": "Analytics"
+    },
+    "ref": {
+        "title": "Ref"
+    },
+    "settings": {
+        "title": "Settings"
+    }
+}
