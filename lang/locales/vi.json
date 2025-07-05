@@ -51,7 +51,39 @@
         }
     },
     "list-wallets": {
-        "title": "Danh sách ví"
+        "title": "Danh sách ví",
+        "pageTitle": "Danh sách ví",
+        "description": "Quản lý ví người dùng và quyền ủy quyền của họ.",
+        "cardTitle": "Danh sách ví",
+        "cardDescription": "Xem và quản lý ví người dùng và tài khoản liên kết.",
+        "refresh": "Làm mới",
+        "searchPlaceholder": "Tìm kiếm theo ID Ví hoặc Biệt danh ...",
+        "table": {
+            "walletId": "ID Ví",
+            "nickname": "Biệt danh",
+            "authType": "Loại xác thực",
+            "stream": "Luồng",
+            "country": "Quốc gia",
+            "loading": "Đang tải...",
+            "noData": "Không có dữ liệu",
+            "master": "Bậc thầy",
+            "member": "Thành viên",
+            "na": "-",
+            "addressCopied": "Đã sao chép địa chỉ vào clipboard",
+            "copyFailed": "Sao chép địa chỉ thất bại",
+            "auths": "Quyền ủy quyền",
+            "authId": "ID Ủy quyền",
+            "userId": "ID Người dùng",
+            "type": "Loại",
+            "name": "Tên",
+            "walletDetails": "Chi tiết ví",
+            "solanaAddress": "Địa chỉ Solana:",
+            "ethAddress": "Địa chỉ ETH:",
+            "status": "Trạng thái:",
+            "active": "Hoạt động",
+            "inactive": "Không hoạt động",
+            "noResults": "Không có kết quả."
+        }
     },
     "categories-token": {
         "title": "Phân loại token"

@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation"
 import { useQuery } from "@tanstack/react-query"
 import { getMyInfor } from "@/services/api/UserAdminService"
 import { logout } from "@/services/api/AuthService"
+import { LanguageSelector } from "./language-selector"
 
 export function AdminHeader() {
   const { data: myInfor} = useQuery({
@@ -58,6 +59,7 @@ export function AdminHeader() {
     <div className="sticky top-0 z-40 w-full backdrop-blur-xl border-b border-slate-700/50 shadow">
       <div className="flex h-16 items-center justify-end px-6 gap-4">
         <div className="flex items-center gap-4">
+          <LanguageSelector />
           {/* Custom Avatar Dropdown */}
           <div className="relative">
             <Button
@@ -103,6 +105,7 @@ export function AdminHeader() {
                 </div>
 
                 <div className="h-px bg-slate-700/50 my-1"></div>
+
 
                 <button
                   className="flex w-full items-center px-3 py-2 text-sm rounded-md text-slate-300 hover:bg-slate-700/50 hover:text-cyan-200 transition-colors"

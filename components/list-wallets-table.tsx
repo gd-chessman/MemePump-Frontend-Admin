@@ -22,6 +22,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { getListWallets, updateListWalletsAuth } from "@/services/api/ListWalletsService"
 import { truncateString } from "@/utils/format"
 import { toast } from "react-toastify"
+import { useLang } from "@/lang/useLang"
 
 // Define types based on the provided JSON structure
 interface WalletAuth {
@@ -53,6 +54,7 @@ interface UserWalletResponse {
 
 
 export function ListWalletsTable({ searchQuery }: { searchQuery: string }) {
+  const { t } = useLang()
   const queryClient = useQueryClient()
   const { data: listWallets, isLoading } = useQuery({
     queryKey: ["list-wallets", searchQuery],
@@ -86,10 +88,10 @@ export function ListWalletsTable({ searchQuery }: { searchQuery: string }) {
     try {
       await navigator.clipboard.writeText(text)
       setCopiedAddress(text)
-      toast.success("Address copied to clipboard")
+      toast.success(t('list-wallets.table.addressCopied'))
       setTimeout(() => setCopiedAddress(null), 2000)
     } catch (err) {
-      toast.error("Failed to copy address")
+      toast.error(t('list-wallets.table.copyFailed'))
     }
   }
 
@@ -110,29 +112,29 @@ export function ListWalletsTable({ searchQuery }: { searchQuery: string }) {
     },
     {
       accessorKey: "wallet_id",
-      header: "Wallet ID",
+      header: t('list-wallets.table.walletId'),
       cell: ({ row }) => <div className="font-medium">{row.getValue("wallet_id")}</div>,
     },
     {
       accessorKey: "wallet_nick_name",
-      header: "Nickname",
-      cell: ({ row }) => <div>{row.getValue("wallet_nick_name") || "N/A"}</div>,
+      header: t('list-wallets.table.nickname'),
+      cell: ({ row }) => <div>{row.getValue("wallet_nick_name") || t('list-wallets.table.na')}</div>,
     },
     {
       accessorKey: "wallet_auth",
-      header: "Auth Type",
+      header: t('list-wallets.table.authType'),
       cell: ({ row }) => {
         const authType = row.getValue("wallet_auth") as string
 
         return (
           <div className="flex">
             <Select value={authType} onValueChange={(value) => handleUpdateAuth(row.original.wallet_id, value)}>
-              <SelectTrigger className="w-24 h-8 text-xs bg-slate-800 border-slate-600 text-slate-200">
+              <SelectTrigger className="w-28 h-8 text-xs bg-slate-800 border-slate-600 text-slate-200">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="master">Master</SelectItem>
-                <SelectItem value="member">Member</SelectItem>
+                <SelectItem value="master">{t('list-wallets.table.master')}</SelectItem>
+                <SelectItem value="member">{t('list-wallets.table.member')}</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -141,7 +143,7 @@ export function ListWalletsTable({ searchQuery }: { searchQuery: string }) {
     },
     {
       accessorKey: "wallet_stream",
-      header: "Stream",
+      header: t('list-wallets.table.stream'),
       cell: ({ row }) => {
         const stream = row.getValue("wallet_stream") as string | null
         return stream ? (
@@ -152,14 +154,14 @@ export function ListWalletsTable({ searchQuery }: { searchQuery: string }) {
             {stream}
           </Badge>
         ) : (
-          "N/A"
+          t('list-wallets.table.na')
         )
       },
     },
     {
       accessorKey: "wallet_country",
-      header: "Country",
-      cell: ({ row }) => <div>{row.getValue("wallet_country") || "N/A"}</div>,
+      header: t('list-wallets.table.country'),
+      cell: ({ row }) => <div>{row.getValue("wallet_country") || t('list-wallets.table.na')}</div>,
     },
   ]
 
@@ -184,7 +186,7 @@ export function ListWalletsTable({ searchQuery }: { searchQuery: string }) {
   })
 
   if (isLoading) {
-    return <div>Loading...</div>
+    return <div>{t('list-wallets.table.loading')}</div>
   }
 
   return (
@@ -218,13 +220,13 @@ export function ListWalletsTable({ searchQuery }: { searchQuery: string }) {
                       <TableRow>
                         <TableCell colSpan={columns.length} className="p-0">
                           <div className="p-4 bg-muted/30">
-                            <h4 className="text-sm font-medium mb-2">Wallet Details</h4>
+                            <h4 className="text-sm font-medium mb-2">{t('list-wallets.table.walletDetails')}</h4>
                             <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
                               <Card className="overflow-hidden">
                                 <CardContent className="p-4">
                                   <div className="space-y-2">
                                     <div>
-                                      <span className="text-sm font-medium">Solana Address:</span>
+                                      <span className="text-sm font-medium">{t('list-wallets.table.solanaAddress')}</span>
                                       <div className="flex items-center gap-2">
                                         <p className="text-sm text-muted-foreground break-all">{truncateString(row.original.wallet_solana_address, 14)}</p>
                                         <Button
@@ -242,7 +244,7 @@ export function ListWalletsTable({ searchQuery }: { searchQuery: string }) {
                                       </div>
                                     </div>
                                     <div>
-                                      <span className="text-sm font-medium">ETH Address:</span>
+                                      <span className="text-sm font-medium">{t('list-wallets.table.ethAddress')}</span>
                                       <div className="flex items-center gap-2">
                                         <p className="text-sm text-muted-foreground break-all">{truncateString(row.original.wallet_eth_address, 14)}</p>
                                         <Button
@@ -260,7 +262,7 @@ export function ListWalletsTable({ searchQuery }: { searchQuery: string }) {
                                       </div>
                                     </div>
                                     <div>
-                                      <span className="text-sm font-medium">Status:</span>
+                                      <span className="text-sm font-medium">{t('list-wallets.table.status')}</span>
                                       <Badge
                                         variant="outline"
                                         className={`ml-2 ${
@@ -269,7 +271,7 @@ export function ListWalletsTable({ searchQuery }: { searchQuery: string }) {
                                             : "bg-red-50 text-red-600 border-red-200 dark:bg-red-950/30 dark:text-red-400 dark:border-red-800/50"
                                         }`}
                                       >
-                                        {row.original.wallet_status ? "Active" : "Inactive"}
+                                        {row.original.wallet_status ? t('list-wallets.table.active') : t('list-wallets.table.inactive')}
                                       </Badge>
                                     </div>
                                   </div>
@@ -285,7 +287,7 @@ export function ListWalletsTable({ searchQuery }: { searchQuery: string }) {
               ) : (
                 <TableRow>
                   <TableCell colSpan={columns.length} className="h-24 text-center">
-                    No results.
+                    {t('list-wallets.table.noResults')}
                   </TableCell>
                 </TableRow>
               )}

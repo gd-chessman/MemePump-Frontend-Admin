@@ -8,7 +8,9 @@ import { Search, RefreshCw } from "lucide-react"
 import { getListWallets } from "@/services/api/ListWalletsService"
 import { useQuery } from "@tanstack/react-query"
 import { useState } from "react"
+import { useLang } from "@/lang/useLang"
 export default function UserWalletsPage() {
+  const { t } = useLang()
   const [searchQuery, setSearchQuery] = useState('')
   const [isRefreshing, setIsRefreshing] = useState(false)
   const { data: listWallets, refetch: refetchListWallets } = useQuery({
@@ -27,20 +29,20 @@ export default function UserWalletsPage() {
   return (
     <div className="flex flex-col space-y-6">
       <div className="flex flex-col space-y-2">
-        <h2 className="text-3xl font-bold tracking-tight">List Wallets</h2>
-        <p className="text-muted-foreground">Manage user wallets and their authorizations.</p>
+        <h2 className="text-3xl font-bold tracking-tight">{t('list-wallets.pageTitle')}</h2>
+        <p className="text-muted-foreground">{t('list-wallets.description')}</p>
       </div>
 
       <Card className="dashboard-card">
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle>List Wallets</CardTitle>
-              <CardDescription>View and manage user wallets and their associated accounts.</CardDescription>
+              <CardTitle>{t('list-wallets.cardTitle')}</CardTitle>
+              <CardDescription>{t('list-wallets.cardDescription')}</CardDescription>
             </div>
             <Button variant="outline" size="sm" className="flex items-center gap-1" onClick={handleRefresh}>
               <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
-              <span>Refresh</span>
+              <span>{t('list-wallets.refresh')}</span>
             </Button>
           </div>
         </CardHeader>
@@ -48,7 +50,7 @@ export default function UserWalletsPage() {
           <div className="flex items-center gap-2 mb-4">
             <div className="relative flex-1">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input type="search" placeholder="Search by Wallet ID or Nickname ..." className="pl-8 w-full md:max-w-sm"
+              <Input type="search" placeholder={t('list-wallets.searchPlaceholder')} className="pl-8 w-full md:max-w-sm"
                 value={searchQuery}
                 onChange={(e) => {
                   setSearchQuery(e.target.value);

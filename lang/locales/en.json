@@ -51,7 +51,39 @@
         }
     },
     "list-wallets": {
-        "title": "List Wallets"
+        "title": "List Wallets",
+        "pageTitle": "List Wallets",
+        "description": "Manage user wallets and their authorizations.",
+        "cardTitle": "List Wallets",
+        "cardDescription": "View and manage user wallets and their associated accounts.",
+        "refresh": "Refresh",
+        "searchPlaceholder": "Search by Wallet ID or Nickname ...",
+        "table": {
+            "walletId": "Wallet ID",
+            "nickname": "Nickname",
+            "authType": "Auth Type",
+            "stream": "Stream",
+            "country": "Country",
+            "loading": "Loading...",
+            "noData": "No data available",
+            "master": "Master",
+            "member": "Member",
+            "na": "-",
+            "addressCopied": "Address copied to clipboard",
+            "copyFailed": "Failed to copy address",
+            "auths": "Authorizations",
+            "authId": "Auth ID",
+            "userId": "User ID",
+            "type": "Type",
+            "name": "Name",
+            "walletDetails": "Wallet Details",
+            "solanaAddress": "Solana Address:",
+            "ethAddress": "ETH Address:",
+            "status": "Status:",
+            "active": "Active",
+            "inactive": "Inactive",
+            "noResults": "No results."
+        }
     },
     "categories-token": {
         "title": "Categories Token"

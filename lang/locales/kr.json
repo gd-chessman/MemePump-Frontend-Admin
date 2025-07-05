@@ -51,7 +51,39 @@
         }
     },
     "list-wallets": {
-        "title": "지갑 목록"
+        "title": "지갑 목록",
+        "pageTitle": "지갑 목록",
+        "description": "사용자 지갑과 권한을 관리합니다.",
+        "cardTitle": "지갑 목록",
+        "cardDescription": "사용자 지갑과 관련 계정을 보고 관리합니다.",
+        "refresh": "새로고침",
+        "searchPlaceholder": "지갑 ID 또는 닉네임으로 검색 ...",
+        "table": {
+            "walletId": "지갑 ID",
+            "nickname": "닉네임",
+            "authType": "인증 유형",
+            "stream": "스트림",
+            "country": "국가",
+            "loading": "로딩 중...",
+            "noData": "데이터 없음",
+            "master": "마스터",
+            "member": "멤버",
+            "na": "-",
+            "addressCopied": "주소가 클립보드에 복사되었습니다",
+            "copyFailed": "주소 복사 실패",
+            "auths": "권한",
+            "authId": "권한 ID",
+            "userId": "사용자 ID",
+            "type": "유형",
+            "name": "이름",
+            "walletDetails": "지갑 세부정보",
+            "solanaAddress": "솔라나 주소:",
+            "ethAddress": "ETH 주소:",
+            "status": "상태:",
+            "active": "활성",
+            "inactive": "비활성",
+            "noResults": "결과 없음."
+        }
     },
     "categories-token": {
         "title": "토큰 분류"
