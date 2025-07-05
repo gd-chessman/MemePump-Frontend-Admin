@@ -37,7 +37,7 @@ interface NavItem {
 const navItems: NavItem[] = [
   {
     title: "Dashboard",
-    href: "/admin",
+    href: "/dashboard",
     icon: LayoutDashboard,
     color: "text-blue-400 hover:text-blue-300",
   },
@@ -49,31 +49,31 @@ const navItems: NavItem[] = [
   // },
   {
     title: "List Wallets",
-    href: "/admin/list-wallets",
+    href: "/list-wallets",
     icon: Wallet,
     color: "text-emerald-400 hover:text-emerald-300",
   },
   {
     title: "Categorys Token",
-    href: "/admin/categories-token",
+    href: "/categories-token",
     icon: Tag,
     color: "text-amber-400 hover:text-amber-300",
   },
   {
     title: "Analytics",
-    href: "/admin/analytics",
+    href: "/analytics",
     icon: BarChart3,
     color: "text-purple-400 hover:text-purple-300",
   },
   {
     title: "Referral",
-    href: "/admin/ref",
+    href: "/ref",
     icon: FileText,
     color: "text-cyan-400 hover:text-cyan-300",
   },
   {
     title: "Settings",
-    href: "/admin/settings",
+    href: "/settings",
     icon: Settings,
     color: "text-slate-400 hover:text-slate-300",
   },
