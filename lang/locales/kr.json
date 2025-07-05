@@ -1,6 +1,54 @@
 {
     "dashboard": {
-        "title": "대시보드"
+        "title": "대시보드",
+        "hello": "안녕하세요, 관리자님!",
+        "overview": "이번 달 시스템 성능 개요입니다.",
+        "totalRevenue": "총 수익",
+        "activeUsers": "활성 사용자",
+        "onlineNow": "현재 온라인",
+        "fromLastMonth": "지난달 대비",
+        "tabs": {
+            "overview": "개요",
+            "analytics": "분석",
+            "reports": "보고서"
+        },
+        "revenueOverview": {
+            "title": "수익 개요",
+            "description": "올해 월별 수익 차트"
+        },
+        "userDistribution": {
+            "title": "사용자 분포",
+            "description": "현재 사용자 유형 분포",
+            "masterUsers": "마스터 사용자",
+            "memberUsers": "멤버 사용자",
+            "anonymousUsers": "익명 사용자"
+        },
+        "trafficAnalysis": {
+            "title": "트래픽 분석",
+            "description": "기기 유형 및 브라우저별 실시간 트래픽",
+            "area": "영역",
+            "line": "선"
+        },
+        "deviceDistribution": {
+            "title": "기기 분포",
+            "description": "현재 기기 유형 분포"
+        },
+        "activeConnections": {
+            "title": "활성 연결",
+            "description": "현재 활성 사용자 연결",
+            "clientId": "클라이언트 ID",
+            "walletId": "지갑 ID",
+            "device": "기기",
+            "lastActive": "마지막 활동"
+        },
+        "reports": {
+            "title": "보고서",
+            "description": "여기서 보고서를 보고 생성하세요.",
+            "revenueReport": "수익 보고서",
+            "userActivityReport": "사용자 활동 보고서",
+            "systemPerformanceReport": "시스템 성능 보고서",
+            "viewDetails": "세부 정보 보기 및 보고서 내보내기"
+        }
     },
     "list-wallets": {
         "title": "지갑 목록"

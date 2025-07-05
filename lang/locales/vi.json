@@ -1,6 +1,54 @@
 {
     "dashboard": {
-        "title": "Bảng điều khiển"
+        "title": "Bảng điều khiển",
+        "hello": "Xin chào, Admin!",
+        "overview": "Đây là tổng quan hiệu suất hệ thống của bạn trong tháng này.",
+        "totalRevenue": "Tổng doanh thu",
+        "activeUsers": "Người dùng hoạt động",
+        "onlineNow": "Đang trực tuyến",
+        "fromLastMonth": "so với tháng trước",
+        "tabs": {
+            "overview": "Tổng quan",
+            "analytics": "Phân tích",
+            "reports": "Báo cáo"
+        },
+        "revenueOverview": {
+            "title": "Tổng quan doanh thu",
+            "description": "Biểu đồ doanh thu hàng tháng cho năm hiện tại"
+        },
+        "userDistribution": {
+            "title": "Phân bố người dùng",
+            "description": "Phân bố loại người dùng hiện tại",
+            "masterUsers": "Người dùng Master",
+            "memberUsers": "Người dùng Member",
+            "anonymousUsers": "Người dùng ẩn danh"
+        },
+        "trafficAnalysis": {
+            "title": "Phân tích lưu lượng",
+            "description": "Lưu lượng thời gian thực theo loại thiết bị và trình duyệt",
+            "area": "Vùng",
+            "line": "Đường"
+        },
+        "deviceDistribution": {
+            "title": "Phân bố thiết bị",
+            "description": "Phân bố loại thiết bị hiện tại"
+        },
+        "activeConnections": {
+            "title": "Kết nối hoạt động",
+            "description": "Các kết nối người dùng hoạt động hiện tại",
+            "clientId": "ID Khách hàng",
+            "walletId": "ID Ví",
+            "device": "Thiết bị",
+            "lastActive": "Hoạt động cuối"
+        },
+        "reports": {
+            "title": "Báo cáo",
+            "description": "Xem và tạo báo cáo tại đây.",
+            "revenueReport": "Báo cáo doanh thu",
+            "userActivityReport": "Báo cáo hoạt động người dùng",
+            "systemPerformanceReport": "Báo cáo hiệu suất hệ thống",
+            "viewDetails": "Xem chi tiết và xuất báo cáo"
+        }
     },
     "list-wallets": {
         "title": "Danh sách ví"

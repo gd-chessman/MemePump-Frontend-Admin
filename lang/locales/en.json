@@ -1,6 +1,54 @@
 {
     "dashboard": {
-        "title": "Dashboard"
+        "title": "Dashboard",
+        "hello": "Hello, Admin!",
+        "overview": "Here's an overview of your system's performance this month.",
+        "totalRevenue": "Total Revenue",
+        "activeUsers": "Active Users",
+        "onlineNow": "Online now",
+        "fromLastMonth": "from last month",
+        "tabs": {
+            "overview": "Overview",
+            "analytics": "Analytics",
+            "reports": "Reports"
+        },
+        "revenueOverview": {
+            "title": "Revenue Overview",
+            "description": "Monthly revenue chart for the current year"
+        },
+        "userDistribution": {
+            "title": "User Distribution",
+            "description": "Current user type distribution",
+            "masterUsers": "Master Users",
+            "memberUsers": "Member Users",
+            "anonymousUsers": "Anonymous Users"
+        },
+        "trafficAnalysis": {
+            "title": "Traffic Analysis",
+            "description": "Real-time traffic by device type and browser",
+            "area": "Area",
+            "line": "Line"
+        },
+        "deviceDistribution": {
+            "title": "Device Distribution",
+            "description": "Current device type distribution"
+        },
+        "activeConnections": {
+            "title": "Active Connections",
+            "description": "Current active user connections",
+            "clientId": "Client ID",
+            "walletId": "Wallet ID",
+            "device": "Device",
+            "lastActive": "Last Active"
+        },
+        "reports": {
+            "title": "Reports",
+            "description": "View and create reports here.",
+            "revenueReport": "Revenue Report",
+            "userActivityReport": "User Activity Report",
+            "systemPerformanceReport": "System Performance Report",
+            "viewDetails": "View details and export report"
+        }
     },
     "list-wallets": {
         "title": "List Wallets"

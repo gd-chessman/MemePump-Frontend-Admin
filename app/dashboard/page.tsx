@@ -6,6 +6,7 @@ import { ArrowUpRight, Users, CreditCard, Activity, Monitor, Smartphone, Tablet 
 import { useEffect, useState } from "react"
 import { io } from "socket.io-client"
 import { Badge } from "@/components/ui/badge"
+import { useLang } from "@/lang/useLang"
 
 import {
   Area,
@@ -54,6 +55,7 @@ interface AnalyticsData {
 }
 
 export default function AdminDashboard() {
+  const { t } = useLang()
   const [analyticsData, setAnalyticsData] = useState<AnalyticsData>({
     total: 0,
     master: 0,
@@ -122,19 +124,19 @@ export default function AdminDashboard() {
   return (
     <div className="flex flex-col space-y-6">
       <div className="flex flex-col space-y-2">
-        <h2 className="text-3xl font-bold tracking-tight">Hello, Admin!</h2>
-        <p className="text-muted-foreground">Here's an overview of your system's performance this month.</p>
+        <h2 className="text-3xl font-bold tracking-tight">{t('dashboard.hello')}</h2>
+        <p className="text-muted-foreground">{t('dashboard.overview')}</p>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <Card className="stat-card">
           <div className="flex justify-between">
             <div>
-              <p className="stat-label">Total Revenue</p>
+              <p className="stat-label">{t('dashboard.totalRevenue')}</p>
               <p className="stat-value">$45,231.89</p>
               <p className="stat-change stat-change-positive flex items-center gap-1">
                 <ArrowUpRight className="h-3 w-3" />
-                <span>20.1% from last month</span>
+                <span>20.1% {t('dashboard.fromLastMonth')}</span>
               </p>
             </div>
             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
@@ -145,11 +147,11 @@ export default function AdminDashboard() {
         <Card className="stat-card">
           <div className="flex justify-between">
             <div>
-              <p className="stat-label">Active Users</p>
+              <p className="stat-label">{t('dashboard.activeUsers')}</p>
               <p className="stat-value">{analyticsData.total}</p>
               <p className="stat-change stat-change-positive flex items-center gap-1">
                 <Activity className="h-3 w-3" />
-                <span>Online now</span>
+                <span>{t('dashboard.onlineNow')}</span>
               </p>
             </div>
             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-purple-500/10">
@@ -160,7 +162,7 @@ export default function AdminDashboard() {
         <Card className="stat-card">
           <div className="flex justify-between">
             <div>
-              <p className="stat-label">Device Distribution</p>
+              <p className="stat-label">{t('dashboard.deviceDistribution.title')}</p>
               <div className="flex gap-2 mt-2">
                 {Object.entries(analyticsData.devices.deviceTypes).map(([type, count]) => (
                   <Badge key={type} variant="secondary" className="flex items-center gap-1">
@@ -179,16 +181,16 @@ export default function AdminDashboard() {
 
       <Tabs defaultValue="overview" className="space-y-4">
         <TabsList className="grid w-full grid-cols-3 lg:w-auto">
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="analytics">Analytics</TabsTrigger>
-          <TabsTrigger value="reports">Reports</TabsTrigger>
+          <TabsTrigger value="overview">{t('dashboard.tabs.overview')}</TabsTrigger>
+          <TabsTrigger value="analytics">{t('dashboard.tabs.analytics')}</TabsTrigger>
+          <TabsTrigger value="reports">{t('dashboard.tabs.reports')}</TabsTrigger>
         </TabsList>
         <TabsContent value="overview" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
             <Card className="col-span-4 dashboard-card">
               <CardHeader className="pb-2">
-                <CardTitle>Revenue Overview</CardTitle>
-                <CardDescription>Monthly revenue chart for the current year</CardDescription>
+                <CardTitle>{t('dashboard.revenueOverview.title')}</CardTitle>
+                <CardDescription>{t('dashboard.revenueOverview.description')}</CardDescription>
               </CardHeader>
               <CardContent className="pl-2">
                 <Overview />
@@ -196,21 +198,21 @@ export default function AdminDashboard() {
             </Card>
             <Card className="col-span-4 lg:col-span-3 dashboard-card">
               <CardHeader className="pb-2">
-                <CardTitle>User Distribution</CardTitle>
-                <CardDescription>Current user type distribution</CardDescription>
+                <CardTitle>{t('dashboard.userDistribution.title')}</CardTitle>
+                <CardDescription>{t('dashboard.userDistribution.description')}</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   <div className="flex justify-between items-center">
-                    <span className="text-sm">Master Users</span>
+                    <span className="text-sm">{t('dashboard.userDistribution.masterUsers')}</span>
                     <Badge variant="secondary">{analyticsData.master}</Badge>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-sm">Member Users</span>
+                    <span className="text-sm">{t('dashboard.userDistribution.memberUsers')}</span>
                     <Badge variant="secondary">{analyticsData.member}</Badge>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-sm">Anonymous Users</span>
+                    <span className="text-sm">{t('dashboard.userDistribution.anonymousUsers')}</span>
                     <Badge variant="secondary">{analyticsData.anonymous}</Badge>
                   </div>
                 </div>
@@ -222,14 +224,14 @@ export default function AdminDashboard() {
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
             <Card className="col-span-4 dashboard-card">
               <CardHeader className="pb-2">
-                <CardTitle>Traffic Analysis</CardTitle>
-                <CardDescription>Real-time traffic by device type and browser</CardDescription>
+                <CardTitle>{t('dashboard.trafficAnalysis.title')}</CardTitle>
+                <CardDescription>{t('dashboard.trafficAnalysis.description')}</CardDescription>
               </CardHeader>
               <CardContent>
                 <Tabs defaultValue="area">
                   <TabsList className="mb-4">
-                    <TabsTrigger value="area">Area</TabsTrigger>
-                    <TabsTrigger value="line">Line</TabsTrigger>
+                    <TabsTrigger value="area">{t('dashboard.trafficAnalysis.area')}</TabsTrigger>
+                    <TabsTrigger value="line">{t('dashboard.trafficAnalysis.line')}</TabsTrigger>
                   </TabsList>
                   <TabsContent value="area">
                     <ResponsiveContainer width="100%" height={400}>
@@ -342,8 +344,8 @@ export default function AdminDashboard() {
             </Card>
             <Card className="col-span-3 dashboard-card">
               <CardHeader className="pb-2">
-                <CardTitle>Device Distribution</CardTitle>
-                <CardDescription>Current device type distribution</CardDescription>
+                <CardTitle>{t('dashboard.deviceDistribution.title')}</CardTitle>
+                <CardDescription>{t('dashboard.deviceDistribution.description')}</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="h-[400px] flex items-center justify-center">
@@ -406,8 +408,8 @@ export default function AdminDashboard() {
           </div>
           <Card className="dashboard-card">
             <CardHeader>
-              <CardTitle>Active Connections</CardTitle>
-              <CardDescription>Current active user connections</CardDescription>
+              <CardTitle>{t('dashboard.activeConnections.title')}</CardTitle>
+              <CardDescription>{t('dashboard.activeConnections.description')}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="rounded-md border">
@@ -415,10 +417,10 @@ export default function AdminDashboard() {
                   <table className="w-full text-sm">
                     <thead>
                       <tr className="border-b bg-muted/50">
-                        <th className="h-12 px-4 text-left font-medium">Client ID</th>
-                        <th className="h-12 px-4 text-left font-medium">Wallet ID</th>
-                        <th className="h-12 px-4 text-left font-medium">Device</th>
-                        <th className="h-12 px-4 text-left font-medium">Last Active</th>
+                        <th className="h-12 px-4 text-left font-medium">{t('dashboard.activeConnections.clientId')}</th>
+                        <th className="h-12 px-4 text-left font-medium">{t('dashboard.activeConnections.walletId')}</th>
+                        <th className="h-12 px-4 text-left font-medium">{t('dashboard.activeConnections.device')}</th>
+                        <th className="h-12 px-4 text-left font-medium">{t('dashboard.activeConnections.lastActive')}</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -449,18 +451,22 @@ export default function AdminDashboard() {
         <TabsContent value="reports" className="space-y-4">
           <Card className="dashboard-card">
             <CardHeader>
-              <CardTitle>Reports</CardTitle>
-              <CardDescription>View and create reports here.</CardDescription>
+              <CardTitle>{t('dashboard.reports.title')}</CardTitle>
+              <CardDescription>{t('dashboard.reports.description')}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                {["Revenue Report", "User Activity Report", "System Performance Report"].map((report) => (
+                {[
+                  t('dashboard.reports.revenueReport'),
+                  t('dashboard.reports.userActivityReport'),
+                  t('dashboard.reports.systemPerformanceReport')
+                ].map((report) => (
                   <div
                     key={report}
                     className="flex flex-col gap-2 rounded-lg border p-4 hover:bg-muted/50 cursor-pointer transition-colors"
                   >
                     <h3 className="font-semibold">{report}</h3>
-                    <p className="text-sm text-muted-foreground">View details and export report</p>
+                    <p className="text-sm text-muted-foreground">{t('dashboard.reports.viewDetails')}</p>
                   </div>
                 ))}
               </div>
