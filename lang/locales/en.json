@@ -279,5 +279,40 @@
         "currentLanguage": "Current language",
         "label": "Search language...",
         "noLanguageFound": "No language found."
+    },
+    "login": {
+        "title": "AdminPanel",
+        "welcomeTitle": "Welcome to your",
+        "adminDashboard": "Admin Dashboard",
+        "welcomeDescription": "Powerful, intuitive, and designed for your business needs.",
+        "features": {
+            "analytics": {
+                "title": "Real-time Analytics",
+                "description": "Monitor performance with live data insights"
+            },
+            "userManagement": {
+                "title": "User Management",
+                "description": "Manage accounts, roles and permissions"
+            },
+            "security": {
+                "title": "Advanced Security",
+                "description": "Enterprise-grade protection for your data"
+            }
+        },
+        "copyright": "© 2025 AdminPanel. All rights reserved.",
+        "signIn": "Sign in",
+        "accessDashboard": "Access your admin dashboard",
+        "username": "Username",
+        "usernamePlaceholder": "Enter your username",
+        "password": "Password",
+        "passwordPlaceholder": "••••••••",
+        "forgotPassword": "Forgot password?",
+        "signInButton": "Sign in",
+        "signingIn": "Signing in...",
+        "errors": {
+            "enterBothFields": "Please enter both username and password",
+            "invalidCredentials": "Invalid username or password",
+            "generalError": "An error occurred. Please try again."
+        }
     }
 }

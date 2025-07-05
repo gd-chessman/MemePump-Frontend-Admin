@@ -279,5 +279,40 @@
         "currentLanguage": "Ngôn ngữ hiện tại",
         "label": "Tìm kiếm ngôn ngữ...",
         "noLanguageFound": "Không tìm thấy ngôn ngữ."
+    },
+    "login": {
+        "title": "AdminPanel",
+        "welcomeTitle": "Chào mừng đến với",
+        "adminDashboard": "Bảng Điều Khiển Admin",
+        "welcomeDescription": "Mạnh mẽ, trực quan và được thiết kế cho nhu cầu kinh doanh của bạn.",
+        "features": {
+            "analytics": {
+                "title": "Phân Tích Thời Gian Thực",
+                "description": "Giám sát hiệu suất với dữ liệu trực tiếp"
+            },
+            "userManagement": {
+                "title": "Quản Lý Người Dùng",
+                "description": "Quản lý tài khoản, vai trò và quyền hạn"
+            },
+            "security": {
+                "title": "Bảo Mật Nâng Cao",
+                "description": "Bảo vệ dữ liệu cấp doanh nghiệp"
+            }
+        },
+        "copyright": "© 2025 AdminPanel. Tất cả quyền được bảo lưu.",
+        "signIn": "Đăng Nhập",
+        "accessDashboard": "Truy cập bảng điều khiển admin của bạn",
+        "username": "Tên Đăng Nhập",
+        "usernamePlaceholder": "Nhập tên đăng nhập của bạn",
+        "password": "Mật Khẩu",
+        "passwordPlaceholder": "••••••••",
+        "forgotPassword": "Quên mật khẩu?",
+        "signInButton": "Đăng Nhập",
+        "signingIn": "Đang đăng nhập...",
+        "errors": {
+            "enterBothFields": "Vui lòng nhập cả tên đăng nhập và mật khẩu",
+            "invalidCredentials": "Tên đăng nhập hoặc mật khẩu không đúng",
+            "generalError": "Đã xảy ra lỗi. Vui lòng thử lại."
+        }
     }
 }
