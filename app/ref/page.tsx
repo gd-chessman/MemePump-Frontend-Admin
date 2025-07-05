@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useQuery } from "@tanstack/react-query"
 import { getReferentSettings, updatReferentSettings } from "@/services/api/ReferentSettings"
 import { getReferentLevelRewards, updateReferentLevelRewards } from "@/services/api/ReferentLevelRewards"
+import { useLang } from "@/lang/useLang"
 
 interface ReferralLevel {
   level: number
@@ -30,6 +31,7 @@ interface ReferentLevelReward {
 }
 
 export default function ReferralSettings() {
+  const { t } = useLang()
   const { data: referentSettings, refetch: refetchReferentSettings } = useQuery<ReferentSettings>({
     queryKey: ["referent-settings"],
     queryFn: getReferentSettings,
@@ -79,7 +81,7 @@ export default function ReferralSettings() {
   const handleMaxLevelChange = async (value: string) => {
     const newMaxLevel = parseInt(value)
     if (newMaxLevel < 1 || newMaxLevel > maxAvailableLevel) {
-      toast.error(`Level must be between 1 and ${maxAvailableLevel}`)
+      toast.error(t("ref.errors.levelRange", { max: maxAvailableLevel }))
       return
     }
 
@@ -95,10 +97,10 @@ export default function ReferralSettings() {
       await updateReferralLevel(newMaxLevel)
       setMaxLevel(newMaxLevel)
       await refetchReferentSettings()
-      toast.success('Level updated successfully')
+      toast.success(t("ref.success.levelUpdated"))
     } catch (err) {
-      setError('Failed to update level')
-      toast.error('Failed to update level')
+      setError(t("ref.errors.updateLevelFailed"))
+      toast.error(t("ref.errors.updateLevelFailed"))
     } finally {
       setIsLoading(false)
     }
@@ -107,7 +109,7 @@ export default function ReferralSettings() {
   const handlePercentageChange = async (levelId: number, value: string, currentLevel: number) => {
     const numValue = parseFloat(value)
     if (isNaN(numValue) || numValue < 0 || numValue > 100) {
-      toast.error('Percentage must be between 0 and 100')
+      toast.error(t("ref.errors.percentageRange"))
       return
     }
 
@@ -123,14 +125,14 @@ export default function ReferralSettings() {
     // Check if the new value is greater than the previous level's percentage
     const previousLevel = referentLevelRewards?.find(r => r.rlr_level === currentLevel - 1)
     if (previousLevel && numValue > parseFloat(previousLevel.rlr_percentage)) {
-      toast.error(`Level ${currentLevel} percentage cannot be greater than Level ${currentLevel - 1}`)
+      toast.error(t("ref.errors.levelGreaterThanPrevious", { current: currentLevel, previous: currentLevel - 1 }))
       return
     }
 
     // Check if the new value is less than the next level's percentage
     const nextLevel = referentLevelRewards?.find(r => r.rlr_level === currentLevel + 1)
     if (nextLevel && numValue < parseFloat(nextLevel.rlr_percentage)) {
-      toast.error(`Level ${currentLevel} percentage cannot be less than Level ${currentLevel + 1}`)
+      toast.error(t("ref.errors.levelLessThanNext", { current: currentLevel, next: currentLevel + 1 }))
       return
     }
 
@@ -140,10 +142,10 @@ export default function ReferralSettings() {
     try {
       await updateReferentLevelRewards(levelId, { rlr_percentage: numValue })
       await refetchReferentLevelRewards()
-      toast.success('Percentage updated successfully')
+      toast.success(t("ref.success.percentageUpdated"))
     } catch (err) {
-      setError('Failed to update percentage')
-      toast.error('Failed to update percentage')
+      setError(t("ref.errors.updatePercentageFailed"))
+      toast.error(t("ref.errors.updatePercentageFailed"))
     } finally {
       setIsLoading(false)
     }
@@ -152,9 +154,9 @@ export default function ReferralSettings() {
   return (
     <div className="flex flex-col space-y-6">
       <div className="flex flex-col space-y-2">
-        <h2 className="text-3xl font-bold tracking-tight">Referral Settings</h2>
+        <h2 className="text-3xl font-bold tracking-tight">{t("ref.title")}</h2>
         <p className="text-muted-foreground">
-          Configure referral levels and their corresponding reward percentages.
+          {t("ref.description")}
         </p>
       </div>
 
@@ -168,12 +170,12 @@ export default function ReferralSettings() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Referral Levels</CardTitle>
+          <CardTitle>{t("ref.cardTitle")}</CardTitle>
           <CardDescription>
-            Set the maximum number of referral levels and their corresponding reward percentages.
+            {t("ref.cardDescription")}
             {referentSettings && (
               <span className="ml-2 text-sm text-muted-foreground">
-                (Current setting: {referentSettings.rs_ref_level} levels)
+                ({t("ref.currentSetting", { level: referentSettings.rs_ref_level })})
               </span>
             )}
           </CardDescription>
@@ -181,14 +183,14 @@ export default function ReferralSettings() {
         <CardContent>
           <div className="space-y-6">
             <div className="flex items-center space-x-4">
-              <Label className="w-48">Maximum Number of Levels</Label>
+              <Label className="w-48">{t("ref.maxLevels")}</Label>
               <Select
                 value={maxLevel.toString()}
                 onValueChange={handleMaxLevelChange}
                 disabled={isLoading || !maxAvailableLevel}
               >
                 <SelectTrigger className="w-32">
-                  <SelectValue placeholder="Select max level" />
+                  <SelectValue placeholder={t("ref.selectMaxLevel")} />
                 </SelectTrigger>
                 <SelectContent>
                   {Array.from({ length: maxAvailableLevel }, (_, i) => i + 1).map((level) => (
@@ -197,7 +199,7 @@ export default function ReferralSettings() {
                       value={level.toString()}
                       className={level === referentSettings?.rs_ref_level ? "bg-accent" : ""}
                     >
-                      {level} {level === 1 ? 'Level' : 'Levels'}
+                      {level} {level === 1 ? t("ref.level") : t("ref.levels")}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -214,7 +216,7 @@ export default function ReferralSettings() {
                 }
                 return (
                   <div key={level.level} className="flex items-center space-x-4">
-                    <Label className="w-24">Level {level.level}</Label>
+                    <Label className="w-24">{t("ref.level")} {level.level}</Label>
                     <div className="flex items-center space-x-2">
                       <Input
                         type="number"
@@ -230,7 +232,7 @@ export default function ReferralSettings() {
                         step="0.1"
                         className="w-32"
                       />
-                      <span className="text-muted-foreground">%</span>
+                      <span className="text-muted-foreground">{t("ref.percentage")}</span>
                     </div>
                   </div>
                 )

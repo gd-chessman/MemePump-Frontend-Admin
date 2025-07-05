@@ -20,9 +20,10 @@ import { getSetting } from "@/services/api/SettingService";
 import { SettingService } from "@/services/api";
 import { toast } from "sonner";
 import { getMyInfor } from "@/services/api/UserAdminService";
-
+import { useLang } from "@/lang/useLang";
 
 export default function SettingsPage() {
+  const { t } = useLang();
   const { data: setting, isLoading, refetch: refetchSetting } = useQuery({
     queryKey: ["setting"],
     queryFn: getSetting,
@@ -47,31 +48,31 @@ export default function SettingsPage() {
       !passwords.confirmPassword
     ) {
       console.warn("Please fill in all password fields");
-      toast.error("Please fill in all password fields");
+      toast.error(t("settings.errors.fillAllFields"));
       return;
     }
 
     if (passwords.currentPassword.length < 4) {
       console.warn("Current password must be at least 4 characters long");
-      toast.error("Current password must be at least 4 characters long");
+      toast.error(t("settings.errors.currentPasswordLength"));
       return;
     }
 
     if (passwords.newPassword.length < 4) {
       console.warn("New password must be at least 4 characters long");
-      toast.error("New password must be at least 4 characters long");
+      toast.error(t("settings.errors.newPasswordLength"));
       return;
     }
 
     if (passwords.confirmPassword.length < 4) {
       console.warn("Confirm password must be at least 4 characters long");
-      toast.error("Confirm password must be at least 4 characters long");
+      toast.error(t("settings.errors.confirmPasswordLength"));
       return;
     }
 
     if (passwords.newPassword !== passwords.confirmPassword) {
       console.warn("New password and confirmation do not match");
-      toast.error("New password and confirmation do not match");
+      toast.error(t("settings.errors.passwordsNotMatch"));
       return;
     }
 
@@ -81,7 +82,7 @@ export default function SettingsPage() {
         newPassword: passwords.newPassword,
       });
       console.log("Password changed successfully");
-      toast.success("Password changed successfully");
+      toast.success(t("settings.success.passwordChanged"));
       setPasswords({
         currentPassword: "",
         newPassword: "",
@@ -89,9 +90,9 @@ export default function SettingsPage() {
       });
     } catch (error: any) {
       if( error.status === 401) {
-        toast.error("Current password is incorrect");
+        toast.error(t("settings.errors.currentPasswordIncorrect"));
       } else {
-        toast.error("Error changing password");
+        toast.error(t("settings.errors.changePasswordFailed"));
       }
     }
   };
@@ -113,29 +114,29 @@ export default function SettingsPage() {
   return (
     <div className="flex flex-col space-y-6">
       <div className="flex flex-col space-y-2">
-        <h2 className="text-3xl font-bold tracking-tight">Settings</h2>
+        <h2 className="text-3xl font-bold tracking-tight">{t("settings.title")}</h2>
         <p className="text-muted-foreground">
-          Manage your account settings and preferences.
+          {t("settings.description")}
         </p>
       </div>
 
       <Tabs defaultValue="profile" className="space-y-4">
         <TabsList className="grid w-full grid-cols-2 lg:w-auto">
-          <TabsTrigger value="profile">Profile</TabsTrigger>
-          <TabsTrigger value="security">Security</TabsTrigger>
+          <TabsTrigger value="profile">{t("settings.tabs.profile")}</TabsTrigger>
+          <TabsTrigger value="security">{t("settings.tabs.security")}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="profile" className="space-y-4">
           <Card className="dashboard-card">
             <CardHeader>
-              <CardTitle>Profile Information</CardTitle>
+              <CardTitle>{t("settings.profile.title")}</CardTitle>
               <CardDescription>
-                Your account details and information
+                {t("settings.profile.description")}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4 flex flex-col items-center">
               <div className="space-y-2 w-full max-w-lg">
-                <Label htmlFor="username">Username</Label>
+                <Label htmlFor="username">{t("settings.profile.username")}</Label>
                 <Input
                   id="username"
                   value={myInfor?.username || ''}
@@ -145,7 +146,7 @@ export default function SettingsPage() {
               </div>
               
               <div className="space-y-2 w-full max-w-lg">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">{t("settings.profile.email")}</Label>
                 <Input
                   id="email"
                   value={myInfor?.email || ''}
@@ -155,7 +156,7 @@ export default function SettingsPage() {
               </div>
               
               <div className="space-y-2 w-full max-w-lg">
-                <Label htmlFor="role">Role</Label>
+                <Label htmlFor="role">{t("settings.profile.role")}</Label>
                 <Input
                   id="role"
                   value={myInfor?.role || ''}
@@ -165,7 +166,7 @@ export default function SettingsPage() {
               </div>
               
               <div className="space-y-2 w-full max-w-lg">
-                <Label htmlFor="created-at">Account Created</Label>
+                <Label htmlFor="created-at">{t("settings.profile.accountCreated")}</Label>
                 <Input
                   id="created-at"
                   value={myInfor?.createdAt ? formatDate(myInfor.createdAt) : 'N/A'}
@@ -175,7 +176,7 @@ export default function SettingsPage() {
               </div>
               
               <div className="space-y-2 w-full max-w-lg">
-                <Label htmlFor="updated-at">Last Updated</Label>
+                <Label htmlFor="updated-at">{t("settings.profile.lastUpdated")}</Label>
                 <Input
                   id="updated-at"
                   value={myInfor?.updatedAt ? formatDate(myInfor.updatedAt) : 'N/A'}
@@ -190,8 +191,8 @@ export default function SettingsPage() {
         <TabsContent value="security" className="space-y-4">
           <Card className="dashboard-card">
             <CardHeader>
-              <CardTitle>Security Settings</CardTitle>
-              <CardDescription>Manage your account security</CardDescription>
+              <CardTitle>{t("settings.security.title")}</CardTitle>
+              <CardDescription>{t("settings.security.description")}</CardDescription>
             </CardHeader>
             <form
               onSubmit={(e) => {
@@ -201,7 +202,7 @@ export default function SettingsPage() {
             >
               <CardContent className="space-y-4 flex flex-col items-center">
                 <div className="space-y-2 w-full max-w-lg">
-                  <Label htmlFor="current-password">Current Password</Label>
+                  <Label htmlFor="current-password">{t("settings.security.currentPassword")}</Label>
                   <Input
                     id="current-password"
                     type="password"
@@ -217,7 +218,7 @@ export default function SettingsPage() {
                   />
                 </div>
                 <div className="space-y-2 w-full max-w-lg">
-                  <Label htmlFor="new-password">New Password</Label>
+                  <Label htmlFor="new-password">{t("settings.security.newPassword")}</Label>
                   <Input
                     id="new-password"
                     type="password"
@@ -233,7 +234,7 @@ export default function SettingsPage() {
                   />
                 </div>
                 <div className="space-y-2 w-full max-w-lg">
-                  <Label htmlFor="confirm-password">Confirm Password</Label>
+                  <Label htmlFor="confirm-password">{t("settings.security.confirmPassword")}</Label>
                   <Input
                     id="confirm-password"
                     type="password"
@@ -250,7 +251,7 @@ export default function SettingsPage() {
                 </div>
               </CardContent>
               <CardFooter className="flex justify-end">
-                <Button type="submit">Save Changes</Button>
+                <Button type="submit">{t("settings.security.saveChanges")}</Button>
               </CardFooter>
             </form>
           </Card>

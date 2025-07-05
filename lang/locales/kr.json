@@ -134,12 +134,128 @@
         }
     },
     "analytics": {
-        "title": "분석"
+        "title": "실시간 분석",
+        "description": "사용자 활동 및 연결의 실시간 모니터링.",
+        "stats": {
+            "totalUsers": "총 사용자",
+            "activeNow": "현재 활성",
+            "masterUsers": "마스터 사용자",
+            "memberUsers": "멤버 사용자",
+            "vipUsers": "VIP 사용자",
+            "normalUsers": "일반 사용자",
+            "anonymousUsers": "익명 사용자"
+        },
+        "tabs": {
+            "overview": "개요",
+            "connections": "활성 연결",
+            "devices": "장치"
+        },
+        "charts": {
+            "userTypes": {
+                "title": "사용자 유형",
+                "description": "유형별 활성 사용자 분포"
+            },
+            "deviceTypes": {
+                "title": "장치 유형",
+                "description": "장치별 활성 사용자 분포"
+            },
+            "browsersOS": {
+                "title": "브라우저 & OS",
+                "description": "브라우저 및 운영체제별 분포"
+            }
+        },
+        "connections": {
+            "title": "활성 연결",
+            "description": "시스템에 대한 모든 현재 활성 연결",
+            "table": {
+                "clientId": "클라이언트 ID",
+                "walletId": "지갑 ID",
+                "userType": "사용자 유형",
+                "device": "장치",
+                "ip": "IP",
+                "lastActive": "마지막 활성"
+            }
+        },
+        "devices": {
+            "title": "활성 사용자 세션",
+            "description": "모든 활성 사용자 세션 및 탭의 세부 정보",
+            "connections": "연결",
+            "tabs": "탭",
+            "lastActive": "마지막 활성:"
+        },
+        "userTypes": {
+            "master": "마스터",
+            "member": "멤버",
+            "vip": "VIP",
+            "normal": "일반",
+            "anonymous": "익명",
+            "guest": "게스트"
+        },
+        "timeAgo": {
+            "seconds": "초 전",
+            "minutes": "분 전",
+            "hours": "시간 전"
+        }
     },
     "ref": {
-        "title": "추천"
+        "title": "추천 설정",
+        "description": "추천 레벨과 해당 보상 비율을 구성하세요.",
+        "cardTitle": "추천 레벨",
+        "cardDescription": "최대 추천 레벨 수와 해당 보상 비율을 설정하세요.",
+        "currentSetting": "현재 설정: {level} 레벨",
+        "maxLevels": "최대 레벨 수",
+        "selectMaxLevel": "최대 레벨 선택",
+        "level": "레벨",
+        "levels": "레벨",
+        "percentage": "%",
+        "errors": {
+            "levelRange": "레벨은 1에서 {max} 사이여야 합니다",
+            "percentageRange": "비율은 0에서 100 사이여야 합니다",
+            "levelGreaterThanPrevious": "레벨 {current} 비율은 레벨 {previous}보다 클 수 없습니다",
+            "levelLessThanNext": "레벨 {current} 비율은 레벨 {next}보다 작을 수 없습니다",
+            "updateLevelFailed": "레벨 업데이트 실패",
+            "updatePercentageFailed": "비율 업데이트 실패"
+        },
+        "success": {
+            "levelUpdated": "레벨이 성공적으로 업데이트되었습니다",
+            "percentageUpdated": "비율이 성공적으로 업데이트되었습니다"
+        }
     },
     "settings": {
-        "title": "설정"
+        "title": "설정",
+        "description": "계정 설정 및 기본 설정을 관리하세요.",
+        "tabs": {
+            "profile": "프로필",
+            "security": "보안"
+        },
+        "profile": {
+            "title": "프로필 정보",
+            "description": "계정 세부 정보 및 정보",
+            "username": "사용자명",
+            "email": "이메일",
+            "role": "역할",
+            "accountCreated": "계정 생성일",
+            "lastUpdated": "마지막 업데이트"
+        },
+        "security": {
+            "title": "보안 설정",
+            "description": "계정 보안 관리",
+            "currentPassword": "현재 비밀번호",
+            "newPassword": "새 비밀번호",
+            "confirmPassword": "비밀번호 확인",
+            "saveChanges": "변경사항 저장"
+        },
+        "errors": {
+            "fillAllFields": "모든 비밀번호 필드를 입력하세요",
+            "currentPasswordLength": "현재 비밀번호는 최소 4자 이상이어야 합니다",
+            "newPasswordLength": "새 비밀번호는 최소 4자 이상이어야 합니다",
+            "confirmPasswordLength": "비밀번호 확인은 최소 4자 이상이어야 합니다",
+            "passwordsNotMatch": "새 비밀번호와 확인이 일치하지 않습니다",
+            "currentPasswordIncorrect": "현재 비밀번호가 올바르지 않습니다",
+            "changePasswordFailed": "비밀번호 변경 오류"
+        },
+        "success": {
+            "passwordChanged": "비밀번호가 성공적으로 변경되었습니다"
+        }
     }
 }

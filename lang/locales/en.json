@@ -134,12 +134,128 @@
         }
     },
     "analytics": {
-        "title": "Analytics"
+        "title": "Realtime Analytics",
+        "description": "Live monitoring of user activity and connections.",
+        "stats": {
+            "totalUsers": "Total Users",
+            "activeNow": "Active now",
+            "masterUsers": "Master Users",
+            "memberUsers": "Member Users",
+            "vipUsers": "VIP Users",
+            "normalUsers": "Normal Users",
+            "anonymousUsers": "Anonymous Users"
+        },
+        "tabs": {
+            "overview": "Overview",
+            "connections": "Active Connections",
+            "devices": "Devices"
+        },
+        "charts": {
+            "userTypes": {
+                "title": "User Types",
+                "description": "Distribution of active users by type"
+            },
+            "deviceTypes": {
+                "title": "Device Types",
+                "description": "Distribution of active users by device"
+            },
+            "browsersOS": {
+                "title": "Browsers & OS",
+                "description": "Distribution by browser and operating system"
+            }
+        },
+        "connections": {
+            "title": "Active Connections",
+            "description": "All current active connections to the system",
+            "table": {
+                "clientId": "Client ID",
+                "walletId": "Wallet ID",
+                "userType": "User Type",
+                "device": "Device",
+                "ip": "IP",
+                "lastActive": "Last Active"
+            }
+        },
+        "devices": {
+            "title": "Active User Sessions",
+            "description": "Details of all active user sessions and tabs",
+            "connections": "Connections",
+            "tabs": "Tabs",
+            "lastActive": "Last active:"
+        },
+        "userTypes": {
+            "master": "Master",
+            "member": "Member",
+            "vip": "VIP",
+            "normal": "Normal",
+            "anonymous": "Anonymous",
+            "guest": "Guest"
+        },
+        "timeAgo": {
+            "seconds": "s ago",
+            "minutes": "m ago",
+            "hours": "h ago"
+        }
     },
     "ref": {
-        "title": "Ref"
+        "title": "Referral Settings",
+        "description": "Configure referral levels and their corresponding reward percentages.",
+        "cardTitle": "Referral Levels",
+        "cardDescription": "Set the maximum number of referral levels and their corresponding reward percentages.",
+        "currentSetting": "Current setting: {level} levels",
+        "maxLevels": "Maximum Number of Levels",
+        "selectMaxLevel": "Select max level",
+        "level": "Level",
+        "levels": "Levels",
+        "percentage": "%",
+        "errors": {
+            "levelRange": "Level must be between 1 and {max}",
+            "percentageRange": "Percentage must be between 0 and 100",
+            "levelGreaterThanPrevious": "Level {current} percentage cannot be greater than Level {previous}",
+            "levelLessThanNext": "Level {current} percentage cannot be less than Level {next}",
+            "updateLevelFailed": "Failed to update level",
+            "updatePercentageFailed": "Failed to update percentage"
+        },
+        "success": {
+            "levelUpdated": "Level updated successfully",
+            "percentageUpdated": "Percentage updated successfully"
+        }
     },
     "settings": {
-        "title": "Settings"
+        "title": "Settings",
+        "description": "Manage your account settings and preferences.",
+        "tabs": {
+            "profile": "Profile",
+            "security": "Security"
+        },
+        "profile": {
+            "title": "Profile Information",
+            "description": "Your account details and information",
+            "username": "Username",
+            "email": "Email",
+            "role": "Role",
+            "accountCreated": "Account Created",
+            "lastUpdated": "Last Updated"
+        },
+        "security": {
+            "title": "Security Settings",
+            "description": "Manage your account security",
+            "currentPassword": "Current Password",
+            "newPassword": "New Password",
+            "confirmPassword": "Confirm Password",
+            "saveChanges": "Save Changes"
+        },
+        "errors": {
+            "fillAllFields": "Please fill in all password fields",
+            "currentPasswordLength": "Current password must be at least 4 characters long",
+            "newPasswordLength": "New password must be at least 4 characters long",
+            "confirmPasswordLength": "Confirm password must be at least 4 characters long",
+            "passwordsNotMatch": "New password and confirmation do not match",
+            "currentPasswordIncorrect": "Current password is incorrect",
+            "changePasswordFailed": "Error changing password"
+        },
+        "success": {
+            "passwordChanged": "Password changed successfully"
+        }
     }
 }

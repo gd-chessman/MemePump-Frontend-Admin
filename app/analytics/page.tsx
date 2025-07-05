@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button"
 import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend } from "recharts"
 import { io } from "socket.io-client"
 import { useAuth } from "@/hooks/useAuth"
+import { useLang } from "@/lang/useLang"
 
 // Define types based on the provided JSON structure
 interface Connection {
@@ -113,6 +114,7 @@ function getDeviceIcon(type: string) {
 }
 
 export default function AnalyticsPage() {
+  const { t } = useLang()
   const [data, setData] = useState<RealtimeData>({
     total: 0,
     master: 0,
@@ -176,11 +178,11 @@ export default function AnalyticsPage() {
 
   // Prepare data for charts
   const userTypeData = [
-    { name: "Master", value: data.master, color: "#9333ea" },
-    { name: "Member", value: data.member, color: "#3b82f6" },
-    { name: "VIP", value: data.vip, color: "#f59e0b" },
-    { name: "Normal", value: data.normal, color: "#10b981" },
-    { name: "Anonymous", value: data.anonymous, color: "#64748b" },
+    { name: t("analytics.userTypes.master"), value: data.master, color: "#9333ea" },
+    { name: t("analytics.userTypes.member"), value: data.member, color: "#3b82f6" },
+    { name: t("analytics.userTypes.vip"), value: data.vip, color: "#f59e0b" },
+    { name: t("analytics.userTypes.normal"), value: data.normal, color: "#10b981" },
+    { name: t("analytics.userTypes.anonymous"), value: data.anonymous, color: "#64748b" },
   ].filter((item) => item.value > 0)
 
   const deviceData = Object.entries(data.devices.deviceTypes).map(([name, value]) => ({
@@ -203,9 +205,9 @@ export default function AnalyticsPage() {
     <div className="flex flex-col space-y-6">
       <div className="flex flex-col space-y-2">
         <div className="flex items-center justify-between">
-          <h2 className="text-3xl font-bold tracking-tight">Realtime Analytics</h2>
+          <h2 className="text-3xl font-bold tracking-tight">{t("analytics.title")}</h2>
         </div>
-        <p className="text-muted-foreground">Live monitoring of user activity and connections.</p>
+        <p className="text-muted-foreground">{t("analytics.description")}</p>
       </div>
 
       {/* User Stats Cards */}
@@ -213,11 +215,11 @@ export default function AnalyticsPage() {
         <Card className="stat-card">
           <div className="flex justify-between">
             <div>
-              <p className="stat-label">Total Users</p>
+              <p className="stat-label">{t("analytics.stats.totalUsers")}</p>
               <p className="stat-value">{data.total}</p>
               <p className="stat-change flex items-center gap-1 text-emerald-500">
                 <Activity className="h-3 w-3" />
-                <span>Active now</span>
+                <span>{t("analytics.stats.activeNow")}</span>
               </p>
             </div>
             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
@@ -230,11 +232,11 @@ export default function AnalyticsPage() {
           <Card key={type.name} className="stat-card">
             <div className="flex justify-between">
               <div>
-                <p className="stat-label">{type.name} Users</p>
+                <p className="stat-label">{type.name}</p>
                 <p className="stat-value">{type.value}</p>
                 <p className="stat-change flex items-center gap-1 text-emerald-500">
                   <Clock className="h-3 w-3" />
-                  <span>Active now</span>
+                  <span>{t("analytics.stats.activeNow")}</span>
                 </p>
               </div>
               <div className={`flex h-12 w-12 items-center justify-center rounded-full ${getUserTypeColor(type.name)}`}>
@@ -247,9 +249,9 @@ export default function AnalyticsPage() {
 
       <Tabs defaultValue="overview" className="space-y-4">
         <TabsList>
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="connections">Active Connections</TabsTrigger>
-          <TabsTrigger value="devices">Devices</TabsTrigger>
+          <TabsTrigger value="overview">{t("analytics.tabs.overview")}</TabsTrigger>
+          <TabsTrigger value="connections">{t("analytics.tabs.connections")}</TabsTrigger>
+          <TabsTrigger value="devices">{t("analytics.tabs.devices")}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-4">
@@ -257,8 +259,8 @@ export default function AnalyticsPage() {
             {/* User Types Distribution */}
             <Card className="col-span-1 dashboard-card">
               <CardHeader>
-                <CardTitle>User Types</CardTitle>
-                <CardDescription>Distribution of active users by type</CardDescription>
+                <CardTitle>{t("analytics.charts.userTypes.title")}</CardTitle>
+                <CardDescription>{t("analytics.charts.userTypes.description")}</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="h-[18.75rem]">
@@ -300,8 +302,8 @@ export default function AnalyticsPage() {
             {/* Device Types Distribution */}
             <Card className="col-span-1 dashboard-card">
               <CardHeader>
-                <CardTitle>Device Types</CardTitle>
-                <CardDescription>Distribution of active users by device</CardDescription>
+                <CardTitle>{t("analytics.charts.deviceTypes.title")}</CardTitle>
+                <CardDescription>{t("analytics.charts.deviceTypes.description")}</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="h-[300px]">
@@ -343,8 +345,8 @@ export default function AnalyticsPage() {
             {/* Browsers & OS */}
             <Card className="col-span-1 dashboard-card">
               <CardHeader>
-                <CardTitle>Browsers & OS</CardTitle>
-                <CardDescription>Distribution by browser and operating system</CardDescription>
+                <CardTitle>{t("analytics.charts.browsersOS.title")}</CardTitle>
+                <CardDescription>{t("analytics.charts.browsersOS.description")}</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="h-[300px]">
@@ -370,8 +372,8 @@ export default function AnalyticsPage() {
         <TabsContent value="connections" className="space-y-4">
           <Card className="dashboard-card">
             <CardHeader>
-              <CardTitle>Active Connections</CardTitle>
-              <CardDescription>All current active connections to the system</CardDescription>
+              <CardTitle>{t("analytics.connections.title")}</CardTitle>
+              <CardDescription>{t("analytics.connections.description")}</CardDescription>
             </CardHeader>
             <CardContent className="p-0 lg:p-6">
               <div className="rounded-md border">
@@ -379,12 +381,12 @@ export default function AnalyticsPage() {
                   <table className="w-full text-sm">
                     <thead>
                       <tr className="border-b bg-muted/50">
-                        <th className="h-12 px-4 text-left font-medium whitespace-nowrap">Client ID</th>
-                        <th className="h-12 px-4 text-left font-medium whitespace-nowrap">Wallet ID</th>
-                        <th className="h-12 px-4 text-left font-medium whitespace-nowrap">User Type</th>
-                        <th className="h-12 px-4 text-left font-medium whitespace-nowrap">Device</th>
-                        <th className="h-12 px-4 text-left font-medium whitespace-nowrap">IP</th>
-                        <th className="h-12 px-4 text-left font-medium whitespace-nowrap">Last Active</th>
+                        <th className="h-12 px-4 text-left font-medium whitespace-nowrap">{t("analytics.connections.table.clientId")}</th>
+                        <th className="h-12 px-4 text-left font-medium whitespace-nowrap">{t("analytics.connections.table.walletId")}</th>
+                        <th className="h-12 px-4 text-left font-medium whitespace-nowrap">{t("analytics.connections.table.userType")}</th>
+                        <th className="h-12 px-4 text-left font-medium whitespace-nowrap">{t("analytics.connections.table.device")}</th>
+                        <th className="h-12 px-4 text-left font-medium whitespace-nowrap">{t("analytics.connections.table.ip")}</th>
+                        <th className="h-12 px-4 text-left font-medium whitespace-nowrap">{t("analytics.connections.table.lastActive")}</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -394,7 +396,7 @@ export default function AnalyticsPage() {
                           <td className="p-4 align-middle whitespace-nowrap">{connection.walletId}</td>
                           <td className="p-4 align-middle whitespace-nowrap">
                             <Badge className={getUserTypeColor(connection.walletAuth || "guest")}>
-                              {connection.walletAuth || "Guest"}
+                              {connection.walletAuth || t("analytics.userTypes.guest")}
                             </Badge>
                           </td>
                           <td className="p-4 align-middle whitespace-nowrap">
@@ -426,8 +428,8 @@ export default function AnalyticsPage() {
             {/* User Tabs */}
             <Card className="col-span-2 dashboard-card">
               <CardHeader>
-                <CardTitle>Active User Sessions</CardTitle>
-                <CardDescription>Details of all active user sessions and tabs</CardDescription>
+                <CardTitle>{t("analytics.devices.title")}</CardTitle>
+                <CardDescription>{t("analytics.devices.description")}</CardDescription>
               </CardHeader>
               <CardContent className="p-0 lg:p-6">
                 <div className="space-y-6">
@@ -449,18 +451,18 @@ export default function AnalyticsPage() {
                           <div className="flex flex-col items-end">
                             <Badge variant="outline">{tab.walletAuth}</Badge>
                             <span className="text-xs text-muted-foreground mt-1">
-                              Last active: {getTimeDifference(tab.lastActive)}
+                              {t("analytics.devices.lastActive")} {getTimeDifference(tab.lastActive)}
                             </span>
                           </div>
                           <div className="flex gap-2 items-center justify-center rounded-md border px-3 py-2">
                             <span className="text-xl font-bold">{tab.tabsCount}</span>
-                            <span className="text-xs text-muted-foreground">Tabs</span>
+                            <span className="text-xs text-muted-foreground">{t("analytics.devices.tabs")}</span>
                           </div>
                         </div>
                       </div>
 
                       <div className="mt-4">
-                        <h5 className="text-sm font-medium mb-2">Connections</h5>
+                        <h5 className="text-sm font-medium mb-2">{t("analytics.devices.connections")}</h5>
                         <div className="grid gap-2">
                           {tab.connections.map((conn) => (
                             <div

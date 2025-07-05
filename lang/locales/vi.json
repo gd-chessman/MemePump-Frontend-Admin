@@ -134,12 +134,128 @@
         }
     },
     "analytics": {
-        "title": "Phân tích"
+        "title": "Phân Tích Thời Gian Thực",
+        "description": "Giám sát trực tiếp hoạt động người dùng và kết nối.",
+        "stats": {
+            "totalUsers": "Tổng Người Dùng",
+            "activeNow": "Đang hoạt động",
+            "masterUsers": "Người Dùng Master",
+            "memberUsers": "Người Dùng Member",
+            "vipUsers": "Người Dùng VIP",
+            "normalUsers": "Người Dùng Thường",
+            "anonymousUsers": "Người Dùng Ẩn Danh"
+        },
+        "tabs": {
+            "overview": "Tổng Quan",
+            "connections": "Kết Nối Đang Hoạt Động",
+            "devices": "Thiết Bị"
+        },
+        "charts": {
+            "userTypes": {
+                "title": "Loại Người Dùng",
+                "description": "Phân bố người dùng đang hoạt động theo loại"
+            },
+            "deviceTypes": {
+                "title": "Loại Thiết Bị",
+                "description": "Phân bố người dùng đang hoạt động theo thiết bị"
+            },
+            "browsersOS": {
+                "title": "Trình Duyệt & Hệ Điều Hành",
+                "description": "Phân bố theo trình duyệt và hệ điều hành"
+            }
+        },
+        "connections": {
+            "title": "Kết Nối Đang Hoạt Động",
+            "description": "Tất cả kết nối đang hoạt động hiện tại đến hệ thống",
+            "table": {
+                "clientId": "ID Khách Hàng",
+                "walletId": "ID Ví",
+                "userType": "Loại Người Dùng",
+                "device": "Thiết Bị",
+                "ip": "IP",
+                "lastActive": "Hoạt Động Cuối"
+            }
+        },
+        "devices": {
+            "title": "Phiên Người Dùng Đang Hoạt Động",
+            "description": "Chi tiết tất cả phiên người dùng đang hoạt động và tab",
+            "connections": "Kết Nối",
+            "tabs": "Tab",
+            "lastActive": "Hoạt động cuối:"
+        },
+        "userTypes": {
+            "master": "Master",
+            "member": "Member",
+            "vip": "VIP",
+            "normal": "Thường",
+            "anonymous": "Ẩn Danh",
+            "guest": "Khách"
+        },
+        "timeAgo": {
+            "seconds": "giây trước",
+            "minutes": "phút trước",
+            "hours": "giờ trước"
+        }
     },
     "ref": {
-        "title": "Giới thiệu"
+        "title": "Cài Đặt Giới Thiệu",
+        "description": "Cấu hình các cấp độ giới thiệu và phần trăm thưởng tương ứng.",
+        "cardTitle": "Cấp Độ Giới Thiệu",
+        "cardDescription": "Thiết lập số lượng cấp độ giới thiệu tối đa và phần trăm thưởng tương ứng.",
+        "currentSetting": "Cài đặt hiện tại: {level} cấp độ",
+        "maxLevels": "Số Lượng Cấp Độ Tối Đa",
+        "selectMaxLevel": "Chọn cấp độ tối đa",
+        "level": "Cấp độ",
+        "levels": "Cấp độ",
+        "percentage": "%",
+        "errors": {
+            "levelRange": "Cấp độ phải từ 1 đến {max}",
+            "percentageRange": "Phần trăm phải từ 0 đến 100",
+            "levelGreaterThanPrevious": "Phần trăm cấp độ {current} không thể lớn hơn cấp độ {previous}",
+            "levelLessThanNext": "Phần trăm cấp độ {current} không thể nhỏ hơn cấp độ {next}",
+            "updateLevelFailed": "Cập nhật cấp độ thất bại",
+            "updatePercentageFailed": "Cập nhật phần trăm thất bại"
+        },
+        "success": {
+            "levelUpdated": "Cập nhật cấp độ thành công",
+            "percentageUpdated": "Cập nhật phần trăm thành công"
+        }
     },
     "settings": {
-        "title": "Cài đặt"
+        "title": "Cài Đặt",
+        "description": "Quản lý cài đặt và tùy chọn tài khoản của bạn.",
+        "tabs": {
+            "profile": "Hồ Sơ",
+            "security": "Bảo Mật"
+        },
+        "profile": {
+            "title": "Thông Tin Hồ Sơ",
+            "description": "Chi tiết và thông tin tài khoản của bạn",
+            "username": "Tên Đăng Nhập",
+            "email": "Email",
+            "role": "Vai Trò",
+            "accountCreated": "Tài Khoản Được Tạo",
+            "lastUpdated": "Cập Nhật Cuối"
+        },
+        "security": {
+            "title": "Cài Đặt Bảo Mật",
+            "description": "Quản lý bảo mật tài khoản của bạn",
+            "currentPassword": "Mật Khẩu Hiện Tại",
+            "newPassword": "Mật Khẩu Mới",
+            "confirmPassword": "Xác Nhận Mật Khẩu",
+            "saveChanges": "Lưu Thay Đổi"
+        },
+        "errors": {
+            "fillAllFields": "Vui lòng điền đầy đủ các trường mật khẩu",
+            "currentPasswordLength": "Mật khẩu hiện tại phải có ít nhất 4 ký tự",
+            "newPasswordLength": "Mật khẩu mới phải có ít nhất 4 ký tự",
+            "confirmPasswordLength": "Xác nhận mật khẩu phải có ít nhất 4 ký tự",
+            "passwordsNotMatch": "Mật khẩu mới và xác nhận không khớp",
+            "currentPasswordIncorrect": "Mật khẩu hiện tại không đúng",
+            "changePasswordFailed": "Lỗi thay đổi mật khẩu"
+        },
+        "success": {
+            "passwordChanged": "Thay đổi mật khẩu thành công"
+        }
     }
 }

@@ -35,10 +35,20 @@ const getNestedTranslation = (translations: Translations, key: string): string =
   }, translations as Translations) as string || key;
 };
 
+// Hàm thay thế các tham số trong chuỗi
+const replaceParameters = (text: string, params?: Record<string, any>): string => {
+  if (!params) return text;
+  
+  return text.replace(/\{(\w+)\}/g, (match, key) => {
+    return params[key] !== undefined ? String(params[key]) : match;
+  });
+};
+
 // Export the translation function that takes language as a parameter
-export const getTranslation = (lang: LangCodes) => (key: string) => {
+export const getTranslation = (lang: LangCodes) => (key: string, params?: Record<string, any>) => {
   const translations = langConfig.langsApp[lang] || {};
-  return getNestedTranslation(translations, key);
+  const translation = getNestedTranslation(translations, key);
+  return replaceParameters(translation, params);
 };
 
 // Re-export useLang and LangProvider
