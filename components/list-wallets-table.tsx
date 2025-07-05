@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { getListWallets, updateListWalletsAuth } from "@/services/api/ListWalletsService"
 import { truncateString } from "@/utils/format"
@@ -69,10 +70,10 @@ export function ListWalletsTable({ searchQuery }: { searchQuery: string }) {
     }))
   }
 
-  const handleUpdateAuth = async (walletId: number, currentAuth: string) => {
+  const handleUpdateAuth = async (walletId: number, newAuth: string) => {
     try {
       await updateListWalletsAuth(walletId.toString(), {
-        wallet_auth: currentAuth === "master" ? "member" : "master"
+        wallet_auth: newAuth
       })
       // Invalidate and refetch the list
       queryClient.invalidateQueries({ queryKey: ["list-wallets"] })
@@ -122,22 +123,18 @@ export function ListWalletsTable({ searchQuery }: { searchQuery: string }) {
       header: "Auth Type",
       cell: ({ row }) => {
         const authType = row.getValue("wallet_auth") as string
-        const isMaster = authType === "master"
 
         return (
           <div className="flex">
-            <Badge
-              variant="outline"
-              className={`cursor-pointer flex items-center gap-1 px-2 py-1 rounded-full font-medium text-xs transition-all duration-300 shadow-sm hover:shadow-md ${
-                isMaster
-                  ? "bg-gradient-to-r from-emerald-500 to-emerald-600 text-white border-emerald-500 hover:from-emerald-600 hover:to-emerald-700 hover:scale-105"
-                  : "bg-gradient-to-r from-slate-500 to-slate-600 text-white border-slate-500 hover:from-slate-600 hover:to-slate-700 hover:scale-105"
-              }`}
-              onClick={() => handleUpdateAuth(row.original.wallet_id, authType)}
-            >
-              <div className={`w-1.5 h-1.5 rounded-full ${isMaster ? 'bg-emerald-200' : 'bg-slate-200'}`}></div>
-              <span className="uppercase tracking-wide">{isMaster ? "Master" : "Member"}</span>
-            </Badge>
+            <Select value={authType} onValueChange={(value) => handleUpdateAuth(row.original.wallet_id, value)}>
+              <SelectTrigger className="w-24 h-8 text-xs bg-slate-800 border-slate-600 text-slate-200">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="master">Master</SelectItem>
+                <SelectItem value="member">Member</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         )
       },
