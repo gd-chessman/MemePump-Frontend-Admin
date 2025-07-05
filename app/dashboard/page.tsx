@@ -128,8 +128,8 @@ export default function AdminDashboard() {
         <p className="text-muted-foreground">{t('dashboard.overview')}</p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        <Card className="stat-card">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-2">
+        {/* <Card className="stat-card">
           <div className="flex justify-between">
             <div>
               <p className="stat-label">{t('dashboard.totalRevenue')}</p>
@@ -143,7 +143,7 @@ export default function AdminDashboard() {
               <CreditCard className="h-6 w-6 text-primary" />
             </div>
           </div>
-        </Card>
+        </Card> */}
         <Card className="stat-card">
           <div className="flex justify-between">
             <div>
