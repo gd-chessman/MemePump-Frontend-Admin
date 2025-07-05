@@ -180,10 +180,9 @@ export default function AdminDashboard() {
       </div>
 
       <Tabs defaultValue="overview" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-3 lg:w-auto">
+        <TabsList className="grid w-full grid-cols-2 lg:w-auto">
           <TabsTrigger value="overview">{t('dashboard.tabs.overview')}</TabsTrigger>
           <TabsTrigger value="analytics">{t('dashboard.tabs.analytics')}</TabsTrigger>
-          <TabsTrigger value="reports">{t('dashboard.tabs.reports')}</TabsTrigger>
         </TabsList>
         <TabsContent value="overview" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
@@ -444,31 +443,6 @@ export default function AdminDashboard() {
                     </tbody>
                   </table>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-        <TabsContent value="reports" className="space-y-4">
-          <Card className="dashboard-card">
-            <CardHeader>
-              <CardTitle>{t('dashboard.reports.title')}</CardTitle>
-              <CardDescription>{t('dashboard.reports.description')}</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                {[
-                  t('dashboard.reports.revenueReport'),
-                  t('dashboard.reports.userActivityReport'),
-                  t('dashboard.reports.systemPerformanceReport')
-                ].map((report) => (
-                  <div
-                    key={report}
-                    className="flex flex-col gap-2 rounded-lg border p-4 hover:bg-muted/50 cursor-pointer transition-colors"
-                  >
-                    <h3 className="font-semibold">{report}</h3>
-                    <p className="text-sm text-muted-foreground">{t('dashboard.reports.viewDetails')}</p>
-                  </div>
-                ))}
               </div>
             </CardContent>
           </Card>
