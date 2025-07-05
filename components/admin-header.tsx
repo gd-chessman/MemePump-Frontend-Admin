@@ -46,7 +46,7 @@ export function AdminHeader() {
   }, [])
 
   const handleSettingsClick = () => {
-    router.push("/admin/settings")
+    router.push("/settings")
     setIsAvatarMenuOpen(false)
   }
 
