@@ -82,7 +82,9 @@
             "status": "Status:",
             "active": "Active",
             "inactive": "Inactive",
-            "noResults": "No results."
+            "noResults": "No results.",
+            "authUpdated": "Auth type updated successfully",
+            "authUpdateFailed": "Failed to update auth type"
         }
     },
     "categories-token": {

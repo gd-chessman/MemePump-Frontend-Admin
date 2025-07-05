@@ -1,6 +1,6 @@
 "use client"
 
-import { Fragment, useState } from "react"
+import { Fragment, useState, useEffect } from "react"
 import {
   type ColumnDef,
   type ColumnFiltersState,
@@ -8,11 +8,10 @@ import {
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
-  getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
-import { ChevronDown, ChevronRight, Wallet, CheckCircle2, XCircle, Copy, Check } from "lucide-react"
+import { ChevronDown, ChevronRight, Wallet, CheckCircle2, XCircle, Copy, Check, ChevronLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
@@ -47,40 +46,41 @@ interface UserWallet {
 
 interface UserWalletResponse {
   data: UserWallet[]
-  total: number
-  page: number
-  limit: number
+  pagination: {
+    page: number
+    limit: number
+    total: number
+    totalPages: number
+  }
 }
-
 
 export function ListWalletsTable({ searchQuery }: { searchQuery: string }) {
   const { t } = useLang()
   const queryClient = useQueryClient()
-  const { data: listWallets, isLoading } = useQuery({
-    queryKey: ["list-wallets", searchQuery],
-    queryFn: () => getListWallets(searchQuery),
-  })
-  const [sorting, setSorting] = useState<SortingState>([])
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [expandedRows, setExpandedRows] = useState<Record<number, boolean>>({})
   const [copiedAddress, setCopiedAddress] = useState<string | null>(null)
+  const [currentPage, setCurrentPage] = useState(1)
+  const pageSize = 10
+
+  // Reset to page 1 when search changes
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [searchQuery])
 
   const toggleRow = (walletId: number) => {
-    setExpandedRows((prev) => ({
+    setExpandedRows(prev => ({
       ...prev,
-      [walletId]: !prev[walletId],
+      [walletId]: !prev[walletId]
     }))
   }
 
   const handleUpdateAuth = async (walletId: number, newAuth: string) => {
     try {
-      await updateListWalletsAuth(walletId.toString(), {
-        wallet_auth: newAuth
-      })
-      // Invalidate and refetch the list
-      queryClient.invalidateQueries({ queryKey: ["list-wallets"] })
+      await updateListWalletsAuth(walletId.toString(), { auth_type: newAuth })
+      toast.success(t('list-wallets.table.authUpdated'))
+      queryClient.invalidateQueries({ queryKey: ['listWallets'] })
     } catch (error) {
-      console.error("Failed to update wallet auth:", error)
+      toast.error(t('list-wallets.table.authUpdateFailed'))
     }
   }
 
@@ -90,15 +90,23 @@ export function ListWalletsTable({ searchQuery }: { searchQuery: string }) {
       setCopiedAddress(text)
       toast.success(t('list-wallets.table.addressCopied'))
       setTimeout(() => setCopiedAddress(null), 2000)
-    } catch (err) {
+    } catch (error) {
       toast.error(t('list-wallets.table.copyFailed'))
     }
   }
 
+  const { data: listWallets, isLoading } = useQuery<UserWalletResponse>({
+    queryKey: ['listWallets', searchQuery, currentPage],
+    queryFn: () => getListWallets(searchQuery, currentPage, pageSize),
+    placeholderData: (previousData) => previousData,
+  })
+
+  const [sorting, setSorting] = useState<SortingState>([])
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+
   const columns: ColumnDef<UserWallet>[] = [
     {
-      id: "expander",
-      header: () => null,
+      id: "expand",
       cell: ({ row }) => {
         const userWallet = row.original
         const isExpanded = expandedRows[userWallet.wallet_id] || false
@@ -171,19 +179,31 @@ export function ListWalletsTable({ searchQuery }: { searchQuery: string }) {
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    initialState: {
-      pagination: {
-        pageSize: 100,
-      },
-    },
+    manualPagination: true,
+    pageCount: listWallets?.pagination.totalPages ?? 0,
     state: {
       sorting,
       columnFilters,
+      pagination: {
+        pageIndex: currentPage - 1,
+        pageSize,
+      },
     },
   })
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1)
+    }
+  }
+
+  const handleNextPage = () => {
+    if (listWallets?.pagination.totalPages && currentPage < listWallets.pagination.totalPages) {
+      setCurrentPage(currentPage + 1)
+    }
+  }
 
   if (isLoading) {
     return <div>{t('list-wallets.table.loading')}</div>
@@ -192,9 +212,8 @@ export function ListWalletsTable({ searchQuery }: { searchQuery: string }) {
   return (
     <div className="space-y-4">
       <div className="rounded-md border">
-        <div className="max-h-[32rem] overflow-auto">
-          <Table>
-            <TableHeader className="sticky top-0 bg-background z-10">
+        <Table>
+            <TableHeader className="sticky top-0 bg-background z-20 border-b">
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>
                   {headerGroup.headers.map((header) => {
@@ -213,8 +232,8 @@ export function ListWalletsTable({ searchQuery }: { searchQuery: string }) {
                   <Fragment key={index}>
                     <TableRow data-state={row.getIsSelected() && "selected"}>
                       {row.getVisibleCells().map((cell) => (
-                        <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
-                      ))}
+                      <TableCell key={cell.id} className="p-2.5">{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+                    ))}
                     </TableRow>
                     {expandedRows[row.original.wallet_id] && (
                       <TableRow>
@@ -293,7 +312,29 @@ export function ListWalletsTable({ searchQuery }: { searchQuery: string }) {
               )}
             </TableBody>
           </Table>
-        </div>
+      </div>
+      
+      {/* Server-side Pagination */}
+      <div className="flex items-center justify-center space-x-4">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={handlePreviousPage}
+          disabled={currentPage <= 1}
+        >
+          <ChevronLeft className="h-4 w-4" />
+        </Button>
+        <span className="text-sm text-muted-foreground">
+          {currentPage} / {listWallets?.pagination.totalPages || 1}
+        </span>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={handleNextPage}
+          disabled={!listWallets?.pagination.totalPages || currentPage >= listWallets.pagination.totalPages}
+        >
+          <ChevronRight className="h-4 w-4" />
+        </Button>
       </div>
     </div>
   )
