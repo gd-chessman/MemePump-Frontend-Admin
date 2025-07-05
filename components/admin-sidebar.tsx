@@ -137,8 +137,8 @@ export function AdminSidebar() {
       >
         <div className="flex h-14 items-center border-b border-slate-800 px-6 justify-between relative">
           <Link href="/admin" className={cn("flex items-center gap-2", isCollapsed && "justify-center")}>
-            <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary">
-              <img src={`${process.env.NEXT_PUBLIC_API_URL}${setting?.logo}`} alt="logo" className="size-8 rounded" />
+            <div className="flex h-8 w-8 items-center justify-center rounded-md">
+              <img src="/logo.png" alt="logo" className="size-8 rounded" />
             </div>
             {!isCollapsed && <span className="text-lg font-bold text-white whitespace-nowrap">Admin Panel</span>}
           </Link>

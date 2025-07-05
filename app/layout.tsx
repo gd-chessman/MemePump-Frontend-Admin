@@ -35,9 +35,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning className="dark">
       <head>
         <title>{process.env.NEXT_PUBLIC_APP_NAME}</title>
-        <link rel="icon" href={`${process.env.NEXT_PUBLIC_API_URL}/uploads/logo.jpg`} type="image/jpeg" />
-        <link rel="icon" href={`${process.env.NEXT_PUBLIC_API_URL}/uploads/logo.jpeg`} type="image/jpeg" />
-        <link rel="icon" href={`${process.env.NEXT_PUBLIC_API_URL}/uploads/logo.png`} type="image/png" />
+        <link rel="icon" href="/logo.png" type="image/png" />
       </head>
       <body className={`${inter.variable} ${inter.className}`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
