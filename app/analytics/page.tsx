@@ -285,7 +285,7 @@ export default function AnalyticsPage() {
                         formatter={(value, entry) => {
                           const percentage = entry.payload ? ((entry.payload.value / data.total) * 100).toFixed(0) : '0';
                           return (
-                            <span style={{ color: '#000' }}>
+                            <span style={{ color: 'inherit' }}>
                               {value} ({percentage}%)
                             </span>
                           );
@@ -328,7 +328,7 @@ export default function AnalyticsPage() {
                         formatter={(value, entry) => {
                           const percentage = entry.payload ? ((entry.payload.value / data.total) * 100).toFixed(0) : '0';
                           return (
-                            <span style={{ color: '#000' }}>
+                            <span style={{ color: 'inherit' }}>
                               {value} ({percentage}%)
                             </span>
                           );

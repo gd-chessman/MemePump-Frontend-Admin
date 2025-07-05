@@ -155,8 +155,7 @@ export function AdminSidebar() {
             >
               <item.icon className={cn(
                 "h-5 w-5 mr-2 transition-colors",
-                item.color,
-                isActive(item) && "text-cyan-300"
+                item.color
               )} />
               {!isCollapsed && <span>{item.title}</span>}
             </Link>
