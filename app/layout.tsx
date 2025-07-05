@@ -10,7 +10,7 @@ import { Toaster } from "sonner";
 import { AdminHeader } from "@/components/admin-header";
 import { AdminSidebar } from "@/components/admin-sidebar";
 import { LangProvider } from "@/lang/LangProvider";
-
+import { usePathname } from "next/navigation";
 
 // Configure Inter font with all required weights
 const inter = Inter({
@@ -24,16 +24,18 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const pathname = usePathname();
+  const isLoginPage = pathname === "/login";
 
-    // Khởi tạo QueryClient trong component để nó không bị chia sẻ giữa các yêu cầu
-    const [queryClient] = useState(() => new QueryClient({
-      defaultOptions: {
-        queries: {
-          refetchOnMount: false,
-        },
+  // Khởi tạo QueryClient trong component để nó không bị chia sẻ giữa các yêu cầu
+  const [queryClient] = useState(() => new QueryClient({
+    defaultOptions: {
+      queries: {
+        refetchOnMount: false,
       },
-    }));
-    
+    },
+  }));
+  
   return (
     <html lang="en" suppressHydrationWarning className="dark">
       <head>
@@ -44,13 +46,17 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
           <QueryClientProvider client={queryClient}>
             <LangProvider>
-            <div className="flex min-h-screen">
-              <AdminSidebar />
-              <div className="flex flex-col flex-1 h-screen overflow-auto">
-                <AdminHeader />
-                <main className="flex-1 p-4 md:p-6 bg-slate-950/50">{children}</main>
-                </div>  
-              </div>
+              {isLoginPage ? (
+                <main className="min-h-screen bg-slate-950/50">{children}</main>
+              ) : (
+                <div className="flex min-h-screen">
+                  <AdminSidebar />
+                  <div className="flex flex-col flex-1 h-screen overflow-auto">
+                    <AdminHeader />
+                    <main className="flex-1 p-4 md:p-6 bg-slate-950/50">{children}</main>
+                  </div>  
+                </div>
+              )}
             </LangProvider>
           </QueryClientProvider>
         </ThemeProvider>
