@@ -342,6 +342,15 @@
         "executed": "Executed",
         "failed": "Failed",
         "noData": "No transactions found.",
-        "viewOnSolscan": "View on Solscan"
+        "viewOnSolscan": "View on Solscan",
+        "statistics": {
+            "total": "Total Transactions",
+            "totalDesc": "All orders in the system.",
+            "executed": "Executed Transactions",
+            "executedDesc": "Orders successfully executed.",
+            "mostActiveWallet": "Most Active Wallet",
+            "mostActiveWalletDesc": "Wallet with the most transactions.",
+            "orderCount": "{{count}} transactions"
+        }
     }
 }

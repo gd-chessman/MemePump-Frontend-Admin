@@ -340,6 +340,15 @@
         "executed": "Thành công",
         "failed": "Thất bại",
         "noData": "Không có giao dịch nào.",
-        "viewOnSolscan": "Xem trên Solscan"
+        "viewOnSolscan": "Xem trên Solscan",
+        "statistics": {
+            "total": "Tổng giao dịch",
+            "totalDesc": "Tất cả giao dịch trong hệ thống.",
+            "executed": "Giao dịch thành công",
+            "executedDesc": "Các giao dịch đã thực hiện thành công.",
+            "mostActiveWallet": "Ví hoạt động nhiều nhất",
+            "mostActiveWalletDesc": "Ví có số giao dịch nhiều nhất.",
+            "orderCount": "{{count}} giao dịch"
+        }
     }
 }

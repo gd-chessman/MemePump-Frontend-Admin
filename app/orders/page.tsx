@@ -2,11 +2,11 @@
 
 import { useState, useEffect } from "react"
 import { useQuery } from "@tanstack/react-query"
-import { getOrderHistory } from "@/services/api/OrderService"
+import { getOrderHistory, getOrderStatistics } from "@/services/api/OrderService"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { Search, Copy, Check, ChevronLeft, ExternalLink, ArrowDownLeft, ArrowUpRight } from "lucide-react"
+import { Search, Copy, Check, ChevronLeft, ExternalLink, ArrowDownLeft, ArrowUpRight, BarChart3, CheckCircle, Wallet as WalletIcon } from "lucide-react"
 import { useLang } from "@/lang/useLang"
 
 export default function OrdersPage() {
@@ -19,6 +19,10 @@ export default function OrdersPage() {
   const { data, isLoading } = useQuery({
     queryKey: ["orders-history", search, page],
     queryFn: () => getOrderHistory(search, page, limit),
+  })
+  const { data: statistics, isLoading: isLoadingStats } = useQuery({
+    queryKey: ["orders-statistics"],
+    queryFn: getOrderStatistics,
   })
 
   const orders = (data && typeof data === 'object' && 'data' in data) ? (data as any).data || [] : []
@@ -45,6 +49,68 @@ export default function OrdersPage() {
 
   return (
     <div className="flex flex-col space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Card>
+          <CardHeader className="pb-2 flex flex-row items-start justify-between">
+            <div>
+              <CardTitle>{t("orders.statistics.total")}</CardTitle>
+              <CardDescription>{t("orders.statistics.totalDesc")}</CardDescription>
+            </div>
+            <BarChart3 className="h-5 w-5 text-blue-400/80" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{isLoadingStats ? '...' : statistics?.total ?? 0}</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2 flex flex-row items-start justify-between">
+            <div>
+              <CardTitle>{t("orders.statistics.executed")}</CardTitle>
+              <CardDescription>{t("orders.statistics.executedDesc")}</CardDescription>
+            </div>
+            <CheckCircle className="h-5 w-5 text-emerald-500/80" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{isLoadingStats ? '...' : statistics?.executed ?? 0}</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2 flex flex-row items-start justify-between">
+            <div>
+              <CardTitle>{t("orders.statistics.mostActiveWallet")}</CardTitle>
+              <CardDescription>{t("orders.statistics.mostActiveWalletDesc")}</CardDescription>
+            </div>
+            <WalletIcon className="h-5 w-5 text-orange-400/80" />
+          </CardHeader>
+          <CardContent>
+            {isLoadingStats ? '...' : statistics?.mostActiveWallet ? (
+              <div className="flex flex-col gap-1">
+                <span className="font-mono text-sm break-all flex items-center gap-1">
+                  {statistics.mostActiveWallet.solAddress
+                    ? truncateMiddle(statistics.mostActiveWallet.solAddress)
+                    : ''}
+                  {statistics.mostActiveWallet.solAddress && (
+                    <button
+                      className="p-0.5 hover:bg-muted rounded"
+                      onClick={() => handleCopy(statistics.mostActiveWallet.solAddress)}
+                      title={t("orders.solAddress")}
+                    >
+                      {copiedTxHash === statistics.mostActiveWallet.solAddress ? (
+                        <Check className="h-4 w-4 text-emerald-500" />
+                      ) : (
+                        <Copy className="h-4 w-4" />
+                      )}
+                    </button>
+                  )}
+                </span>
+                <span className="text-sm text-muted-foreground">{t("orders.statistics.orderCount", { count: statistics.mostActiveWallet.orderCount })}</span>
+              </div>
+            ) : (
+              <span>-</span>
+            )}
+          </CardContent>
+        </Card>
+      </div>
       <div className="flex flex-col space-y-2">
         <h2 className="text-3xl font-bold tracking-tight">{t("orders.title")}</h2>
         <p className="text-muted-foreground">{t("orders.description")}</p>

@@ -11,3 +11,13 @@ export const getOrderHistory = async (search: string = '', page: number = 1, lim
         return [];
     }
 }
+
+export const getOrderStatistics = async () => {
+    try {
+        const temp = await axiosClient.get(`/order-statistics`)
+        return temp.data;
+    } catch (error) {
+        console.log(error)
+        return {};
+    }       
+}
