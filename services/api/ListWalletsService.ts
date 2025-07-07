@@ -1,15 +1,19 @@
-
 import axiosClient from "@/utils/axiosClient";
 
 
-export const getListWallets = async (search: string = '', page: number = 1, limit: number = 10)=>{
-    try {
-        const temp = await axiosClient.get(`/list-wallets?search=${search}&page=${page}&limit=${limit}`)
-        return temp.data;
-    } catch (error) {
-        console.log(error)
-        return [];
-    }
+export const getListWallets = async (search: string = '', page: number = 1, limit: number = 10, walletAuth: string = '') => {
+  try {
+    const params = new URLSearchParams();
+    if (search) params.append('search', search);
+    if (page) params.append('page', page.toString());
+    if (limit) params.append('limit', limit.toString());
+    if (walletAuth) params.append('wallet_auth', walletAuth);
+    const temp = await axiosClient.get(`/list-wallets?${params.toString()}`);
+    return temp.data;
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
 }
 
 export const updateListWalletsAuth = async (walletId: string, item: any) => {

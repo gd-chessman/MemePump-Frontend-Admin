@@ -83,7 +83,8 @@
             "active": "활성",
             "inactive": "비활성",
             "noResults": "결과 없음."
-        }
+        },
+        "allTypes": "전체"
     },
     "categories-token": {
         "title": "토큰 분류",

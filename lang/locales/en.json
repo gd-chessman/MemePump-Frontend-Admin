@@ -58,6 +58,7 @@
         "cardDescription": "View and manage user wallets and their associated accounts.",
         "refresh": "Refresh",
         "searchPlaceholder": "Search by Wallet ID or Nickname ...",
+        "allTypes": "All types",
         "table": {
             "walletId": "Wallet ID",
             "nickname": "Nickname",

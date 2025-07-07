@@ -83,7 +83,8 @@
             "active": "Hoạt động",
             "inactive": "Không hoạt động",
             "noResults": "Không có kết quả."
-        }
+        },
+        "allTypes": "Tất cả"
     },
     "categories-token": {
         "title": "Phân loại token",
