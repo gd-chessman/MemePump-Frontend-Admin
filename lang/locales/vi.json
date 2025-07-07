@@ -267,7 +267,8 @@
         "analytics": "Phân Tích",
         "referral": "Giới Thiệu",
         "settings": "Cài Đặt",
-        "admin": "Quản Trị"
+        "admin": "Quản Trị",
+        "orders": "Giao dịch"
     },
     "header": {
         "accountInformation": "THÔNG TIN TÀI KHOẢN",

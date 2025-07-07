@@ -267,7 +267,8 @@
         "analytics": "분석",
         "referral": "추천",
         "settings": "설정",
-        "admin": "관리자"
+        "admin": "관리자",
+        "orders": "거래"
     },
     "header": {
         "accountInformation": "계정 정보",

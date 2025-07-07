@@ -18,6 +18,8 @@ import {
   Tag,
   ChevronLeft,
   Wallet,
+  Receipt,
+  Trophy,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -70,9 +72,15 @@ export function AdminSidebar() {
       color: "text-purple-400 hover:text-purple-300",
     },
     {
+      title: t("navigation.orders"),
+      href: "/orders",
+      icon: Receipt,
+      color: "text-pink-400 hover:text-pink-300",
+    },
+    {
       title: t("navigation.referral"),
       href: "/ref",
-      icon: FileText,
+      icon: Trophy,
       color: "text-cyan-400 hover:text-cyan-300",
     },
     {

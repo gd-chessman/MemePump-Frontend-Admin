@@ -269,7 +269,8 @@
         "analytics": "Analytics",
         "referral": "Referral",
         "settings": "Settings",
-        "admin": "Admin"
+        "admin": "Admin",
+        "orders": "Transactions"
     },
     "header": {
         "accountInformation": "ACCOUNT INFORMATION",
