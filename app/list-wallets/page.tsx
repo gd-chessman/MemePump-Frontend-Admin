@@ -206,13 +206,13 @@ export default function UserWalletsPage() {
                 <ChevronLeft className="h-4 w-4" />
               </Button>
               <span className="text-sm text-muted-foreground">
-                {currentPage} / {listWallets?.pagination.totalPages || 1}
+                {currentPage} / {listWallets?.pagination?.totalPages || 1}
               </span>
               <Button
                 variant="outline"
                 size="sm"
                 onClick={handleNextPage}
-                disabled={!listWallets?.pagination.totalPages || currentPage >= listWallets.pagination.totalPages}
+                disabled={!listWallets?.pagination?.totalPages || currentPage >= listWallets?.pagination?.totalPages}
               >
                 <ChevronLeft className="h-4 w-4 rotate-180" />
               </Button>
