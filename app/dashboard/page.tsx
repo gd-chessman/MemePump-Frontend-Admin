@@ -2,11 +2,13 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Overview } from "@/components/overview"
-import { ArrowUpRight, Users, CreditCard, Activity, Monitor, Smartphone, Tablet } from "lucide-react"
+import { ArrowUpRight, Users, CreditCard, Activity, Monitor, Smartphone, Tablet, CheckCircle, Wallet as WalletIcon, Copy, Check } from "lucide-react"
 import { useEffect, useState } from "react"
 import { io } from "socket.io-client"
 import { Badge } from "@/components/ui/badge"
 import { useLang } from "@/lang/useLang"
+import { useQuery } from "@tanstack/react-query"
+import { getOrderStatistics } from "@/services/api/OrderService"
 
 import {
   Area,
@@ -70,6 +72,11 @@ export default function AdminDashboard() {
     },
     connections: []
   })
+  const [copiedWallet, setCopiedWallet] = useState<string | null>(null)
+  const { data: orderStats, isLoading: isLoadingOrderStats } = useQuery({
+    queryKey: ["orders-statistics-dashboard"],
+    queryFn: getOrderStatistics,
+  })
 
   useEffect(() => {
     const socket = io(`${process.env.NEXT_PUBLIC_API_URL}/admin`, {
@@ -121,6 +128,20 @@ export default function AdminDashboard() {
     value
   }))
 
+  function truncateMiddle(str: string, start: number = 4, end: number = 4) {
+    if (!str) return '-';
+    if (str.length <= start + end + 3) return str;
+    return `${str.slice(0, start)}...${str.slice(-end)}`;
+  }
+
+  const handleCopyWallet = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text)
+      setCopiedWallet(text)
+      setTimeout(() => setCopiedWallet(null), 2000)
+    } catch {}
+  }
+
   return (
     <div className="flex flex-col space-y-6">
       <div className="flex flex-col space-y-2">
@@ -128,23 +149,54 @@ export default function AdminDashboard() {
         <p className="text-muted-foreground">{t('dashboard.overview')}</p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-2">
-        {/* <Card className="stat-card">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <Card className="stat-card min-h-[140px] flex flex-col justify-between">
           <div className="flex justify-between">
             <div>
-              <p className="stat-label">{t('dashboard.totalRevenue')}</p>
-              <p className="stat-value">$45,231.89</p>
-              <p className="stat-change stat-change-positive flex items-center gap-1">
-                <ArrowUpRight className="h-3 w-3" />
-                <span>20.1% {t('dashboard.fromLastMonth')}</span>
-              </p>
+              <p className="stat-label">{t('orders.statistics.executed')}</p>
+              <p className="stat-value">{isLoadingOrderStats ? '...' : orderStats?.executed ?? 0}</p>
             </div>
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-              <CreditCard className="h-6 w-6 text-primary" />
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500/10">
+              <CheckCircle className="h-6 w-6 text-emerald-500" />
             </div>
           </div>
-        </Card> */}
-        <Card className="stat-card">
+        </Card>
+        <Card className="stat-card min-h-[140px] flex flex-col justify-between">
+          <div className="flex justify-between">
+            <div>
+              <p className="stat-label">{t('orders.statistics.mostActiveWallet')}</p>
+              <div className="flex items-center gap-2 mt-2">
+                {isLoadingOrderStats ? (
+                  <span>...</span>
+                ) : orderStats?.mostActiveWallet ? (
+                  <>
+                    <span className="font-mono text-sm break-all flex items-center gap-1">
+                      {truncateMiddle(orderStats.mostActiveWallet.solAddress)}
+                      <button
+                        className="p-0.5 hover:bg-muted rounded"
+                        onClick={() => handleCopyWallet(orderStats.mostActiveWallet.solAddress)}
+                        title={t("orders.solAddress")}
+                      >
+                        {copiedWallet === orderStats.mostActiveWallet.solAddress ? (
+                          <Check className="h-4 w-4 text-emerald-500" />
+                        ) : (
+                          <Copy className="h-4 w-4" />
+                        )}
+                      </button>
+                    </span>
+                    <span className="text-xs text-muted-foreground">{t('orders.statistics.orderCount', { count: orderStats.mostActiveWallet.orderCount })}</span>
+                  </>
+                ) : (
+                  <span>-</span>
+                )}
+              </div>
+            </div>
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-orange-500/10">
+              <WalletIcon className="h-6 w-6 text-orange-500" />
+            </div>
+          </div>
+        </Card>
+        <Card className="stat-card min-h-[140px] flex flex-col justify-between">
           <div className="flex justify-between">
             <div>
               <p className="stat-label">{t('dashboard.activeUsers')}</p>
@@ -159,7 +211,7 @@ export default function AdminDashboard() {
             </div>
           </div>
         </Card>
-        <Card className="stat-card">
+        <Card className="stat-card min-h-[140px] flex flex-col justify-between">
           <div className="flex justify-between">
             <div>
               <p className="stat-label">{t('dashboard.deviceDistribution.title')}</p>
