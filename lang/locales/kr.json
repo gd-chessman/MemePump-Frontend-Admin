@@ -317,5 +317,28 @@
             "invalidCredentials": "사용자명 또는 비밀번호가 올바르지 않습니다",
             "generalError": "오류가 발생했습니다. 다시 시도해 주세요."
         }
+    },
+    "orders": {
+        "title": "거래 내역",
+        "description": "모든 거래 기록을 보고 검색하세요.",
+        "listTitle": "거래 목록",
+        "listDescription": "모든 거래",
+        "searchPlaceholder": "지갑 주소, 토큰 이름, 토큰 주소로 검색...",
+        "stt": "번호",
+        "solAddress": "SOL 주소",
+        "trade": "거래 종류",
+        "token": "토큰",
+        "quantity": "수량",
+        "price": "가격",
+        "total": "합계",
+        "status": "상태",
+        "createdAt": "생성일",
+        "txHash": "Tx Hash",
+        "buy": "매수",
+        "sell": "매도",
+        "executed": "성공",
+        "failed": "실패",
+        "noData": "거래가 없습니다.",
+        "viewOnSolscan": "Solscan에서 보기"
     }
 }

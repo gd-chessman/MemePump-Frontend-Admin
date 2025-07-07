@@ -319,5 +319,28 @@
             "invalidCredentials": "Invalid username or password",
             "generalError": "An error occurred. Please try again."
         }
+    },
+    "orders": {
+        "title": "Transaction History",
+        "description": "View and search all transaction records.",
+        "listTitle": "Transaction List",
+        "listDescription": "All transactions",
+        "searchPlaceholder": "Search by Wallet Address, Token Name, Token Address...",
+        "stt": "No.",
+        "solAddress": "SOL Address",
+        "trade": "Trade",
+        "token": "Token",
+        "quantity": "Quantity",
+        "price": "Price",
+        "total": "Total",
+        "status": "Status",
+        "createdAt": "Created At",
+        "txHash": "Tx Hash",
+        "buy": "Buy",
+        "sell": "Sell",
+        "executed": "Executed",
+        "failed": "Failed",
+        "noData": "No transactions found.",
+        "viewOnSolscan": "View on Solscan"
     }
 }

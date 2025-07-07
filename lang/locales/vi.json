@@ -317,5 +317,28 @@
             "invalidCredentials": "Tên đăng nhập hoặc mật khẩu không đúng",
             "generalError": "Đã xảy ra lỗi. Vui lòng thử lại."
         }
+    },
+    "orders": {
+        "title": "Lịch sử giao dịch",
+        "description": "Xem và tìm kiếm tất cả các giao dịch.",
+        "listTitle": "Danh sách giao dịch",
+        "listDescription": "Tất cả giao dịch",
+        "searchPlaceholder": "Tìm theo địa chỉ ví, tên token, địa chỉ token...",
+        "stt": "STT",
+        "solAddress": "Địa chỉ SOL",
+        "trade": "Loại giao dịch",
+        "token": "Token",
+        "quantity": "Số lượng",
+        "price": "Giá",
+        "total": "Tổng",
+        "status": "Trạng thái",
+        "createdAt": "Thời gian",
+        "txHash": "Tx Hash",
+        "buy": "Mua",
+        "sell": "Bán",
+        "executed": "Thành công",
+        "failed": "Thất bại",
+        "noData": "Không có giao dịch nào.",
+        "viewOnSolscan": "Xem trên Solscan"
     }
 }

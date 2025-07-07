@@ -7,8 +7,10 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Search, Copy, Check, ChevronLeft, ExternalLink, ArrowDownLeft, ArrowUpRight } from "lucide-react"
+import { useLang } from "@/lang/useLang"
 
 export default function OrdersPage() {
+  const { t } = useLang()
   const [search, setSearch] = useState('')
   const [page, setPage] = useState(1)
   const limit = 10
@@ -44,15 +46,15 @@ export default function OrdersPage() {
   return (
     <div className="flex flex-col space-y-6">
       <div className="flex flex-col space-y-2">
-        <h2 className="text-3xl font-bold tracking-tight">Order History</h2>
-        <p className="text-muted-foreground">View and search all order transactions.</p>
+        <h2 className="text-3xl font-bold tracking-tight">{t("orders.title")}</h2>
+        <p className="text-muted-foreground">{t("orders.description")}</p>
       </div>
       <Card className="dashboard-card">
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle>Order List</CardTitle>
-              <CardDescription>All executed and failed orders.</CardDescription>
+              <CardTitle>{t("orders.listTitle")}</CardTitle>
+              <CardDescription>{t("orders.listDescription")}</CardDescription>
             </div>
           </div>
         </CardHeader>
@@ -62,7 +64,7 @@ export default function OrdersPage() {
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
                 type="search"
-                placeholder="Search by Wallet Address, Token Name, Token Address..."
+                placeholder={t("orders.searchPlaceholder")}
                 className="pl-8 w-full md:max-w-sm"
                 value={search}
                 onChange={e => setSearch(e.target.value)}
@@ -73,16 +75,16 @@ export default function OrdersPage() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b bg-muted/50">
-                  <th className="h-12 px-4 text-left font-medium whitespace-nowrap">STT</th>
-                  <th className="h-12 px-4 text-left font-medium whitespace-nowrap">SOL Address</th>
-                  <th className="h-12 px-4 text-left font-medium whitespace-nowrap">Trade</th>
-                  <th className="h-12 px-4 text-left font-medium whitespace-nowrap">Token</th>
-                  <th className="h-12 px-4 text-left font-medium whitespace-nowrap">Quantity</th>
-                  <th className="h-12 px-4 text-left font-medium whitespace-nowrap">Price</th>
-                  <th className="h-12 px-4 text-left font-medium whitespace-nowrap">Total</th>
-                  <th className="h-12 px-4 text-left font-medium whitespace-nowrap">Status</th>
-                  <th className="h-12 px-4 text-left font-medium whitespace-nowrap">Created At</th>
-                  <th className="h-12 px-4 text-left font-medium whitespace-nowrap">Tx Hash</th>
+                  <th className="h-12 px-4 text-left font-medium whitespace-nowrap">{t("orders.stt")}</th>
+                  <th className="h-12 px-4 text-left font-medium whitespace-nowrap">{t("orders.solAddress")}</th>
+                  <th className="h-12 px-4 text-left font-medium whitespace-nowrap">{t("orders.trade")}</th>
+                  <th className="h-12 px-4 text-left font-medium whitespace-nowrap">{t("orders.token")}</th>
+                  <th className="h-12 px-4 text-left font-medium whitespace-nowrap">{t("orders.quantity")}</th>
+                  <th className="h-12 px-4 text-left font-medium whitespace-nowrap">{t("orders.price")}</th>
+                  <th className="h-12 px-4 text-left font-medium whitespace-nowrap">{t("orders.total")}</th>
+                  <th className="h-12 px-4 text-left font-medium whitespace-nowrap">{t("orders.status")}</th>
+                  <th className="h-12 px-4 text-left font-medium whitespace-nowrap">{t("orders.createdAt")}</th>
+                  <th className="h-12 px-4 text-left font-medium whitespace-nowrap">{t("orders.txHash")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -99,7 +101,7 @@ export default function OrdersPage() {
                             <button
                               className="p-0.5 hover:bg-muted rounded"
                               onClick={() => handleCopy(order.solAddress)}
-                              title="Copy SOL Address"
+                              title={t("orders.solAddress")}
                             >
                               {copiedTxHash === order.solAddress ? (
                                 <Check className="h-3 w-3 text-emerald-500" />
@@ -123,7 +125,7 @@ export default function OrdersPage() {
                           ) : (
                             <ArrowUpRight className="h-2.5 w-2.5 text-red-500" />
                           )}
-                          {order.order_trade_type.charAt(0).toUpperCase() + order.order_trade_type.slice(1)}
+                          {t(`orders.${order.order_trade_type}`)}
                         </span>
                       </td>
                       <td className="px-4 py-2">
@@ -134,7 +136,7 @@ export default function OrdersPage() {
                             <button
                               className="p-0.5 hover:bg-muted rounded"
                               onClick={() => handleCopy(order.order_token_address)}
-                              title="Copy Token Address"
+                              title={t("orders.token")}
                             >
                               {copiedTxHash === order.order_token_address ? (
                                 <Check className="h-3 w-3 text-emerald-500" />
@@ -154,7 +156,7 @@ export default function OrdersPage() {
                             ? 'bg-emerald-100 text-emerald-700 px-2 py-1 rounded text-xs'
                             : 'bg-red-100 text-red-700 px-2 py-1 rounded text-xs'
                         }>
-                          {order.order_status}
+                          {t(`orders.${order.order_status}`)}
                         </span>
                       </td>
                       <td className="px-4 py-2 text-xs">{formatDate(order.order_created_at)}</td>
@@ -165,7 +167,7 @@ export default function OrdersPage() {
                             target="_blank"
                             rel="noopener noreferrer"
                             className="inline-flex items-center gap-1 text-blue-600 hover:underline"
-                            title="View on Solscan"
+                            title={t("orders.viewOnSolscan")}
                           >
                             <ExternalLink className="h-4 w-4" />
                           </a>
@@ -176,7 +178,7 @@ export default function OrdersPage() {
                     </tr>
                   ))
                 ) : (
-                  <tr><td colSpan={11} className="text-center py-8">No orders found.</td></tr>
+                  <tr><td colSpan={11} className="text-center py-8">{t("orders.noData")}</td></tr>
                 )}
               </tbody>
             </table>
