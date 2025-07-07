@@ -173,7 +173,8 @@
                 "userType": "Loại Người Dùng",
                 "device": "Thiết Bị",
                 "ip": "IP",
-                "lastActive": "Hoạt Động Cuối"
+                "lastActive": "Hoạt Động Cuối",
+                "solAddress": "Địa chỉ SOL"
             }
         },
         "devices": {

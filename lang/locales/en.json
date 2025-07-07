@@ -175,7 +175,8 @@
                 "userType": "User Type",
                 "device": "Device",
                 "ip": "IP",
-                "lastActive": "Last Active"
+                "lastActive": "Last Active",
+                "solAddress": "SOL Address"
             }
         },
         "devices": {

@@ -173,7 +173,8 @@
                 "userType": "사용자 유형",
                 "device": "장치",
                 "ip": "IP",
-                "lastActive": "마지막 활성"
+                "lastActive": "마지막 활성",
+                "solAddress": "솔라나 주소"
             }
         },
         "devices": {

@@ -25,6 +25,7 @@ interface Connection {
   }
   ip?: string
   tabsCount?: number
+  solAddress?: string
 }
 
 interface UserTab {
@@ -111,6 +112,13 @@ function getDeviceIcon(type: string) {
     default:
       return <Globe className="h-4 w-4" />
   }
+}
+
+// Helper to truncate address with ellipsis in the middle
+function truncateAddress(address?: string, start: number = 5, end: number = 5): string {
+  if (!address) return '-';
+  if (address.length <= start + end) return address;
+  return `${address.slice(0, start)}...${address.slice(-end)}`;
 }
 
 export default function AnalyticsPage() {
@@ -382,7 +390,7 @@ export default function AnalyticsPage() {
                     <thead>
                       <tr className="border-b bg-muted/50">
                         <th className="h-12 px-4 text-left font-medium whitespace-nowrap">{t("analytics.connections.table.clientId")}</th>
-                        <th className="h-12 px-4 text-left font-medium whitespace-nowrap">{t("analytics.connections.table.walletId")}</th>
+                        <th className="h-12 px-4 text-left font-medium whitespace-nowrap">{t("analytics.connections.table.solAddress")}</th>
                         <th className="h-12 px-4 text-left font-medium whitespace-nowrap">{t("analytics.connections.table.userType")}</th>
                         <th className="h-12 px-4 text-left font-medium whitespace-nowrap">{t("analytics.connections.table.device")}</th>
                         <th className="h-12 px-4 text-left font-medium whitespace-nowrap">{t("analytics.connections.table.ip")}</th>
@@ -393,7 +401,7 @@ export default function AnalyticsPage() {
                       {data.connections.map((connection) => (
                         <tr key={connection.clientId} className="border-b transition-colors hover:bg-muted/50">
                           <td className="p-4 align-middle font-mono text-xs whitespace-nowrap">{connection.clientId}</td>
-                          <td className="p-4 align-middle whitespace-nowrap">{connection.walletId}</td>
+                          <td className="p-4 align-middle whitespace-nowrap">{truncateAddress(connection.solAddress)}</td>
                           <td className="p-4 align-middle whitespace-nowrap">
                             <Badge className={getUserTypeColor(connection.walletAuth || "guest")}>
                               {connection.walletAuth || t("analytics.userTypes.guest")}
