@@ -179,46 +179,10 @@ export default function AdminDashboard() {
         </Card>
       </div>
 
-      <Tabs defaultValue="overview" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-2 lg:w-auto">
-          <TabsTrigger value="overview">{t('dashboard.tabs.overview')}</TabsTrigger>
+      <Tabs defaultValue="analytics" className="space-y-4">
+        <TabsList className="grid w-full grid-cols-1 lg:w-auto">
           <TabsTrigger value="analytics">{t('dashboard.tabs.analytics')}</TabsTrigger>
         </TabsList>
-        <TabsContent value="overview" className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-            <Card className="col-span-4 dashboard-card">
-              <CardHeader className="pb-2">
-                <CardTitle>{t('dashboard.revenueOverview.title')}</CardTitle>
-                <CardDescription>{t('dashboard.revenueOverview.description')}</CardDescription>
-              </CardHeader>
-              <CardContent className="pl-2">
-                <Overview />
-              </CardContent>
-            </Card>
-            <Card className="col-span-4 lg:col-span-3 dashboard-card">
-              <CardHeader className="pb-2">
-                <CardTitle>{t('dashboard.userDistribution.title')}</CardTitle>
-                <CardDescription>{t('dashboard.userDistribution.description')}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm">{t('dashboard.userDistribution.masterUsers')}</span>
-                    <Badge variant="secondary">{analyticsData.master}</Badge>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm">{t('dashboard.userDistribution.memberUsers')}</span>
-                    <Badge variant="secondary">{analyticsData.member}</Badge>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm">{t('dashboard.userDistribution.anonymousUsers')}</span>
-                    <Badge variant="secondary">{analyticsData.anonymous}</Badge>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
         <TabsContent value="analytics" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
             <Card className="col-span-4 dashboard-card">
