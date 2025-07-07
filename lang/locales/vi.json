@@ -77,7 +77,7 @@
             "type": "Loại",
             "name": "Tên",
             "walletDetails": "Chi tiết ví",
-            "solanaAddress": "Địa chỉ Solana:",
+            "solanaAddress": "Địa chỉ Solana",
             "ethAddress": "Địa chỉ ETH:",
             "status": "Trạng thái:",
             "active": "Hoạt động",

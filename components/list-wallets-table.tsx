@@ -105,23 +105,44 @@ export function ListWalletsTable({ searchQuery }: { searchQuery: string }) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
 
   const columns: ColumnDef<UserWallet>[] = [
-    {
-      id: "expand",
-      cell: ({ row }) => {
-        const userWallet = row.original
-        const isExpanded = expandedRows[userWallet.wallet_id] || false
+    // {
+    //   id: "expand",
+    //   cell: ({ row }) => {
+    //     const userWallet = row.original
+    //     const isExpanded = expandedRows[userWallet.wallet_id] || false
 
-        return (
-          <Button variant="ghost" size="icon" className="h-8 w-8 p-0" onClick={() => toggleRow(userWallet.wallet_id)}>
-            {isExpanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
-          </Button>
-        )
-      },
-    },
+    //     return (
+    //       <Button variant="ghost" size="icon" className="h-8 w-8 p-0" onClick={() => toggleRow(userWallet.wallet_id)}>
+    //         {isExpanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+    //       </Button>
+    //     )
+    //   },
+    // },
     {
       accessorKey: "wallet_id",
       header: t('list-wallets.table.walletId'),
       cell: ({ row }) => <div className="font-medium">{row.getValue("wallet_id")}</div>,
+    },
+    {
+      id: "wallet_solana_address",
+      header: t('list-wallets.table.solanaAddress'),
+      cell: ({ row }) => (
+        <div className="flex items-center gap-2">
+          <span className="text-xs break-all">{truncateString(row.original.wallet_solana_address, 14)}</span>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-6 w-6"
+            onClick={() => copyToClipboard(row.original.wallet_solana_address)}
+          >
+            {copiedAddress === row.original.wallet_solana_address ? (
+              <Check className="h-3.5 w-3.5 text-emerald-500" />
+            ) : (
+              <Copy className="h-3.5 w-3.5" />
+            )}
+          </Button>
+        </div>
+      ),
     },
     {
       accessorKey: "wallet_nick_name",
@@ -235,6 +256,8 @@ export function ListWalletsTable({ searchQuery }: { searchQuery: string }) {
                       <TableCell key={cell.id} className="p-2.5">{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
                     ))}
                     </TableRow>
+                    {/* Removed expand/collapse functionality */}
+                    {/**
                     {expandedRows[row.original.wallet_id] && (
                       <TableRow>
                         <TableCell colSpan={columns.length} className="p-0">
@@ -263,24 +286,6 @@ export function ListWalletsTable({ searchQuery }: { searchQuery: string }) {
                                       </div>
                                     </div>
                                     <div>
-                                      <span className="text-sm font-medium">{t('list-wallets.table.ethAddress')}</span>
-                                      <div className="flex items-center gap-2">
-                                        <p className="text-sm text-muted-foreground break-all">{truncateString(row.original.wallet_eth_address, 14)}</p>
-                                        <Button
-                                          variant="ghost"
-                                          size="icon"
-                                          className="h-6 w-6"
-                                          onClick={() => copyToClipboard(row.original.wallet_eth_address)}
-                                        >
-                                          {copiedAddress === row.original.wallet_eth_address ? (
-                                            <Check className="h-3.5 w-3.5 text-emerald-500" />
-                                          ) : (
-                                            <Copy className="h-3.5 w-3.5" />
-                                          )}
-                                        </Button>
-                                      </div>
-                                    </div>
-                                    <div>
                                       <span className="text-sm font-medium">{t('list-wallets.table.status')}</span>
                                       <Badge
                                         variant="outline"
@@ -301,6 +306,7 @@ export function ListWalletsTable({ searchQuery }: { searchQuery: string }) {
                         </TableCell>
                       </TableRow>
                     )}
+                    */}
                   </Fragment>
                 ))
               ) : (

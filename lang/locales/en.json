@@ -77,7 +77,7 @@
             "type": "Type",
             "name": "Name",
             "walletDetails": "Wallet Details",
-            "solanaAddress": "Solana Address:",
+            "solanaAddress": "Solana Address",
             "ethAddress": "ETH Address:",
             "status": "Status:",
             "active": "Active",
