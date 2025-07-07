@@ -51,7 +51,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+    <div className="min-h-screen flex items-center justify-center p-6 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
       <Card className="w-full max-w-md bg-slate-800/90 backdrop-blur-sm border-slate-700/50 shadow-xl">
         <CardHeader className="text-center pb-6">
           <div className="flex justify-center mb-4">
@@ -62,7 +62,7 @@ export default function LoginPage() {
         </CardHeader>
         <CardContent>
           <form className="space-y-6" onSubmit={handleSubmit}>
-            {error && <div className="bg-destructive/10 text-destructive text-sm p-3 rounded-md">{error}</div>}
+            {error && <div className="bg-red-900/90 text-red-300 text-sm p-3 rounded-md border border-red-900/80 shadow">{error}</div>}
 
             <div className="space-y-4">
               <div className="space-y-2">

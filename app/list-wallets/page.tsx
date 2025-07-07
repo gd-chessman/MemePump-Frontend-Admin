@@ -126,7 +126,6 @@ export default function UserWalletsPage() {
                     <TableHead>{t('list-wallets.table.nickname')}</TableHead>
                     <TableHead>{t('list-wallets.table.authType')}</TableHead>
                     <TableHead>{t('list-wallets.table.stream')}</TableHead>
-                    <TableHead>{t('list-wallets.table.country')}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -183,12 +182,11 @@ export default function UserWalletsPage() {
                             t('list-wallets.table.na')
                           )}
                         </TableCell>
-                        <TableCell>{row.wallet_country || t('list-wallets.table.na')}</TableCell>
                       </TableRow>
                     ))
                   ) : (
                     <TableRow>
-                      <TableCell colSpan={6} className="h-24 text-center">
+                      <TableCell colSpan={5} className="h-24 text-center">
                         {t('list-wallets.table.noResults')}
                       </TableCell>
                     </TableRow>

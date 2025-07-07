@@ -370,20 +370,20 @@ export function CategoryTokenTable({ searchQuery }: { searchQuery: string }) {
             <Button
               variant="ghost"
               size="icon"
-              className="h-8 w-8 p-0 text-blue-600 hover:text-blue-700 hover:bg-blue-100"
+              className="h-8 w-8 p-0 text-blue-500 hover:text-blue-600 hover:bg-blue-50 focus:ring-2 focus:ring-blue-300"
               onClick={() => setOpenEditModal(prev => ({ ...prev, [category.slct_id.toString()]: true }))}
             >
-              <Pencil className="h-4 w-4" />
+              <Pencil className="h-4 w-4 text-blue-500 group-hover:text-blue-600" />
               <span className="sr-only">{t('categories-token.table.edit')}</span>
             </Button>
 
             <Button
               variant="ghost"
               size="icon"
-              className="h-8 w-8 p-0 text-destructive hover:text-destructive hover:bg-destructive/10"
+              className="h-8 w-8 p-0 text-red-500 hover:text-red-600 hover:bg-red-50 focus:ring-2 focus:ring-red-300"
               onClick={() => setOpenAlert((prevState) => ({ ...prevState, [category.slct_id.toString()]: true }))}
             >
-              <Trash className="h-4 w-4" />
+              <Trash className="h-4 w-4 text-red-500 group-hover:text-red-600" />
               <span className="sr-only">{t('categories-token.table.delete')}</span>
             </Button>
 
