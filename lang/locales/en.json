@@ -349,7 +349,7 @@
             "totalDesc": "All orders in the system.",
             "executed": "Executed Transactions",
             "executedDesc": "Orders successfully executed.",
-            "mostActiveWallet": "Most Active Wallet",
+            "mostActiveWallet": "Most Traded Wallet",
             "mostActiveWalletDesc": "Wallet with the most transactions.",
             "orderCount": "{{count}} transactions"
         }

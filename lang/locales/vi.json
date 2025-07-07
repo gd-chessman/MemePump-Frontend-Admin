@@ -347,7 +347,7 @@
             "totalDesc": "Tất cả giao dịch trong hệ thống.",
             "executed": "Giao dịch thành công",
             "executedDesc": "Các giao dịch đã thực hiện thành công.",
-            "mostActiveWallet": "Ví hoạt động nhiều nhất",
+            "mostActiveWallet": "Ví giao dịch nhiều nhất",
             "mostActiveWalletDesc": "Ví có số giao dịch nhiều nhất.",
             "orderCount": "{{count}} giao dịch"
         }
