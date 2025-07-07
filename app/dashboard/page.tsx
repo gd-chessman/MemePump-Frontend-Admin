@@ -165,7 +165,7 @@ export default function AdminDashboard() {
           <div className="flex justify-between">
             <div>
               <p className="stat-label">{t('orders.statistics.mostActiveWallet')}</p>
-              <div className="flex items-center gap-2 mt-2">
+              <div className="flex flex-col gap-2 mt-2">
                 {isLoadingOrderStats ? (
                   <span>...</span>
                 ) : orderStats?.mostActiveWallet ? (
