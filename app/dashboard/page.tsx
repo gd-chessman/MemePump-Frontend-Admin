@@ -1,7 +1,6 @@
 "use client"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Overview } from "@/components/overview"
 import { ArrowUpRight, Users, CreditCard, Activity, Monitor, Smartphone, Tablet, CheckCircle, Wallet as WalletIcon, Copy, Check } from "lucide-react"
 import { useEffect, useState } from "react"
 import { io } from "socket.io-client"
@@ -47,6 +46,7 @@ interface AnalyticsData {
   connections: Array<{
     clientId: string
     walletId: number
+    solAddress?: string
     lastActive: number
     device?: {
       browser: string
@@ -174,7 +174,7 @@ export default function AdminDashboard() {
                       {truncateMiddle(orderStats.mostActiveWallet.solAddress)}
                       <button
                         className="p-0.5 hover:bg-muted rounded"
-                        onClick={() => handleCopyWallet(orderStats.mostActiveWallet.solAddress)}
+                        onClick={() => handleCopyWallet(orderStats.mostActiveWallet.solAddress!)}
                         title={t("orders.solAddress")}
                       >
                         {copiedWallet === orderStats.mostActiveWallet.solAddress ? (
@@ -442,7 +442,26 @@ export default function AdminDashboard() {
                       {analyticsData.connections.map((connection) => (
                         <tr key={connection.clientId} className="border-b transition-colors hover:bg-muted/50">
                           <td className="p-4 align-middle font-mono text-xs">{connection.clientId}</td>
-                          <td className="p-4 align-middle">{connection.walletId}</td>
+                          <td className="p-4 align-middle">
+                            {connection.solAddress ? (
+                              <span className="font-mono text-xs break-all flex items-center gap-1">
+                                {truncateMiddle(connection.solAddress)}
+                                <button
+                                  className="p-0.5 hover:bg-muted rounded"
+                                  onClick={() => handleCopyWallet(connection.solAddress!)}
+                                  title={t("orders.solAddress")}
+                                >
+                                  {copiedWallet === connection.solAddress ? (
+                                    <Check className="h-3 w-3 text-emerald-500" />
+                                  ) : (
+                                    <Copy className="h-3 w-3" />
+                                  )}
+                                </button>
+                              </span>
+                            ) : (
+                              <span>-</span>
+                            )}
+                          </td>
                           <td className="p-4 align-middle">
                             {connection.device && (
                               <div className="flex items-center gap-2">
