@@ -26,6 +26,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts"
+import { getWalletStatistics } from "@/services/api/ListWalletsService"
 
 
 const COLORS = ["hsl(var(--chart-1))", "hsl(var(--chart-2))", "hsl(var(--chart-3))", "hsl(var(--chart-4))"]
@@ -78,6 +79,12 @@ export default function AdminDashboard() {
     queryFn: getOrderStatistics,
   })
 
+  const { data: walletStats, isLoading: isLoadingWalletStats } = useQuery({
+    queryKey: ["wallet-statistics-dashboard"],
+    queryFn: getWalletStatistics,
+  })
+
+  console.log(walletStats)
   useEffect(() => {
     const socket = io(`${process.env.NEXT_PUBLIC_API_URL}/admin`, {
       query: {
@@ -149,7 +156,18 @@ export default function AdminDashboard() {
         <p className="text-muted-foreground">{t('dashboard.overview')}</p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-1 lg:grid-cols-5">
+        <Card className="stat-card min-h-[140px] flex flex-col justify-between">
+          <div className="flex justify-between">
+            <div>
+              <p className="stat-label">{t('dashboard.totalWallets')}</p>
+              <p className="stat-value">{isLoadingWalletStats ? '...' : walletStats?.totalWallets ?? 0}</p>
+            </div>
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-cyan-500/10">
+              <WalletIcon className="h-6 w-6 text-cyan-500" />
+            </div>
+          </div>
+        </Card>
         <Card className="stat-card min-h-[140px] flex flex-col justify-between">
           <div className="flex justify-between">
             <div>

@@ -25,3 +25,13 @@ export const updateListWalletsAuth = async (walletId: string, item: any) => {
         throw error;
     }
 }
+
+export const getWalletStatistics = async () =>{
+  try {
+    const temp = await axiosClient.get(`/wallet-statistics`)
+    return temp.data;
+} catch (error) {
+    console.log(error)
+    return {};
+}  
+}
