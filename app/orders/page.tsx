@@ -53,8 +53,8 @@ export default function OrdersPage() {
         <Card>
           <CardHeader className="pb-2 flex flex-row items-start justify-between">
             <div>
-              <CardTitle>{t("orders.statistics.total")}</CardTitle>
-              <CardDescription>{t("orders.statistics.totalDesc")}</CardDescription>
+              <CardTitle className="text-base font-medium">{t("orders.statistics.total")}</CardTitle>
+              <CardDescription className="text-xs">{t("orders.statistics.totalDesc")}</CardDescription>
             </div>
             <BarChart3 className="h-5 w-5 text-blue-400/80" />
           </CardHeader>
@@ -65,8 +65,8 @@ export default function OrdersPage() {
         <Card>
           <CardHeader className="pb-2 flex flex-row items-start justify-between">
             <div>
-              <CardTitle>{t("orders.statistics.executed")}</CardTitle>
-              <CardDescription>{t("orders.statistics.executedDesc")}</CardDescription>
+              <CardTitle className="text-base font-medium">{t("orders.statistics.executed")}</CardTitle>
+              <CardDescription className="text-xs">{t("orders.statistics.executedDesc")}</CardDescription>
             </div>
             <CheckCircle className="h-5 w-5 text-emerald-500/80" />
           </CardHeader>
@@ -77,8 +77,8 @@ export default function OrdersPage() {
         <Card>
           <CardHeader className="pb-2 flex flex-row items-start justify-between">
             <div>
-              <CardTitle>{t("orders.statistics.mostActiveWallet")}</CardTitle>
-              <CardDescription>{t("orders.statistics.mostActiveWalletDesc")}</CardDescription>
+              <CardTitle className="text-base font-medium">{t("orders.statistics.mostActiveWallet")}</CardTitle>
+              <CardDescription className="text-xs">{t("orders.statistics.mostActiveWalletDesc")}</CardDescription>
             </div>
             <WalletIcon className="h-5 w-5 text-orange-400/80" />
           </CardHeader>
