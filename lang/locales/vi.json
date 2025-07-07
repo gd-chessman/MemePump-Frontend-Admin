@@ -39,7 +39,8 @@
             "clientId": "ID Khách hàng",
             "walletId": "ID Ví",
             "device": "Thiết bị",
-            "lastActive": "Hoạt động cuối"
+            "lastActive": "Hoạt động cuối",
+            "solAddress": "Địa chỉ SOL"
         },
         "reports": {
             "title": "Báo cáo",

@@ -39,7 +39,8 @@
             "clientId": "클라이언트 ID",
             "walletId": "지갑 ID",
             "device": "기기",
-            "lastActive": "마지막 활동"
+            "lastActive": "마지막 활동",
+            "solAddress": "SOL 주소"
         },
         "reports": {
             "title": "보고서",

@@ -39,7 +39,8 @@
             "clientId": "Client ID",
             "walletId": "Wallet ID",
             "device": "Device",
-            "lastActive": "Last Active"
+            "lastActive": "Last Active",
+            "solAddress": "SOL Address"
         },
         "reports": {
             "title": "Reports",

@@ -433,7 +433,7 @@ export default function AdminDashboard() {
                     <thead>
                       <tr className="border-b bg-muted/50">
                         <th className="h-12 px-4 text-left font-medium">{t('dashboard.activeConnections.clientId')}</th>
-                        <th className="h-12 px-4 text-left font-medium">{t('dashboard.activeConnections.walletId')}</th>
+                        <th className="h-12 px-4 text-left font-medium">{t('dashboard.activeConnections.solAddress')}</th>
                         <th className="h-12 px-4 text-left font-medium">{t('dashboard.activeConnections.device')}</th>
                         <th className="h-12 px-4 text-left font-medium">{t('dashboard.activeConnections.lastActive')}</th>
                       </tr>
