@@ -77,12 +77,12 @@ export function AdminSidebar() {
       icon: Receipt,
       color: "text-pink-400 hover:text-pink-300",
     },
-    {
-      title: t("navigation.referral"),
-      href: "/ref",
-      icon: Trophy,
-      color: "text-cyan-400 hover:text-cyan-300",
-    },
+    // {
+    //   title: t("navigation.referral"),
+    //   href: "/ref",
+    //   icon: Trophy,
+    //   color: "text-cyan-400 hover:text-cyan-300",
+    // },
     {
       title: t("navigation.settings"),
       href: "/settings",

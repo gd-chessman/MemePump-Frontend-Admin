@@ -228,7 +228,8 @@
         "description": "계정 설정 및 기본 설정을 관리하세요.",
         "tabs": {
             "profile": "프로필",
-            "security": "보안"
+            "security": "보안",
+            "referral": "추천"
         },
         "profile": {
             "title": "프로필 정보",

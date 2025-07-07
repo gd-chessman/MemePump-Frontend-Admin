@@ -230,7 +230,8 @@
         "description": "Manage your account settings and preferences.",
         "tabs": {
             "profile": "Profile",
-            "security": "Security"
+            "security": "Security",
+            "referral": "Referral"
         },
         "profile": {
             "title": "Profile Information",

@@ -228,7 +228,8 @@
         "description": "Quản lý cài đặt và tùy chọn tài khoản của bạn.",
         "tabs": {
             "profile": "Hồ Sơ",
-            "security": "Bảo Mật"
+            "security": "Bảo Mật",
+            "referral": "Giới thiệu"
         },
         "profile": {
             "title": "Thông Tin Hồ Sơ",
@@ -265,7 +266,7 @@
         "listWallets": "Danh Sách Ví",
         "categoriesToken": "Danh Mục Token",
         "analytics": "Phân Tích",
-        "referral": "Giới Thiệu",
+        "referral": "Giới thiệu",
         "settings": "Cài Đặt",
         "admin": "Quản Trị",
         "orders": "Giao dịch"
