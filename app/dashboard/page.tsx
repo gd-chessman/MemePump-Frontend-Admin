@@ -375,7 +375,7 @@ export default function AdminDashboard() {
                 </Tabs>
               </CardContent>
             </Card>
-            <Card className="col-span-3 dashboard-card">
+            <Card className="col-span-4 md:col-span-3 dashboard-card">
               <CardHeader className="pb-2">
                 <CardTitle>{t('dashboard.deviceDistribution.title')}</CardTitle>
                 <CardDescription>{t('dashboard.deviceDistribution.description')}</CardDescription>
