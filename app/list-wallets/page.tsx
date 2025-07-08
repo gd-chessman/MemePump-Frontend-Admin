@@ -49,9 +49,10 @@ export default function UserWalletsPage() {
 
   const handleUpdateAuth = async (walletId: number, newAuth: string) => {
     try {
-      await updateListWalletsAuth(walletId.toString(), { auth_type: newAuth })
+      await updateListWalletsAuth(walletId.toString(), { wallet_auth: newAuth })
       toast.success(t('list-wallets.table.authUpdated'))
       queryClient.invalidateQueries({ queryKey: ['listWallets'] })
+      refetchListWallets()
     } catch (error) {
       toast.error(t('list-wallets.table.authUpdateFailed'))
     }
