@@ -1,0 +1,78 @@
+import axiosClient from '@/utils/axiosClient';
+
+// 1. Tạo BG Affiliate mới
+export const createBgAffiliate = async (walletId: number, totalCommissionPercent: number) => {
+  try {
+    const response = await axiosClient.post('/bg-affiliate', {
+      walletId,
+      totalCommissionPercent
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error creating BG affiliate:', error);
+    throw error;
+  }
+};
+
+// 2. Cập nhật hoa hồng root BG
+export const updateRootBgCommission = async (treeId: number, newPercent: number) => {
+  try {
+    const response = await axiosClient.put('/bg-affiliate/commission', {
+      treeId,
+      newPercent
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error updating root BG commission:', error);
+    throw error;
+  }
+};
+
+// 3. Lấy danh sách tất cả BG affiliate trees
+export const getBgAffiliateTrees = async () => {
+  try {
+    const response = await axiosClient.get('/bg-affiliate/trees');
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching BG affiliate trees:', error);
+    throw error;
+  }
+};
+
+// 4. Lấy chi tiết BG affiliate tree
+export const getBgAffiliateTreeDetail = async (treeId: number) => {
+  try {
+    const response = await axiosClient.get(`/bg-affiliate/trees/${treeId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching BG affiliate tree detail:', error);
+    throw error;
+  }
+};
+
+// 5. Lấy thống kê BG affiliate của wallet
+export const getWalletBgAffiliateStats = async (walletId: number) => {
+  try {
+    const response = await axiosClient.get(`/bg-affiliate/wallet/${walletId}/stats`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching wallet BG affiliate stats:', error);
+    throw error;
+  }
+};
+
+// 6. Thêm node mới vào BG affiliate tree
+export const addNodeToBgAffiliateTree = async (treeId: number, walletId: number, parentWalletId: number, commissionPercent: number) => {
+  try {
+    const response = await axiosClient.post('/bg-affiliate/nodes', {
+      treeId,
+      walletId,
+      parentWalletId,
+      commissionPercent
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error adding node to BG affiliate tree:', error);
+    throw error;
+  }
+}; 
