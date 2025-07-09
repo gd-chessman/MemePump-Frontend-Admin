@@ -15,11 +15,12 @@ export const createBgAffiliate = async (walletId: number, totalCommissionPercent
 };
 
 // 2. Cập nhật hoa hồng root BG
-export const updateRootBgCommission = async (treeId: number, newPercent: number) => {
+export const updateRootBgCommission = async (treeId: number, newPercent: number, rootWalletId: number) => {
   try {
     const response = await axiosClient.put('/bg-affiliate/commission', {
       treeId,
-      newPercent
+      newPercent,
+      rootWalletId
     });
     return response.data;
   } catch (error) {

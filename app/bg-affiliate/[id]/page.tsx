@@ -82,12 +82,23 @@ export default function BgAffiliateTreeDetailPage() {
         <div>
           <h1 className="text-2xl font-bold text-slate-100">BG Affiliate Tree #{tree.treeId}</h1>
           <p className="text-slate-400 text-sm">
-            Root: <span className="font-semibold text-cyan-400">{tree.rootWallet.nickName}</span> &bull; {truncateAddress(tree.rootWallet.solanaAddress)}
+            Root: <span className="font-semibold text-cyan-400">{tree.rootWallet.nickName}</span> &bull; 
+            <span className="items-center gap-1 inline-flex">
+              {truncateAddress(tree.rootWallet.solanaAddress)}
+              <button
+                className="ml-1 p-1 rounded hover:bg-slate-700 transition-colors"
+                title="Copy address"
+                onClick={() => copyToClipboard(tree.rootWallet.solanaAddress)}
+              >
+                {copiedAddress === tree.rootWallet.solanaAddress ? (
+                  <Check className="h-3 w-3 text-emerald-400" />
+                ) : (
+                  <Copy className="h-3 w-3 text-slate-400" />
+                )}
+              </button>
+            </span>
           </p>
         </div>
-        <Badge variant="outline" className="border-green-500/30 text-green-400">
-          Active
-        </Badge>
       </div>
 
       {/* Summary Cards */}
@@ -111,7 +122,7 @@ export default function BgAffiliateTreeDetailPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-slate-400 text-sm">Total Members</p>
-                <p className="text-2xl font-bold text-purple-400">{tree.nodeCount}</p>
+                <p className="text-2xl font-bold text-purple-400">{tree.nodes.length}</p>
               </div>
               <div className="h-8 w-8 rounded-lg bg-purple-500/10 flex items-center justify-center">
                 <Users className="h-4 w-4 text-purple-400" />
@@ -136,7 +147,7 @@ export default function BgAffiliateTreeDetailPage() {
       </div>
 
       {/* Action Buttons */}
-      <div className="flex gap-2">
+      {/* <div className="flex gap-2">
         <Button 
           variant="outline" 
           size="sm"
@@ -155,7 +166,7 @@ export default function BgAffiliateTreeDetailPage() {
           <Plus className="h-4 w-4 mr-1" />
           Add New Member
         </Button>
-      </div>
+      </div> */}
 
       {/* Tree View */}
       <Card className="bg-slate-800/50 border-slate-700/50">
@@ -166,16 +177,6 @@ export default function BgAffiliateTreeDetailPage() {
               <CardDescription className="text-slate-400">
                 Interactive view of the complete affiliate hierarchy with commission percentages
               </CardDescription>
-            </div>
-            <div className="flex items-center gap-4 text-xs text-slate-400">
-              <span className="flex items-center gap-1">
-                <div className="w-2 h-2 rounded-full bg-gradient-to-r from-cyan-500 to-purple-500"></div>
-                Root Node
-              </span>
-              <span className="flex items-center gap-1">
-                <div className="w-2 h-2 rounded-full bg-gradient-to-r from-emerald-500 to-blue-500"></div>
-                Member Node
-              </span>
             </div>
           </div>
         </CardHeader>

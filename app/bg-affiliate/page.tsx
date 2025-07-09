@@ -86,8 +86,8 @@ export default function BgAffiliateAdminPage() {
 
   // Update Root BG Commission mutation
   const updateCommissionMutation = useMutation({
-    mutationFn: ({ treeId, newPercent }: { treeId: number, newPercent: number }) =>
-      updateRootBgCommission(treeId, newPercent),
+    mutationFn: ({ treeId, newPercent, rootWalletId }: { treeId: number, newPercent: number, rootWalletId: number }) =>
+      updateRootBgCommission(treeId, newPercent, rootWalletId),
     onSuccess: (data) => {
       console.log('Commission updated successfully:', data);
       // Close dialog and reset form
@@ -123,9 +123,7 @@ export default function BgAffiliateAdminPage() {
   }));
 
   const totalMembers = bgAffiliateTrees.reduce((sum: number, tree: any) => sum + (tree.nodeCount || 0), 0);
-  const avgCommission = bgAffiliateTrees.length > 0 
-    ? Math.round(bgAffiliateTrees.reduce((sum: number, tree: any) => sum + (tree.totalCommissionPercent || 0), 0) / bgAffiliateTrees.length)
-    : 0;
+
 
   const handleUpdateCommission = (tree: any) => {
     setSelectedTree(tree);
@@ -163,7 +161,7 @@ export default function BgAffiliateAdminPage() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card className="bg-slate-800/50 border-slate-700/50">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
@@ -187,20 +185,6 @@ export default function BgAffiliateAdminPage() {
               </div>
               <div className="h-8 w-8 rounded-lg bg-emerald-500/10 flex items-center justify-center">
                 <Wallet className="h-4 w-4 text-emerald-400" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-slate-800/50 border-slate-700/50">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-slate-400 text-sm">Avg Commission</p>
-                <p className="text-2xl font-bold text-purple-400">{avgCommission}%</p>
-              </div>
-              <div className="h-8 w-8 rounded-lg bg-purple-500/10 flex items-center justify-center">
-                <TrendingUp className="h-4 w-4 text-purple-400" />
               </div>
             </div>
           </CardContent>
@@ -464,7 +448,8 @@ export default function BgAffiliateAdminPage() {
                 if (selectedTree && updateCommissionForm.newPercent) {
                   updateCommissionMutation.mutate({
                     treeId: selectedTree.treeId,
-                    newPercent: parseFloat(updateCommissionForm.newPercent)
+                    newPercent: parseFloat(updateCommissionForm.newPercent),
+                    rootWalletId: selectedTree.rootWallet.walletId
                   });
                 }
               }}
