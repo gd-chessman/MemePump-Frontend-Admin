@@ -138,10 +138,10 @@ export default function BgAffiliateAdminPage() {
     try {
       await navigator.clipboard.writeText(text);
       setCopiedAddress(text);
-      toast.success('Address copied to clipboard!');
+      toast.success(t('list-wallets.table.addressCopied'));
       setTimeout(() => setCopiedAddress(null), 2000);
     } catch (error) {
-      toast.error('Failed to copy address');
+      toast.error(t('list-wallets.table.copyFailed'));
     }
   };
 
