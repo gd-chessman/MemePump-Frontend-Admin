@@ -75,4 +75,18 @@ export const addNodeToBgAffiliateTree = async (treeId: number, walletId: number,
     console.error('Error adding node to BG affiliate tree:', error);
     throw error;
   }
+};
+
+// 7. Cập nhật trạng thái BG affiliate node
+export const updateBgAffiliateNodeStatus = async (walletId: number, status: boolean) => {
+  try {
+    const response = await axiosClient.put('/bg-affiliate/nodes/status', {
+      walletId,
+      status
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error updating BG affiliate node status:', error);
+    throw error;
+  }
 }; 

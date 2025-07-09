@@ -429,12 +429,38 @@
                 "solanaAddress": "Solana Address",
                 "commission": "Commission (%)",
                 "level": "Level",
+                "status": "Status",
+                "active": "Active",
+                "inactive": "Inactive",
                 "joined": "Joined",
-                "noMembers": "No members found"
+                "noMembers": "No members found",
+                "statusUpdated": "Node status updated successfully!",
+                "statusUpdateFailed": "Failed to update node status. Please try again.",
+                "cannotDisableRoot": "Cannot disable root BG status"
             },
             "loading": "Loading tree...",
             "error": "Error loading tree. Please try again.",
-            "notFound": "Tree not found"
+            "notFound": "Tree not found",
+            "addNode": "Add Node",
+            "dialogs": {
+                "addNode": {
+                    "title": "Add New Node",
+                    "selectWallet": "Select Wallet",
+                    "selectWalletPlaceholder": "Search and select a wallet...",
+                    "selectParent": "Select Parent Node",
+                    "selectParentPlaceholder": "Choose parent node...",
+                    "selectParentHelp": "Select the parent node under which this new node will be added",
+                    "commission": "Commission (%)",
+                    "commissionPlaceholder": "e.g., 15",
+                    "commissionHelp": "Enter commission percentage for this node (0-100)",
+                    "availableWallets": "available wallets",
+                    "addButton": "Add Node",
+                    "adding": "Adding...",
+                    "success": "Node added successfully!",
+                    "error": "Failed to add node. Please try again.",
+                    "cancel": "Cancel"
+                }
+            }
         }
     }
 }

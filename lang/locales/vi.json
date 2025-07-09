@@ -427,12 +427,38 @@
                 "solanaAddress": "Địa Chỉ Solana",
                 "commission": "Hoa Hồng (%)",
                 "level": "Cấp",
+                "status": "Trạng Thái",
+                "active": "Hoạt Động",
+                "inactive": "Không Hoạt Động",
                 "joined": "Tham Gia",
-                "noMembers": "Không tìm thấy thành viên"
+                "noMembers": "Không tìm thấy thành viên",
+                "statusUpdated": "Cập nhật trạng thái node thành công!",
+                "statusUpdateFailed": "Cập nhật trạng thái node thất bại. Vui lòng thử lại.",
+                "cannotDisableRoot": "Không thể tắt trạng thái của root BG"
             },
             "loading": "Đang tải cây...",
             "error": "Lỗi tải cây. Vui lòng thử lại.",
-            "notFound": "Không tìm thấy cây"
+            "notFound": "Không tìm thấy cây",
+            "addNode": "Thêm Node",
+            "dialogs": {
+                "addNode": {
+                    "title": "Thêm Node Mới",
+                    "selectWallet": "Chọn Ví",
+                    "selectWalletPlaceholder": "Tìm kiếm và chọn ví...",
+                    "selectParent": "Chọn Node Cha",
+                    "selectParentPlaceholder": "Chọn node cha...",
+                    "selectParentHelp": "Chọn node cha mà node mới này sẽ được thêm vào dưới",
+                    "commission": "Hoa Hồng (%)",
+                    "commissionPlaceholder": "vd: 15",
+                    "commissionHelp": "Nhập phần trăm hoa hồng cho node này (0-100)",
+                    "availableWallets": "ví có sẵn",
+                    "addButton": "Thêm Node",
+                    "adding": "Đang thêm...",
+                    "success": "Thêm node thành công!",
+                    "error": "Thêm node thất bại. Vui lòng thử lại.",
+                    "cancel": "Hủy"
+                }
+            }
         }
     }
 }

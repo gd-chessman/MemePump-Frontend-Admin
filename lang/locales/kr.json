@@ -427,12 +427,38 @@
                 "solanaAddress": "솔라나 주소",
                 "commission": "수수료 (%)",
                 "level": "레벨",
+                "status": "상태",
+                "active": "활성",
+                "inactive": "비활성",
                 "joined": "가입일",
-                "noMembers": "멤버를 찾을 수 없습니다"
+                "noMembers": "멤버를 찾을 수 없습니다",
+                "statusUpdated": "노드 상태가 성공적으로 업데이트되었습니다!",
+                "statusUpdateFailed": "노드 상태 업데이트에 실패했습니다. 다시 시도해 주세요.",
+                "cannotDisableRoot": "루트 BG 상태를 비활성화할 수 없습니다"
             },
             "loading": "트리 로딩 중...",
             "error": "트리 로딩 오류. 다시 시도해 주세요.",
-            "notFound": "트리를 찾을 수 없습니다"
+            "notFound": "트리를 찾을 수 없습니다",
+            "addNode": "노드 추가",
+            "dialogs": {
+                "addNode": {
+                    "title": "새 노드 추가",
+                    "selectWallet": "지갑 선택",
+                    "selectWalletPlaceholder": "지갑을 검색하고 선택하세요...",
+                    "selectParent": "상위 노드 선택",
+                    "selectParentPlaceholder": "상위 노드를 선택하세요...",
+                    "selectParentHelp": "새 노드가 추가될 상위 노드를 선택하세요",
+                    "commission": "수수료 (%)",
+                    "commissionPlaceholder": "예: 15",
+                    "commissionHelp": "이 노드의 수수료 백분율을 입력하세요 (0-100)",
+                    "availableWallets": "사용 가능한 지갑",
+                    "addButton": "노드 추가",
+                    "adding": "추가 중...",
+                    "success": "노드가 성공적으로 추가되었습니다!",
+                    "error": "노드 추가에 실패했습니다. 다시 시도해 주세요.",
+                    "cancel": "취소"
+                }
+            }
         }
     }
 }
