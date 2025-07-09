@@ -60,7 +60,7 @@ export default function RootLayout({
             </LangProvider>
           </QueryClientProvider>
         </ThemeProvider>
-        <Toaster position="top-center" />
+        <Toaster position="top-center" theme="dark" />
       </body>
     </html>
   )
