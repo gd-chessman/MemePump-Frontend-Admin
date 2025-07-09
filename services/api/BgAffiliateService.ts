@@ -9,7 +9,7 @@ export const createBgAffiliate = async (walletId: number, totalCommissionPercent
     });
     return response.data;
   } catch (error) {
-    console.error('Error creating BG affiliate:', error);
+    console.log('Error creating BG affiliate:', error);
     throw error;
   }
 };
@@ -24,7 +24,7 @@ export const updateRootBgCommission = async (treeId: number, newPercent: number,
     });
     return response.data;
   } catch (error) {
-    console.error('Error updating root BG commission:', error);
+    console.log('Error updating root BG commission:', error);
     throw error;
   }
 };
@@ -45,7 +45,7 @@ export const getBgAffiliateTreeDetail = async (treeId: number) => {
     const response = await axiosClient.get(`/bg-affiliate/trees/${treeId}`);
     return response.data;
   } catch (error) {
-    console.error('Error fetching BG affiliate tree detail:', error);
+    console.log('Error fetching BG affiliate tree detail:', error);
     throw error;
   }
 };
@@ -56,7 +56,7 @@ export const getWalletBgAffiliateStats = async (walletId: number) => {
     const response = await axiosClient.get(`/bg-affiliate/wallet/${walletId}/stats`);
     return response.data;
   } catch (error) {
-    console.error('Error fetching wallet BG affiliate stats:', error);
+    console.log('Error fetching wallet BG affiliate stats:', error);
     return [];
   }
 };
@@ -72,7 +72,7 @@ export const addNodeToBgAffiliateTree = async (treeId: number, walletId: number,
     });
     return response.data;
   } catch (error) {
-    console.error('Error adding node to BG affiliate tree:', error);
+    console.log('Error adding node to BG affiliate tree:', error);
     throw error;
   }
 };
@@ -86,7 +86,7 @@ export const updateBgAffiliateNodeStatus = async (walletId: number, status: bool
     });
     return response.data;
   } catch (error) {
-    console.error('Error updating BG affiliate node status:', error);
+    console.log('Error updating BG affiliate node status:', error);
     throw error;
   }
 }; 
