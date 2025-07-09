@@ -42,7 +42,7 @@ export default function RootLayout({
         <title>{process.env.NEXT_PUBLIC_APP_NAME}</title>
         <link rel="icon" href="/logo.png" type="image/png" />
       </head>
-      <body className={`${inter.variable} ${inter.className}`}>
+      <body className={`${inter.variable} ${inter.className}`} suppressHydrationWarning>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
           <QueryClientProvider client={queryClient}>
             <LangProvider>
