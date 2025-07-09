@@ -129,7 +129,7 @@ export default function BgAffiliateAdminPage() {
 
   const handleUpdateCommission = (tree: any) => {
     setSelectedTree(tree);
-    setUpdateCommissionForm({ newPercent: tree.totalCommissionPercent.toString() });
+    setUpdateCommissionForm({ newPercent: Number(tree.totalCommissionPercent).toString() });
     setShowUpdateCommission(true);
   };
 
