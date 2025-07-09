@@ -180,13 +180,6 @@ export default function BgAffiliateTreeDetailPage() {
             </span>
           </p>
         </div>
-        <Button 
-          className="bg-gradient-to-r from-cyan-600 to-purple-600 hover:from-cyan-700 hover:to-purple-700"
-          onClick={() => setShowAddNode(true)}
-        >
-          <Plus className="h-4 w-4 mr-2" />
-          {t('bg-affiliate.detail.addNode')}
-        </Button>
       </div>
 
       {/* Summary Cards */}
