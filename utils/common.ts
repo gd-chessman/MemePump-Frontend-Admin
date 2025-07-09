@@ -15,7 +15,7 @@ export const selectStyles = {
     }),
     menu: (provided: any) => ({
       ...provided,
-      backgroundColor: 'rgba(15, 23, 42, 0.95)',
+      backgroundColor: 'rgba(15, 23, 42)',
       border: '1px solid rgba(71, 85, 105, 0.5)',
       borderRadius: '6px',
       boxShadow: '0 10px 25px rgba(0, 0, 0, 0.5)',

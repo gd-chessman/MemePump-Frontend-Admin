@@ -7,13 +7,14 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Eye, Users, Wallet, Percent, Calendar, ChevronRight, ChevronDown, Search, MoreHorizontal, TrendingUp, Activity } from "lucide-react";
+import { Plus, Eye, Users, Wallet, Percent, Calendar, ChevronRight, ChevronDown, Search, MoreHorizontal, TrendingUp, Activity, Edit, Copy, Check } from "lucide-react";
 import Link from "next/link";
 import Select from "react-select";
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getListWallets } from '@/services/api/ListWalletsService';
-import { createBgAffiliate, getBgAffiliateTrees } from '@/services/api/BgAffiliateService';
+import { createBgAffiliate, getBgAffiliateTrees, updateRootBgCommission } from '@/services/api/BgAffiliateService';
 import { selectStyles } from "@/utils/common";
+import { toast } from "sonner";
 
 
 // Helper function to truncate address
@@ -25,14 +26,21 @@ function truncateAddress(address: string, start: number = 4, end: number = 4): s
 
 export default function BgAffiliateAdminPage() {
   const [showCreate, setShowCreate] = useState(false);
+  const [showUpdateCommission, setShowUpdateCommission] = useState(false);
+  const [selectedTree, setSelectedTree] = useState<any>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [walletSearchQuery, setWalletSearchQuery] = useState("");
+  const [copiedAddress, setCopiedAddress] = useState<string | null>(null);
   const queryClient = useQueryClient();
 
   // Form states
   const [createForm, setCreateForm] = useState({ 
     selectedWallet: null, 
     totalCommissionPercent: "" 
+  });
+
+  const [updateCommissionForm, setUpdateCommissionForm] = useState({
+    newPercent: ""
   });
 
   // Fetch BG Affiliate trees
@@ -61,11 +69,43 @@ export default function BgAffiliateAdminPage() {
       setCreateForm({ selectedWallet: null, totalCommissionPercent: "" });
       // Invalidate and refetch trees list
       queryClient.invalidateQueries({ queryKey: ['bg-affiliate-trees'] });
-      // Show success message (you can add toast notification here)
+      // Show success toast
+      toast.success('BG Affiliate created successfully!');
     },
-    onError: (error) => {
+    onError: (error: any) => {
       console.error('Error creating BG Affiliate:', error);
-      // Show error message (you can add toast notification here)
+      if (error.response?.data?.message === "Wallet đã có cây affiliate") {
+        // Show error toast
+        toast.error("The wallet already has an affiliate tree");
+      } else {
+        // Show error toast
+        toast.error('Failed to create BG Affiliate. Please try again.');
+      }
+    }
+  });
+
+  // Update Root BG Commission mutation
+  const updateCommissionMutation = useMutation({
+    mutationFn: ({ treeId, newPercent }: { treeId: number, newPercent: number }) =>
+      updateRootBgCommission(treeId, newPercent),
+    onSuccess: (data) => {
+      console.log('Commission updated successfully:', data);
+      // Close dialog and reset form
+      setShowUpdateCommission(false);
+      setSelectedTree(null);
+      setUpdateCommissionForm({ newPercent: "" });
+      // Invalidate and refetch trees list
+      queryClient.invalidateQueries({ queryKey: ['bg-affiliate-trees'] });
+      // Show success toast
+      toast.success('Commission updated successfully!');
+    },
+    onError: (error: any) => {
+      console.error('Error updating commission:', error);
+      if (error.response?.data?.message) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error('Failed to update commission. Please try again.');
+      }
     }
   });
 
@@ -86,6 +126,24 @@ export default function BgAffiliateAdminPage() {
   const avgCommission = bgAffiliateTrees.length > 0 
     ? Math.round(bgAffiliateTrees.reduce((sum: number, tree: any) => sum + (tree.totalCommissionPercent || 0), 0) / bgAffiliateTrees.length)
     : 0;
+
+  const handleUpdateCommission = (tree: any) => {
+    setSelectedTree(tree);
+    setUpdateCommissionForm({ newPercent: tree.totalCommissionPercent.toString() });
+    setShowUpdateCommission(true);
+  };
+
+  // Copy to clipboard function
+  const copyToClipboard = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedAddress(text);
+      toast.success('Address copied to clipboard!');
+      setTimeout(() => setCopiedAddress(null), 2000);
+    } catch (error) {
+      toast.error('Failed to copy address');
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -222,7 +280,22 @@ export default function BgAffiliateAdminPage() {
                         <TableCell>
                           <div>
                             <p className="font-medium text-slate-100">{tree.rootWallet?.nickName || 'Unknown'}</p>
-                            <p className="text-xs text-slate-400">{truncateAddress(tree.rootWallet?.solanaAddress || '')}</p>
+                            <div className="flex items-center gap-2">
+                              <p className="text-xs text-slate-400">{truncateAddress(tree.rootWallet?.solanaAddress || '')}</p>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-5 w-5 text-slate-400 hover:text-cyan-300 hover:bg-cyan-900/20"
+                                onClick={() => copyToClipboard(tree.rootWallet?.solanaAddress || '')}
+                                title="Copy address"
+                              >
+                                {copiedAddress === tree.rootWallet?.solanaAddress ? (
+                                  <Check className="h-3 w-3 text-emerald-500" />
+                                ) : (
+                                  <Copy className="h-3 w-3" />
+                                )}
+                              </Button>
+                            </div>
                           </div>
                         </TableCell>
                         <TableCell>
@@ -245,15 +318,25 @@ export default function BgAffiliateAdminPage() {
                           </Badge>
                         </TableCell>
                         <TableCell>
-                          <Link href={`/bg-affiliate/${tree.treeId}`} passHref legacyBehavior>
+                          <div className="flex items-center gap-2">
+                            <Link href={`/bg-affiliate/${tree.treeId}`} passHref legacyBehavior>
+                              <Button 
+                                size="sm" 
+                                variant="ghost" 
+                                className="h-8 w-8 p-0 text-slate-400 hover:text-cyan-300 hover:bg-cyan-900/20"
+                              >
+                                <Eye className="h-4 w-4" />
+                              </Button>
+                            </Link>
                             <Button 
                               size="sm" 
                               variant="ghost" 
-                              className="h-8 w-8 p-0 text-slate-400 hover:text-cyan-300 hover:bg-cyan-900/20"
+                              className="h-8 w-8 p-0 text-slate-400 hover:text-emerald-300 hover:bg-emerald-900/20"
+                              onClick={() => handleUpdateCommission(tree)}
                             >
-                              <Eye className="h-4 w-4" />
+                              <Edit className="h-4 w-4" />
                             </Button>
-                          </Link>
+                          </div>
                         </TableCell>
                       </TableRow>
                     ))
@@ -267,18 +350,11 @@ export default function BgAffiliateAdminPage() {
 
       {/* Create Tree Dialog */}
       <Dialog open={showCreate} onOpenChange={setShowCreate}>
-        <DialogContent className="bg-slate-900/95 border-slate-700/50">
+        <DialogContent className="bg-slate-900 border-slate-700/50">
           <DialogHeader>
             <DialogTitle className="text-slate-100">Create New BG</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
-            {createBgAffiliateMutation.isError && (
-              <div className="p-3 rounded-lg bg-red-900/20 border border-red-500/30">
-                <p className="text-red-400 text-sm">
-                  Error creating BG Affiliate. Please try again.
-                </p>
-              </div>
-            )}
             <div className="space-y-2">
               <label className="block text-sm font-medium text-slate-300">Select Wallet</label>
               <Select
@@ -332,6 +408,68 @@ export default function BgAffiliateAdminPage() {
               }}
             >
               {createBgAffiliateMutation.isPending ? 'Creating...' : 'Create BG'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Update Commission Dialog */}
+      <Dialog open={showUpdateCommission} onOpenChange={setShowUpdateCommission}>
+        <DialogContent className="bg-slate-900/95 border-slate-700/50">
+          <DialogHeader>
+            <DialogTitle className="text-slate-100">Update Root BG Commission</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            {selectedTree && (
+              <div className="p-3 rounded-lg bg-slate-800/30 border border-slate-600/30">
+                <p className="text-sm text-slate-300 mb-1">Tree #{selectedTree.treeId}</p>
+                <p className="text-sm text-slate-400">
+                  Root: {selectedTree.rootWallet?.nickName || 'Unknown'} ({truncateAddress(selectedTree.rootWallet?.solanaAddress || '')})
+                </p>
+                <p className="text-sm text-slate-400">
+                  Current Commission: <span className="text-emerald-400 font-medium">{selectedTree.totalCommissionPercent}%</span>
+                </p>
+              </div>
+            )}
+            <div>
+              <label className="block text-sm font-medium text-slate-300 mb-2">New Commission (%)</label>
+              <Input 
+                type="number" 
+                placeholder="e.g., 60" 
+                value={updateCommissionForm.newPercent} 
+                onChange={e => setUpdateCommissionForm(f => ({ ...f, newPercent: e.target.value }))} 
+                className="bg-slate-800/50 border-slate-600/50" 
+                disabled={updateCommissionMutation.isPending}
+                min="0"
+                max="100"
+                step="0.01"
+              />
+              <p className="text-xs text-slate-400 mt-1">
+                Enter a value between 0 and 100
+              </p>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button 
+              variant="outline"
+              onClick={() => setShowUpdateCommission(false)}
+              disabled={updateCommissionMutation.isPending}
+            >
+              Cancel
+            </Button>
+            <Button 
+              className="bg-gradient-to-r from-emerald-600 to-blue-600 hover:from-emerald-700 hover:to-blue-700" 
+              disabled={!updateCommissionForm.newPercent || updateCommissionMutation.isPending}
+              onClick={() => {
+                if (selectedTree && updateCommissionForm.newPercent) {
+                  updateCommissionMutation.mutate({
+                    treeId: selectedTree.treeId,
+                    newPercent: parseFloat(updateCommissionForm.newPercent)
+                  });
+                }
+              }}
+            >
+              {updateCommissionMutation.isPending ? 'Updating...' : 'Update Commission'}
             </Button>
           </DialogFooter>
         </DialogContent>
