@@ -35,8 +35,7 @@ export const getBgAffiliateTrees = async () => {
     const response = await axiosClient.get('/bg-affiliate/trees');
     return response.data;
   } catch (error) {
-    console.error('Error fetching BG affiliate trees:', error);
-    throw error;
+    return [];
   }
 };
 
@@ -58,7 +57,7 @@ export const getWalletBgAffiliateStats = async (walletId: number) => {
     return response.data;
   } catch (error) {
     console.error('Error fetching wallet BG affiliate stats:', error);
-    throw error;
+    return [];
   }
 };
 
