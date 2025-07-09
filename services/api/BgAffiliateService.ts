@@ -40,9 +40,9 @@ export const getBgAffiliateTrees = async () => {
 };
 
 // 4. Lấy chi tiết BG affiliate tree
-export const getBgAffiliateTreeDetail = async (treeId: number) => {
+export const getBgAffiliateTreeDetail = async (walletId: number) => {
   try {
-    const response = await axiosClient.get(`/bg-affiliate/trees/${treeId}`);
+    const response = await axiosClient.get(`/bg-affiliate/trees/wallet/${walletId}`);
     return response.data;
   } catch (error) {
     console.log('Error fetching BG affiliate tree detail:', error);

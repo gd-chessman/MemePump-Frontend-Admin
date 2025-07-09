@@ -307,7 +307,7 @@ export default function BgAffiliateAdminPage() {
                         </TableCell>
                         <TableCell>
                           <div className="flex items-center gap-2">
-                            <Link href={`/bg-affiliate/${tree.treeId}`} passHref legacyBehavior>
+                            <Link href={`/bg-affiliate/${tree.rootWallet.walletId}`} passHref legacyBehavior>
                               <Button 
                                 size="sm" 
                                 variant="ghost" 
