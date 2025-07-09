@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { getBgAffiliateTreeDetail } from '@/services/api/BgAffiliateService';
 import { useQuery } from '@tanstack/react-query';
+import { useLang } from "@/lang/useLang";
 
 // --- Helper: truncateAddress ---
 function truncateAddress(address: string, start: number = 4, end: number = 4): string {
@@ -31,6 +32,7 @@ function getNodeLevel(node: any, nodes: any[], cache: any = {}): any {
 
 // --- Main Detail Page ---
 export default function BgAffiliateTreeDetailPage() {
+  const { t } = useLang();
   const params = useParams();
   const id = params?.id ? Number(params.id) : undefined;
 
@@ -45,10 +47,10 @@ export default function BgAffiliateTreeDetailPage() {
 
   // Sau đó mới return điều kiện
   if (isLoading) {
-    return <div className="flex items-center justify-center py-12 text-slate-400">Loading tree...</div>;
+    return <div className="flex items-center justify-center py-12 text-slate-400">{t('bg-affiliate.detail.loading')}</div>;
   }
   if (error) {
-    return <div className="flex items-center justify-center py-12 text-red-400">Error loading tree. Please try again.</div>;
+    return <div className="flex items-center justify-center py-12 text-red-400">{t('bg-affiliate.detail.error')}</div>;
   }
   if (!tree) return notFound();
 
@@ -68,10 +70,10 @@ export default function BgAffiliateTreeDetailPage() {
     try {
       await navigator.clipboard.writeText(address);
       setCopiedAddress(address);
-      toast.success("Address copied!");
+      toast.success(t('list-wallets.table.addressCopied'));
       setTimeout(() => setCopiedAddress(null), 2000);
     } catch {
-      toast.error("Copy failed");
+      toast.error(t('list-wallets.table.copyFailed'));
     }
   };
 
@@ -80,9 +82,12 @@ export default function BgAffiliateTreeDetailPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-100">BG Affiliate #{tree.treeId}</h1>
+          <h1 className="text-2xl font-bold text-slate-100">{t('bg-affiliate.detail.title', { treeId: tree.treeId })}</h1>
           <p className="text-slate-400 text-sm">
-            Root: <span className="font-semibold text-cyan-400">{tree.rootWallet.nickName}</span> &bull; 
+            {t('bg-affiliate.detail.rootInfo', { 
+              nickname: tree.rootWallet.nickName,
+              address: truncateAddress(tree.rootWallet.solanaAddress)
+            })} &bull; 
             <span className="items-center gap-1 inline-flex">
               {truncateAddress(tree.rootWallet.solanaAddress)}
               <button
@@ -107,7 +112,7 @@ export default function BgAffiliateTreeDetailPage() {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-slate-400 text-sm">Root Commission</p>
+                <p className="text-slate-400 text-sm">{t('bg-affiliate.detail.stats.rootCommission')}</p>
                 <p className="text-2xl font-bold text-emerald-400">{tree.totalCommissionPercent}%</p>
               </div>
               <div className="h-8 w-8 rounded-lg bg-emerald-500/10 flex items-center justify-center">
@@ -121,7 +126,7 @@ export default function BgAffiliateTreeDetailPage() {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-slate-400 text-sm">Total Members</p>
+                <p className="text-slate-400 text-sm">{t('bg-affiliate.detail.stats.totalMembers')}</p>
                 <p className="text-2xl font-bold text-purple-400">{tree.nodes.length}</p>
               </div>
               <div className="h-8 w-8 rounded-lg bg-purple-500/10 flex items-center justify-center">
@@ -135,7 +140,7 @@ export default function BgAffiliateTreeDetailPage() {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-slate-400 text-sm">Created</p>
+                <p className="text-slate-400 text-sm">{t('bg-affiliate.detail.stats.created')}</p>
                 <p className="text-2xl font-bold text-cyan-400">{new Date(tree.createdAt).toLocaleDateString()}</p>
               </div>
               <div className="h-8 w-8 rounded-lg bg-cyan-500/10 flex items-center justify-center">
@@ -173,9 +178,9 @@ export default function BgAffiliateTreeDetailPage() {
         <CardHeader className="pb-4">
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle className="text-slate-100">Affiliate Tree Structure</CardTitle>
+              <CardTitle className="text-slate-100">{t('bg-affiliate.detail.treeStructure')}</CardTitle>
               <CardDescription className="text-slate-400">
-                Interactive view of the complete affiliate hierarchy with commission percentages
+                {t('bg-affiliate.detail.treeDescription')}
               </CardDescription>
             </div>
           </div>
@@ -191,20 +196,20 @@ export default function BgAffiliateTreeDetailPage() {
               `}
               onClick={() => setSelectedLevel("all")}
             >
-              All
+              {t('bg-affiliate.detail.tabs.all')}
             </button>
             {levelsSorted.map((level: any) => (
-              <button
-                key={level}
-                className={`min-w-[90px] px-3 py-1 rounded-lg text-sm font-medium transition-all duration-150
-                  ${selectedLevel === String(level)
-                    ? "bg-gradient-to-r from-blue-500 to-cyan-500 text-white shadow-sm border border-blue-400/60"
-                    : "bg-slate-700 text-slate-200 hover:bg-slate-600/80 hover:text-white hover:border hover:border-blue-400/30"}
-                `}
-                onClick={() => setSelectedLevel(String(level))}
-              >
-                Level {level}
-              </button>
+                              <button
+                  key={level}
+                  className={`min-w-[90px] px-3 py-1 rounded-lg text-sm font-medium transition-all duration-150
+                    ${selectedLevel === String(level)
+                      ? "bg-gradient-to-r from-blue-500 to-cyan-500 text-white shadow-sm border border-blue-400/60"
+                      : "bg-slate-700 text-slate-200 hover:bg-slate-600/80 hover:text-white hover:border hover:border-blue-400/30"}
+                  `}
+                  onClick={() => setSelectedLevel(String(level))}
+                >
+                  {t('bg-affiliate.detail.tabs.level', { level })}
+                </button>
             ))}
           </div>
           {/* Table */}
@@ -212,17 +217,17 @@ export default function BgAffiliateTreeDetailPage() {
             <Table className="min-w-full bg-slate-900 border-slate-700/50">
               <TableHeader className="bg-slate-800/30">
                 <TableRow>
-                  <TableHead className="px-4 py-2 text-left text-slate-300">Nickname</TableHead>
-                  <TableHead className="px-4 py-2 text-left text-slate-300">Solana Address</TableHead>
-                  <TableHead className="px-4 py-2 text-left text-slate-300">Commission (%)</TableHead>
-                  <TableHead className="px-4 py-2 text-left text-slate-300">Level</TableHead>
-                  <TableHead className="px-4 py-2 text-left text-slate-300">Joined</TableHead>
+                  <TableHead className="px-4 py-2 text-left text-slate-300">{t('bg-affiliate.detail.table.nickname')}</TableHead>
+                  <TableHead className="px-4 py-2 text-left text-slate-300">{t('bg-affiliate.detail.table.solanaAddress')}</TableHead>
+                  <TableHead className="px-4 py-2 text-left text-slate-300">{t('bg-affiliate.detail.table.commission')}</TableHead>
+                  <TableHead className="px-4 py-2 text-left text-slate-300">{t('bg-affiliate.detail.table.level')}</TableHead>
+                  <TableHead className="px-4 py-2 text-left text-slate-300">{t('bg-affiliate.detail.table.joined')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filteredNodes.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={5} className="text-center text-slate-400 py-6">No members found</TableCell>
+                    <TableCell colSpan={5} className="text-center text-slate-400 py-6">{t('bg-affiliate.detail.table.noMembers')}</TableCell>
                   </TableRow>
                 ) : (
                   filteredNodes.map((node: any) => (

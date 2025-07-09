@@ -352,5 +352,87 @@
             "mostActiveWalletDesc": "가장 많은 거래를 한 지갑입니다.",
             "orderCount": "{{count}}건 거래"
         }
+    },
+    "bg-affiliate": {
+        "title": "BG Affiliate",
+        "description": "제휴 및 수수료 구조 관리",
+        "cardTitle": "제휴",
+        "cardDescription": "모든 BG 제휴 관리 및 모니터링",
+        "searchPlaceholder": "트리 검색...",
+        "newBg": "새 BG",
+        "stats": {
+            "totalTrees": "총 트리",
+            "totalMembers": "총 멤버",
+            "activeTrees": "활성 트리"
+        },
+        "table": {
+            "number": "#",
+            "rootWallet": "루트 지갑",
+            "commission": "수수료",
+            "members": "멤버",
+            "created": "생성일",
+            "status": "상태",
+            "actions": "작업",
+            "active": "활성",
+            "loading": "트리 로딩 중...",
+            "error": "트리 로딩 오류. 다시 시도해 주세요.",
+            "noTrees": "트리를 찾을 수 없습니다",
+            "membersCount": "멤버"
+        },
+        "dialogs": {
+            "create": {
+                "title": "새 BG 생성",
+                "selectWallet": "지갑 선택",
+                "selectWalletPlaceholder": "지갑을 검색하고 선택하세요...",
+                "commission": "수수료 (%)",
+                "commissionPlaceholder": "예: 70",
+                "commissionHelp": "0에서 100 사이의 값을 입력하세요",
+                "availableWallets": "사용 가능한 지갑",
+                "createButton": "BG 생성",
+                "creating": "생성 중...",
+                "success": "BG Affiliate가 성공적으로 생성되었습니다!",
+                "error": "BG Affiliate 생성에 실패했습니다. 다시 시도해 주세요.",
+                "walletExists": "지갑이 이미 제휴 트리를 가지고 있습니다"
+            },
+            "updateCommission": {
+                "title": "루트 BG 수수료 업데이트",
+                "treeInfo": "트리 #{treeId}",
+                "rootInfo": "루트: {nickname} ({address})",
+                "currentCommission": "현재 수수료: {percent}%",
+                "newCommission": "새 수수료 (%)",
+                "newCommissionPlaceholder": "예: 60",
+                "newCommissionHelp": "0에서 100 사이의 값을 입력하세요",
+                "updateButton": "수수료 업데이트",
+                "updating": "업데이트 중...",
+                "success": "수수료가 성공적으로 업데이트되었습니다!",
+                "error": "수수료 업데이트에 실패했습니다. 다시 시도해 주세요."
+            }
+        },
+        "detail": {
+            "title": "BG Affiliate 트리 #{treeId}",
+            "rootInfo": "루트: {nickname} • {address}",
+            "stats": {
+                "rootCommission": "루트 수수료",
+                "totalMembers": "총 멤버",
+                "created": "생성일"
+            },
+            "treeStructure": "제휴 트리 구조",
+            "treeDescription": "수수료 비율이 포함된 완전한 제휴 계층 구조의 대화형 보기",
+            "tabs": {
+                "all": "전체",
+                "level": "레벨 {level}"
+            },
+            "table": {
+                "nickname": "닉네임",
+                "solanaAddress": "솔라나 주소",
+                "commission": "수수료 (%)",
+                "level": "레벨",
+                "joined": "가입일",
+                "noMembers": "멤버를 찾을 수 없습니다"
+            },
+            "loading": "트리 로딩 중...",
+            "error": "트리 로딩 오류. 다시 시도해 주세요.",
+            "notFound": "트리를 찾을 수 없습니다"
+        }
     }
 }

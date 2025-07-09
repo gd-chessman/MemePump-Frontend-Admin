@@ -354,5 +354,87 @@
             "mostActiveWalletDesc": "Wallet with the most transactions.",
             "orderCount": "{{count}} transactions"
         }
+    },
+    "bg-affiliate": {
+        "title": "BG Affiliate",
+        "description": "Manage affiliate and commission structures",
+        "cardTitle": "Affiliate",
+        "cardDescription": "Manage and monitor all BG affiliate",
+        "searchPlaceholder": "Search trees...",
+        "newBg": "New BG",
+        "stats": {
+            "totalTrees": "Total Trees",
+            "totalMembers": "Total Members",
+            "activeTrees": "Active Trees"
+        },
+        "table": {
+            "number": "#",
+            "rootWallet": "Root Wallet",
+            "commission": "Commission",
+            "members": "Members",
+            "created": "Created",
+            "status": "Status",
+            "actions": "Actions",
+            "active": "Active",
+            "loading": "Loading trees...",
+            "error": "Error loading trees. Please try again.",
+            "noTrees": "No trees found",
+            "membersCount": "members"
+        },
+        "dialogs": {
+            "create": {
+                "title": "Create New BG",
+                "selectWallet": "Select Wallet",
+                "selectWalletPlaceholder": "Search and select a wallet...",
+                "commission": "Commission (%)",
+                "commissionPlaceholder": "e.g., 70",
+                "commissionHelp": "Enter a value between 0 and 100",
+                "availableWallets": "available wallets",
+                "createButton": "Create BG",
+                "creating": "Creating...",
+                "success": "BG Affiliate created successfully!",
+                "error": "Failed to create BG Affiliate. Please try again.",
+                "walletExists": "The wallet already has an affiliate tree"
+            },
+            "updateCommission": {
+                "title": "Update Root BG Commission",
+                "treeInfo": "Tree #{treeId}",
+                "rootInfo": "Root: {nickname} ({address})",
+                "currentCommission": "Current Commission: {percent}%",
+                "newCommission": "New Commission (%)",
+                "newCommissionPlaceholder": "e.g., 60",
+                "newCommissionHelp": "Enter a value between 0 and 100",
+                "updateButton": "Update Commission",
+                "updating": "Updating...",
+                "success": "Commission updated successfully!",
+                "error": "Failed to update commission. Please try again."
+            }
+        },
+        "detail": {
+            "title": "BG Affiliate Tree #{treeId}",
+            "rootInfo": "Root: {nickname} • {address}",
+            "stats": {
+                "rootCommission": "Root Commission",
+                "totalMembers": "Total Members",
+                "created": "Created"
+            },
+            "treeStructure": "Affiliate Tree Structure",
+            "treeDescription": "Interactive view of the complete affiliate hierarchy with commission percentages",
+            "tabs": {
+                "all": "All",
+                "level": "Level {level}"
+            },
+            "table": {
+                "nickname": "Nickname",
+                "solanaAddress": "Solana Address",
+                "commission": "Commission (%)",
+                "level": "Level",
+                "joined": "Joined",
+                "noMembers": "No members found"
+            },
+            "loading": "Loading tree...",
+            "error": "Error loading tree. Please try again.",
+            "notFound": "Tree not found"
+        }
     }
 }

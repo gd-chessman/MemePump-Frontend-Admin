@@ -15,6 +15,7 @@ import { getListWallets } from '@/services/api/ListWalletsService';
 import { createBgAffiliate, getBgAffiliateTrees, updateRootBgCommission } from '@/services/api/BgAffiliateService';
 import { selectStyles } from "@/utils/common";
 import { toast } from "sonner";
+import { useLang } from "@/lang/useLang";
 
 
 // Helper function to truncate address
@@ -25,6 +26,7 @@ function truncateAddress(address: string, start: number = 4, end: number = 4): s
 
 
 export default function BgAffiliateAdminPage() {
+  const { t } = useLang();
   const [showCreate, setShowCreate] = useState(false);
   const [showUpdateCommission, setShowUpdateCommission] = useState(false);
   const [selectedTree, setSelectedTree] = useState<any>(null);
@@ -70,16 +72,16 @@ export default function BgAffiliateAdminPage() {
       // Invalidate and refetch trees list
       queryClient.invalidateQueries({ queryKey: ['bg-affiliate-trees'] });
       // Show success toast
-      toast.success('BG Affiliate created successfully!');
+      toast.success(t('bg-affiliate.dialogs.create.success'));
     },
     onError: (error: any) => {
       console.error('Error creating BG Affiliate:', error);
       if (error.response?.data?.message === "Wallet đã có cây affiliate") {
         // Show error toast
-        toast.error("The wallet already has an affiliate tree");
+        toast.error(t('bg-affiliate.dialogs.create.walletExists'));
       } else {
         // Show error toast
-        toast.error('Failed to create BG Affiliate. Please try again.');
+        toast.error(t('bg-affiliate.dialogs.create.error'));
       }
     }
   });
@@ -97,14 +99,14 @@ export default function BgAffiliateAdminPage() {
       // Invalidate and refetch trees list
       queryClient.invalidateQueries({ queryKey: ['bg-affiliate-trees'] });
       // Show success toast
-      toast.success('Commission updated successfully!');
+      toast.success(t('bg-affiliate.dialogs.updateCommission.success'));
     },
     onError: (error: any) => {
       console.error('Error updating commission:', error);
       if (error.response?.data?.message) {
         toast.error(error.response.data.message);
       } else {
-        toast.error('Failed to update commission. Please try again.');
+        toast.error(t('bg-affiliate.dialogs.updateCommission.error'));
       }
     }
   });
@@ -148,15 +150,15 @@ export default function BgAffiliateAdminPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-100">BG Affiliate</h1>
-          <p className="text-slate-400 text-sm">Manage affiliate and commission structures</p>
+          <h1 className="text-2xl font-bold text-slate-100">{t('bg-affiliate.title')}</h1>
+          <p className="text-slate-400 text-sm">{t('bg-affiliate.description')}</p>
         </div>
         <Button 
           className="bg-gradient-to-r from-cyan-600 to-purple-600 hover:from-cyan-700 hover:to-purple-700"
           onClick={() => setShowCreate(true)}
         >
           <Plus className="h-4 w-4 mr-2" />
-          New BG
+          {t('bg-affiliate.newBg')}
         </Button>
       </div>
 
@@ -166,7 +168,7 @@ export default function BgAffiliateAdminPage() {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-slate-400 text-sm">Total Trees</p>
+                <p className="text-slate-400 text-sm">{t('bg-affiliate.stats.totalTrees')}</p>
                 <p className="text-2xl font-bold text-cyan-400">{bgAffiliateTrees.length}</p>
               </div>
               <div className="h-8 w-8 rounded-lg bg-cyan-500/10 flex items-center justify-center">
@@ -180,7 +182,7 @@ export default function BgAffiliateAdminPage() {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-slate-400 text-sm">Total Members</p>
+                <p className="text-slate-400 text-sm">{t('bg-affiliate.stats.totalMembers')}</p>
                 <p className="text-2xl font-bold text-emerald-400">{totalMembers}</p>
               </div>
               <div className="h-8 w-8 rounded-lg bg-emerald-500/10 flex items-center justify-center">
@@ -194,7 +196,7 @@ export default function BgAffiliateAdminPage() {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-slate-400 text-sm">Active Trees</p>
+                <p className="text-slate-400 text-sm">{t('bg-affiliate.stats.activeTrees')}</p>
                 <p className="text-2xl font-bold text-pink-400">{bgAffiliateTrees.length}</p>
               </div>
               <div className="h-8 w-8 rounded-lg bg-pink-500/10 flex items-center justify-center">
@@ -210,9 +212,9 @@ export default function BgAffiliateAdminPage() {
         <CardHeader className="pb-4">
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle className="text-slate-100">Affiliate</CardTitle>
+              <CardTitle className="text-slate-100">{t('bg-affiliate.cardTitle')}</CardTitle>
               <CardDescription className="text-slate-400">
-                Manage and monitor all BG affiliate
+                {t('bg-affiliate.cardDescription')}
               </CardDescription>
             </div>
           </div>
@@ -223,7 +225,7 @@ export default function BgAffiliateAdminPage() {
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-slate-400" />
               <Input 
                 type="search" 
-                placeholder="Search trees..." 
+                placeholder={t('bg-affiliate.searchPlaceholder')} 
                 className="pl-8 w-full md:max-w-sm bg-slate-700/50 border-slate-600/50"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -232,33 +234,33 @@ export default function BgAffiliateAdminPage() {
           </div>
           {treesLoading ? (
             <div className="flex items-center justify-center py-8">
-              <div className="text-slate-400">Loading trees...</div>
+              <div className="text-slate-400">{t('bg-affiliate.table.loading')}</div>
             </div>
           ) : treesError ? (
             <div className="flex items-center justify-center py-8">
-              <div className="text-red-400">Error loading trees. Please try again.</div>
+              <div className="text-red-400">{t('bg-affiliate.table.error')}</div>
             </div>
           ) : (
             <div className="overflow-x-auto rounded-md border">
               <Table>
                 <TableHeader>
                   <TableRow className="border-slate-700/50">
-                    <TableHead className="text-slate-300">#</TableHead>
-                    <TableHead className="text-slate-300">Root Wallet</TableHead>
-                    <TableHead className="text-slate-300">Commission</TableHead>
-                    <TableHead className="text-slate-300">Members</TableHead>
-                    <TableHead className="text-slate-300">Created</TableHead>
-                    <TableHead className="text-slate-300">Status</TableHead>
-                    <TableHead className="text-slate-300">Actions</TableHead>
+                    <TableHead className="text-slate-300">{t('bg-affiliate.table.number')}</TableHead>
+                    <TableHead className="text-slate-300">{t('bg-affiliate.table.rootWallet')}</TableHead>
+                    <TableHead className="text-slate-300">{t('bg-affiliate.table.commission')}</TableHead>
+                    <TableHead className="text-slate-300">{t('bg-affiliate.table.members')}</TableHead>
+                    <TableHead className="text-slate-300">{t('bg-affiliate.table.created')}</TableHead>
+                    <TableHead className="text-slate-300">{t('bg-affiliate.table.status')}</TableHead>
+                    <TableHead className="text-slate-300">{t('bg-affiliate.table.actions')}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {filteredTrees.length === 0 ? (
-                    <TableRow>
-                      <TableCell colSpan={7} className="text-center py-8 text-slate-400">
-                        No trees found
-                      </TableCell>
-                    </TableRow>
+                                      <TableRow>
+                    <TableCell colSpan={7} className="text-center py-8 text-slate-400">
+                      {t('bg-affiliate.table.noTrees')}
+                    </TableCell>
+                  </TableRow>
                   ) : (
                     filteredTrees.map((tree: any, index: number) => (
                       <TableRow key={tree.treeId} className="border-slate-700/30 hover:bg-slate-700/20">
@@ -292,7 +294,7 @@ export default function BgAffiliateAdminPage() {
                         <TableCell>
                           <div className="flex items-center gap-2">
                             <span className="font-medium text-purple-400">{tree.nodeCount || 0}</span>
-                            <span className="text-xs text-slate-400">members</span>
+                            <span className="text-xs text-slate-400">{t('bg-affiliate.table.membersCount')}</span>
                           </div>
                         </TableCell>
                         <TableCell className="text-slate-400 text-sm">
@@ -300,7 +302,7 @@ export default function BgAffiliateAdminPage() {
                         </TableCell>
                         <TableCell>
                           <Badge variant="outline" className="border-green-500/30 text-green-400">
-                            Active
+                            {t('bg-affiliate.table.active')}
                           </Badge>
                         </TableCell>
                         <TableCell>
@@ -338,11 +340,11 @@ export default function BgAffiliateAdminPage() {
       <Dialog open={showCreate} onOpenChange={setShowCreate}>
         <DialogContent className="bg-slate-900 border-slate-700/50">
           <DialogHeader>
-            <DialogTitle className="text-slate-100">Create New BG</DialogTitle>
+            <DialogTitle className="text-slate-100">{t('bg-affiliate.dialogs.create.title')}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-slate-300">Select Wallet</label>
+              <label className="block text-sm font-medium text-slate-300">{t('bg-affiliate.dialogs.create.selectWallet')}</label>
               <Select
                 options={walletOptions as any}
                 value={createForm.selectedWallet ? {
@@ -354,7 +356,7 @@ export default function BgAffiliateAdminPage() {
                   selectedWallet: option ? option.value : null 
                 }))}
                 onInputChange={(newValue) => setWalletSearchQuery(newValue)}
-                placeholder="Search and select a wallet..."
+                placeholder={t('bg-affiliate.dialogs.create.selectWalletPlaceholder')}
                 isClearable
                 isSearchable
                 styles={selectStyles}
@@ -365,14 +367,14 @@ export default function BgAffiliateAdminPage() {
                 isDisabled={createBgAffiliateMutation.isPending}
               />
               <p className="text-xs text-slate-400">
-                {availableWallets?.data?.length || 0} available wallets (not in any tree)
+                {availableWallets?.data?.length || 0} {t('bg-affiliate.dialogs.create.availableWallets')}
               </p>
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">Commission (%)</label>
+              <label className="block text-sm font-medium text-slate-300 mb-2">{t('bg-affiliate.dialogs.create.commission')}</label>
               <Input 
                 type="number" 
-                placeholder="e.g., 70" 
+                placeholder={t('bg-affiliate.dialogs.create.commissionPlaceholder')} 
                 value={createForm.totalCommissionPercent} 
                 onChange={e => setCreateForm(f => ({ ...f, totalCommissionPercent: e.target.value }))} 
                 className="bg-slate-800/50 border-slate-600/50" 
@@ -382,7 +384,7 @@ export default function BgAffiliateAdminPage() {
                 step="0.01"
               />
               <p className="text-xs text-slate-400 mt-1">
-                Enter a value between 0 and 100
+                {t('bg-affiliate.dialogs.create.commissionHelp')}
               </p>
             </div>
           </div>
@@ -399,7 +401,7 @@ export default function BgAffiliateAdminPage() {
                 }
               }}
             >
-              {createBgAffiliateMutation.isPending ? 'Creating...' : 'Create BG'}
+              {createBgAffiliateMutation.isPending ? t('bg-affiliate.dialogs.create.creating') : t('bg-affiliate.dialogs.create.createButton')}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -409,24 +411,29 @@ export default function BgAffiliateAdminPage() {
       <Dialog open={showUpdateCommission} onOpenChange={setShowUpdateCommission}>
         <DialogContent className="bg-slate-900/95 border-slate-700/50">
           <DialogHeader>
-            <DialogTitle className="text-slate-100">Update Root BG Commission</DialogTitle>
+            <DialogTitle className="text-slate-100">{t('bg-affiliate.dialogs.updateCommission.title')}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             {selectedTree && (
               <div className="p-3 rounded-lg bg-slate-800/30 border border-slate-600/30">
                 <p className="text-sm text-slate-400">
-                  Root: {selectedTree.rootWallet?.nickName || 'Unknown'} ({truncateAddress(selectedTree.rootWallet?.solanaAddress || '')})
+                  {t('bg-affiliate.dialogs.updateCommission.rootInfo', { 
+                    nickname: selectedTree.rootWallet?.nickName || 'Unknown', 
+                    address: truncateAddress(selectedTree.rootWallet?.solanaAddress || '') 
+                  })}
                 </p>
                 <p className="text-sm text-slate-400">
-                  Current Commission: <span className="text-emerald-400 font-medium">{selectedTree.totalCommissionPercent}%</span>
+                  {t('bg-affiliate.dialogs.updateCommission.currentCommission', { 
+                    percent: selectedTree.totalCommissionPercent 
+                  })}
                 </p>
               </div>
             )}
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">New Commission (%)</label>
+              <label className="block text-sm font-medium text-slate-300 mb-2">{t('bg-affiliate.dialogs.updateCommission.newCommission')}</label>
               <Input 
                 type="number" 
-                placeholder="e.g., 60" 
+                placeholder={t('bg-affiliate.dialogs.updateCommission.newCommissionPlaceholder')} 
                 value={updateCommissionForm.newPercent} 
                 onChange={e => setUpdateCommissionForm(f => ({ ...f, newPercent: e.target.value }))} 
                 className="bg-slate-800/50 border-slate-600/50" 
@@ -436,7 +443,7 @@ export default function BgAffiliateAdminPage() {
                 step="0.01"
               />
               <p className="text-xs text-slate-400 mt-1">
-                Enter a value between 0 and 100
+                {t('bg-affiliate.dialogs.updateCommission.newCommissionHelp')}
               </p>
             </div>
           </div>
@@ -461,7 +468,7 @@ export default function BgAffiliateAdminPage() {
                 }
               }}
             >
-              {updateCommissionMutation.isPending ? 'Updating...' : 'Update Commission'}
+              {updateCommissionMutation.isPending ? t('bg-affiliate.dialogs.updateCommission.updating') : t('bg-affiliate.dialogs.updateCommission.updateButton')}
             </Button>
           </DialogFooter>
         </DialogContent>

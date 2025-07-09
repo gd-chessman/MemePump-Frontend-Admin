@@ -352,5 +352,87 @@
             "mostActiveWalletDesc": "Ví có số giao dịch nhiều nhất.",
             "orderCount": "{{count}} giao dịch"
         }
+    },
+    "bg-affiliate": {
+        "title": "BG Giới Thiệu",
+        "description": "Quản lý cấu trúc giới thiệu và hoa hồng",
+        "cardTitle": "Giới Thiệu",
+        "cardDescription": "Quản lý và giám sát tất cả BG giới thiệu",
+        "searchPlaceholder": "Tìm kiếm cây...",
+        "newBg": "BG Mới",
+        "stats": {
+            "totalTrees": "Tổng Cây",
+            "totalMembers": "Tổng Thành Viên",
+            "activeTrees": "Cây Hoạt Động"
+        },
+        "table": {
+            "number": "#",
+            "rootWallet": "Ví Gốc",
+            "commission": "Hoa Hồng",
+            "members": "Thành Viên",
+            "created": "Tạo Lúc",
+            "status": "Trạng Thái",
+            "actions": "Hành Động",
+            "active": "Hoạt Động",
+            "loading": "Đang tải cây...",
+            "error": "Lỗi tải cây. Vui lòng thử lại.",
+            "noTrees": "Không tìm thấy cây nào",
+            "membersCount": "thành viên"
+        },
+        "dialogs": {
+            "create": {
+                "title": "Tạo BG Mới",
+                "selectWallet": "Chọn Ví",
+                "selectWalletPlaceholder": "Tìm kiếm và chọn ví...",
+                "commission": "Hoa Hồng (%)",
+                "commissionPlaceholder": "vd: 70",
+                "commissionHelp": "Nhập giá trị từ 0 đến 100",
+                "availableWallets": "ví có sẵn",
+                "createButton": "Tạo BG",
+                "creating": "Đang tạo...",
+                "success": "Tạo BG Giới Thiệu thành công!",
+                "error": "Tạo BG Giới Thiệu thất bại. Vui lòng thử lại.",
+                "walletExists": "Ví đã có cây giới thiệu"
+            },
+            "updateCommission": {
+                "title": "Cập Nhật Hoa Hồng Root BG",
+                "treeInfo": "Cây #{treeId}",
+                "rootInfo": "Gốc: {nickname} ({address})",
+                "currentCommission": "Hoa Hồng Hiện Tại: {percent}%",
+                "newCommission": "Hoa Hồng Mới (%)",
+                "newCommissionPlaceholder": "vd: 60",
+                "newCommissionHelp": "Nhập giá trị từ 0 đến 100",
+                "updateButton": "Cập Nhật Hoa Hồng",
+                "updating": "Đang cập nhật...",
+                "success": "Cập nhật hoa hồng thành công!",
+                "error": "Cập nhật hoa hồng thất bại. Vui lòng thử lại."
+            }
+        },
+        "detail": {
+            "title": "Cây BG Giới Thiệu #{treeId}",
+            "rootInfo": "Gốc: {nickname} • {address}",
+            "stats": {
+                "rootCommission": "Hoa Hồng Gốc",
+                "totalMembers": "Tổng Thành Viên",
+                "created": "Tạo Lúc"
+            },
+            "treeStructure": "Cấu Trúc Giới Thiệu",
+            "treeDescription": "Xem tương tác của hệ thống phân cấp giới thiệu hoàn chỉnh với phần trăm hoa hồng",
+            "tabs": {
+                "all": "Tất Cả",
+                "level": "Cấp {level}"
+            },
+            "table": {
+                "nickname": "Biệt Danh",
+                "solanaAddress": "Địa Chỉ Solana",
+                "commission": "Hoa Hồng (%)",
+                "level": "Cấp",
+                "joined": "Tham Gia",
+                "noMembers": "Không tìm thấy thành viên"
+            },
+            "loading": "Đang tải cây...",
+            "error": "Lỗi tải cây. Vui lòng thử lại.",
+            "notFound": "Không tìm thấy cây"
+        }
     }
 }
