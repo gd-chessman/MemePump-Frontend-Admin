@@ -55,7 +55,7 @@ export default function BgAffiliateAdminPage() {
   // Fetch available wallets when dialog is open
   const { data: availableWallets = [], isLoading: walletsLoading } = useQuery({
     queryKey: ["list-wallets-bg-affiliate", walletSearchQuery, 'all', 1],
-    queryFn: () => getListWallets(walletSearchQuery, 1, 10, ''),
+    queryFn: () => getListWallets(walletSearchQuery, 1, 30, ''),
     enabled: showCreate, // Only fetch when dialog is open
     placeholderData: (previousData) => previousData,
   });
@@ -365,6 +365,8 @@ export default function BgAffiliateAdminPage() {
                 loadingMessage={() => "Loading wallets..."}
                 isLoading={walletsLoading}
                 isDisabled={createBgAffiliateMutation.isPending}
+                filterOption={() => true}
+                isOptionDisabled={() => false}
               />
               <p className="text-xs text-slate-400">
                 {availableWallets?.pagination?.total || 0} {t('bg-affiliate.dialogs.create.availableWallets')}
