@@ -149,7 +149,7 @@ export default function BgAffiliateAdminPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-slate-100">BG Affiliate</h1>
-          <p className="text-slate-400 text-sm">Manage affiliate trees and commission structures</p>
+          <p className="text-slate-400 text-sm">Manage affiliate and commission structures</p>
         </div>
         <Button 
           className="bg-gradient-to-r from-cyan-600 to-purple-600 hover:from-cyan-700 hover:to-purple-700"
@@ -210,24 +210,26 @@ export default function BgAffiliateAdminPage() {
         <CardHeader className="pb-4">
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle className="text-slate-100">Affiliate Trees</CardTitle>
+              <CardTitle className="text-slate-100">Affiliate</CardTitle>
               <CardDescription className="text-slate-400">
-                Manage and monitor all BG affiliate trees
+                Manage and monitor all BG affiliate
               </CardDescription>
             </div>
-            <div className="relative">
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center gap-2 mb-4">
+            <div className="relative flex-1">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-slate-400" />
               <Input 
                 type="search" 
                 placeholder="Search trees..." 
-                className="pl-8 w-64 bg-slate-700/50 border-slate-600/50"
+                className="pl-8 w-full md:max-w-sm bg-slate-700/50 border-slate-600/50"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
           </div>
-        </CardHeader>
-        <CardContent>
           {treesLoading ? (
             <div className="flex items-center justify-center py-8">
               <div className="text-slate-400">Loading trees...</div>
@@ -237,17 +239,17 @@ export default function BgAffiliateAdminPage() {
               <div className="text-red-400">Error loading trees. Please try again.</div>
             </div>
           ) : (
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto rounded-md border">
               <Table>
                 <TableHeader>
                   <TableRow className="border-slate-700/50">
-                    <TableHead className="text-slate-300">Tree ID</TableHead>
+                    <TableHead className="text-slate-300">#</TableHead>
                     <TableHead className="text-slate-300">Root Wallet</TableHead>
                     <TableHead className="text-slate-300">Commission</TableHead>
                     <TableHead className="text-slate-300">Members</TableHead>
                     <TableHead className="text-slate-300">Created</TableHead>
                     <TableHead className="text-slate-300">Status</TableHead>
-                    <TableHead className="text-slate-300"></TableHead>
+                    <TableHead className="text-slate-300">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -258,9 +260,9 @@ export default function BgAffiliateAdminPage() {
                       </TableCell>
                     </TableRow>
                   ) : (
-                    filteredTrees.map((tree: any) => (
+                    filteredTrees.map((tree: any, index: number) => (
                       <TableRow key={tree.treeId} className="border-slate-700/30 hover:bg-slate-700/20">
-                        <TableCell className="font-medium text-cyan-400">#{tree.treeId}</TableCell>
+                        <TableCell className="font-medium text-cyan-400">{index + 1}</TableCell>
                         <TableCell>
                           <div>
                             <p className="font-medium text-slate-100">{tree.rootWallet?.nickName || 'Unknown'}</p>
@@ -375,13 +377,19 @@ export default function BgAffiliateAdminPage() {
                 onChange={e => setCreateForm(f => ({ ...f, totalCommissionPercent: e.target.value }))} 
                 className="bg-slate-800/50 border-slate-600/50" 
                 disabled={createBgAffiliateMutation.isPending}
+                min="0"
+                max="100"
+                step="0.01"
               />
+              <p className="text-xs text-slate-400 mt-1">
+                Enter a value between 0 and 100
+              </p>
             </div>
           </div>
           <DialogFooter>
             <Button 
               className="bg-gradient-to-r from-cyan-600 to-purple-600 hover:from-cyan-700 hover:to-purple-700" 
-              disabled={!createForm.selectedWallet || !createForm.totalCommissionPercent || createBgAffiliateMutation.isPending}
+              disabled={!createForm.selectedWallet || !createForm.totalCommissionPercent || createBgAffiliateMutation.isPending || parseFloat(createForm.totalCommissionPercent) < 0 || parseFloat(createForm.totalCommissionPercent) > 100}
               onClick={() => {
                 if (createForm.selectedWallet && createForm.totalCommissionPercent) {
                   createBgAffiliateMutation.mutate({
@@ -406,7 +414,6 @@ export default function BgAffiliateAdminPage() {
           <div className="space-y-4">
             {selectedTree && (
               <div className="p-3 rounded-lg bg-slate-800/30 border border-slate-600/30">
-                <p className="text-sm text-slate-300 mb-1">Tree #{selectedTree.treeId}</p>
                 <p className="text-sm text-slate-400">
                   Root: {selectedTree.rootWallet?.nickName || 'Unknown'} ({truncateAddress(selectedTree.rootWallet?.solanaAddress || '')})
                 </p>
@@ -443,7 +450,7 @@ export default function BgAffiliateAdminPage() {
             </Button>
             <Button 
               className="bg-gradient-to-r from-emerald-600 to-blue-600 hover:from-emerald-700 hover:to-blue-700" 
-              disabled={!updateCommissionForm.newPercent || updateCommissionMutation.isPending}
+              disabled={!updateCommissionForm.newPercent || updateCommissionMutation.isPending || parseFloat(updateCommissionForm.newPercent) < 0 || parseFloat(updateCommissionForm.newPercent) > 100}
               onClick={() => {
                 if (selectedTree && updateCommissionForm.newPercent) {
                   updateCommissionMutation.mutate({

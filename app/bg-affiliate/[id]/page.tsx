@@ -80,7 +80,7 @@ export default function BgAffiliateTreeDetailPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-100">BG Affiliate Tree #{tree.treeId}</h1>
+          <h1 className="text-2xl font-bold text-slate-100">BG Affiliate #{tree.treeId}</h1>
           <p className="text-slate-400 text-sm">
             Root: <span className="font-semibold text-cyan-400">{tree.rootWallet.nickName}</span> &bull; 
             <span className="items-center gap-1 inline-flex">
