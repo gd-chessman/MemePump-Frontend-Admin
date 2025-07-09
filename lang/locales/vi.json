@@ -410,7 +410,7 @@
         },
         "detail": {
             "title": "Cây BG Giới Thiệu #{treeId}",
-            "rootInfo": "Gốc: {nickname} • {address}",
+            "rootInfo": "Gốc: {nickname} ",
             "stats": {
                 "rootCommission": "Hoa Hồng Gốc",
                 "totalMembers": "Tổng Thành Viên",

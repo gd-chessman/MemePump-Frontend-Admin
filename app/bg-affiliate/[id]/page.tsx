@@ -85,9 +85,8 @@ export default function BgAffiliateTreeDetailPage() {
           <h1 className="text-2xl font-bold text-slate-100">{t('bg-affiliate.detail.title', { treeId: tree.treeId })}</h1>
           <p className="text-slate-400 text-sm">
             {t('bg-affiliate.detail.rootInfo', { 
-              nickname: tree.rootWallet.nickName,
-              address: truncateAddress(tree.rootWallet.solanaAddress)
-            })} &bull; 
+              nickname: tree.rootWallet.nickName
+            })} &bull; &nbsp;
             <span className="items-center gap-1 inline-flex">
               {truncateAddress(tree.rootWallet.solanaAddress)}
               <button

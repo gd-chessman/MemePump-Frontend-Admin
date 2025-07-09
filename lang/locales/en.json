@@ -412,7 +412,7 @@
         },
         "detail": {
             "title": "BG Affiliate Tree #{treeId}",
-            "rootInfo": "Root: {nickname} • {address}",
+            "rootInfo": "Root: {nickname}",
             "stats": {
                 "rootCommission": "Root Commission",
                 "totalMembers": "Total Members",
