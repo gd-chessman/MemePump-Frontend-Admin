@@ -138,7 +138,7 @@ export default function BgAffiliateTreeDetailPage() {
   // Convert to react-select format for parent nodes
   const parentOptions = [
     { value: tree.rootWallet, label: `${tree.rootWallet.nickName} (Root)` }
-  ].concat(nodesWithLevel.map((node: any) => ({
+  ].concat(nodesWithLevel.filter((node: any) => node.level > 1).map((node: any) => ({
     value: node,
     label: `${node.walletInfo.nickName} (Level ${node.level})`
   })));
