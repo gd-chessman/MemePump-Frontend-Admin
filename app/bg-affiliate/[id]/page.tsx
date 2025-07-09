@@ -4,18 +4,13 @@ import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { ChevronRight, ChevronDown, Percent, Users, Calendar, Wallet, Plus, Activity, Copy, Check, Power } from "lucide-react";
+import { ChevronRight, ChevronDown, Percent, Users, Calendar, Wallet, Activity, Copy, Check, Power } from "lucide-react";
 import { notFound, useParams } from "next/navigation";
 import { toast } from "sonner";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { getBgAffiliateTreeDetail, addNodeToBgAffiliateTree, updateBgAffiliateNodeStatus } from '@/services/api/BgAffiliateService';
-import { getListWallets } from '@/services/api/ListWalletsService';
+import { getBgAffiliateTreeDetail, updateBgAffiliateNodeStatus } from '@/services/api/BgAffiliateService';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useLang } from "@/lang/useLang";
-import Select from "react-select";
-import { selectStyles } from "@/utils/common";
 
 // --- Helper: truncateAddress ---
 function truncateAddress(address: string, start: number = 4, end: number = 4): string {
@@ -24,15 +19,51 @@ function truncateAddress(address: string, start: number = 4, end: number = 4): s
   return `${address.slice(0, start)}...${address.slice(-end)}`;
 }
 
-
-// Hàm tính level cho node
-function getNodeLevel(node: any, nodes: any[], cache: any = {}): any {
-  if (node.parentWalletId === null) return 1;
-  if (cache[node.walletId]) return cache[node.walletId];
-  const parent = nodes.find((n: any) => n.walletId === node.parentWalletId);
-  const level: any = parent ? getNodeLevel(parent, nodes, cache) + 1 : 1;
-  cache[node.walletId] = level;
+// Hàm tính level cho node từ cấu trúc tree
+function getNodeLevel(node: any, treeData: any, level: number = 1): any {
+  if (!treeData.downlineStructure) return level;
+  
+  for (const downlineNode of treeData.downlineStructure) {
+    if (downlineNode.walletId === node.walletId) {
+      return level + 1;
+    }
+    // Tìm trong children
+    if (downlineNode.children && downlineNode.children.length > 0) {
+      const foundInChildren = findNodeInChildren(downlineNode.children, node.walletId, level + 1);
+      if (foundInChildren) return foundInChildren;
+    }
+  }
   return level;
+}
+
+// Hàm tìm node trong children
+function findNodeInChildren(children: any[], targetWalletId: number, currentLevel: number): number | null {
+  for (const child of children) {
+    if (child.walletId === targetWalletId) {
+      return currentLevel + 1;
+    }
+    if (child.children && child.children.length > 0) {
+      const found = findNodeInChildren(child.children, targetWalletId, currentLevel + 1);
+      if (found) return found;
+    }
+  }
+  return null;
+}
+
+// Hàm flatten tree structure thành array
+function flattenTreeStructure(treeData: any): any[] {
+  const result: any[] = [];
+  
+  if (treeData.downlineStructure) {
+    for (const node of treeData.downlineStructure) {
+      result.push(node);
+      if (node.children && node.children.length > 0) {
+        result.push(...flattenTreeStructure({ downlineStructure: node.children }));
+      }
+    }
+  }
+  
+  return result;
 }
 
 // --- Main Detail Page ---
@@ -42,50 +73,16 @@ export default function BgAffiliateTreeDetailPage() {
   const id = params?.id ? Number(params.id) : undefined;
   const queryClient = useQueryClient();
 
-  // State for add node dialog
-  const [showAddNode, setShowAddNode] = useState(false);
-  const [walletSearchQuery, setWalletSearchQuery] = useState("");
-  const [addNodeForm, setAddNodeForm] = useState({
-    selectedWallet: null,
-    selectedParent: null,
-    commissionPercent: ""
-  });
+
 
   // Tất cả hook phải ở đầu
-  const { data: tree, isLoading, error } = useQuery({
+  const { data: treeData, isLoading, error } = useQuery({
     queryKey: ['bg-affiliate-tree-detail', id],
     queryFn: () => getBgAffiliateTreeDetail(Number(id)),
     enabled: !!id,
   });
 
-  // Fetch available wallets for adding new node
-  const { data: availableWallets = [], isLoading: walletsLoading } = useQuery({
-    queryKey: ["list-wallets-add-node", walletSearchQuery, 'all', 1],
-    queryFn: () => getListWallets(walletSearchQuery, 1, 30, ''),
-    enabled: showAddNode,
-    placeholderData: (previousData) => previousData,
-  });
 
-  // Add node mutation
-  const addNodeMutation = useMutation({
-    mutationFn: ({ treeId, walletId, parentWalletId, commissionPercent }: { treeId: number, walletId: number, parentWalletId: number, commissionPercent: number }) =>
-      addNodeToBgAffiliateTree(treeId, walletId, parentWalletId, commissionPercent),
-    onSuccess: (data) => {
-      console.log('Node added successfully:', data);
-      setShowAddNode(false);
-      setAddNodeForm({ selectedWallet: null, selectedParent: null, commissionPercent: "" });
-      queryClient.invalidateQueries({ queryKey: ['bg-affiliate-tree-detail', id] });
-      toast.success(t('bg-affiliate.detail.dialogs.addNode.success'));
-    },
-    onError: (error: any) => {
-      console.error('Error adding node:', error);
-      if (error.response?.data?.message) {
-        toast.error(error.response.data.message);
-      } else {
-        toast.error(t('bg-affiliate.detail.dialogs.addNode.error'));
-      }
-    }
-  });
 
   // Update node status mutation
   const updateNodeStatusMutation = useMutation({
@@ -115,33 +112,34 @@ export default function BgAffiliateTreeDetailPage() {
   if (error) {
     return <div className="flex items-center justify-center py-12 text-red-400">{t('bg-affiliate.detail.error')}</div>;
   }
-  if (!tree) return notFound();
+  if (!treeData) return notFound();
 
-  // Tính level cho từng node
-  const levelCache: any = {};
-  const nodesWithLevel = tree ? tree.nodes.map((node: any) => ({
+  // Flatten tree structure và tính level
+  const allNodes = flattenTreeStructure(treeData);
+  const nodesWithLevel = allNodes.map((node: any) => ({
     ...node,
-    level: getNodeLevel(node, tree.nodes, levelCache)
-  })) : [];
-  const levels = Array.from(new Set(nodesWithLevel.map((n: any) => n.level)));
-  const levelsSorted = (levels as number[]).sort((a, b) => a - b);
-  const filteredNodes = selectedLevel === "all"
-    ? nodesWithLevel
-    : nodesWithLevel.filter((n: any) => n.level === Number(selectedLevel));
-
-  // Convert to react-select format for wallets
-  const walletOptions = availableWallets?.data?.map((wallet: any) => ({
-    value: wallet,
-    label: truncateAddress(wallet.wallet_solana_address)
+    level: getNodeLevel(node, treeData)
   }));
 
-  // Convert to react-select format for parent nodes
-  const parentOptions = [
-    { value: tree.rootWallet, label: `${tree.rootWallet.nickName} (Root)` }
-  ].concat(nodesWithLevel.filter((node: any) => node.level > 1).map((node: any) => ({
-    value: node,
-    label: `${node.walletInfo.nickName} (Level ${node.level})`
-  })));
+  // Thêm root node vào danh sách
+  const rootNode = {
+    nodeId: 0,
+    walletId: treeData.currentWallet.walletId,
+    commissionPercent: treeData.treeInfo.totalCommissionPercent,
+    effectiveFrom: treeData.treeInfo.createdAt,
+    walletInfo: treeData.currentWallet,
+    level: 1,
+    status: treeData.currentWallet.status // Sử dụng status từ API
+  };
+
+  const allNodesWithRoot = [rootNode, ...nodesWithLevel];
+  const levels = Array.from(new Set(allNodesWithRoot.map((n: any) => n.level)));
+  const levelsSorted = (levels as number[]).sort((a, b) => a - b);
+  const filteredNodes = selectedLevel === "all"
+    ? allNodesWithRoot
+    : allNodesWithRoot.filter((n: any) => n.level === Number(selectedLevel));
+
+
 
   const copyToClipboard = async (address: string) => {
     try {
@@ -159,19 +157,19 @@ export default function BgAffiliateTreeDetailPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-100">{t('bg-affiliate.detail.title', { treeId: tree.treeId })}</h1>
+          <h1 className="text-2xl font-bold text-slate-100">{t('bg-affiliate.detail.title', { treeId: treeData.treeInfo.treeId })}</h1>
           <p className="text-slate-400 text-sm">
             {t('bg-affiliate.detail.rootInfo', { 
-              nickname: tree.rootWallet.nickName
+              nickname: treeData.currentWallet.nickName
             })} &bull; &nbsp;
             <span className="items-center gap-1 inline-flex">
-              {truncateAddress(tree.rootWallet.solanaAddress)}
+              {truncateAddress(treeData.currentWallet.solanaAddress)}
               <button
                 className="ml-1 p-1 rounded hover:bg-slate-700 transition-colors"
                 title="Copy address"
-                onClick={() => copyToClipboard(tree.rootWallet.solanaAddress)}
+                onClick={() => copyToClipboard(treeData.currentWallet.solanaAddress)}
               >
-                {copiedAddress === tree.rootWallet.solanaAddress ? (
+                {copiedAddress === treeData.currentWallet.solanaAddress ? (
                   <Check className="h-3 w-3 text-emerald-400" />
                 ) : (
                   <Copy className="h-3 w-3 text-slate-400" />
@@ -180,6 +178,7 @@ export default function BgAffiliateTreeDetailPage() {
             </span>
           </p>
         </div>
+
       </div>
 
       {/* Summary Cards */}
@@ -189,7 +188,7 @@ export default function BgAffiliateTreeDetailPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-slate-400 text-sm">{t('bg-affiliate.detail.stats.rootCommission')}</p>
-                <p className="text-2xl font-bold text-emerald-400">{tree.totalCommissionPercent}%</p>
+                <p className="text-2xl font-bold text-emerald-400">{treeData.treeInfo.totalCommissionPercent}%</p>
               </div>
               <div className="h-8 w-8 rounded-lg bg-emerald-500/10 flex items-center justify-center">
                 <Percent className="h-4 w-4 text-emerald-400" />
@@ -203,7 +202,7 @@ export default function BgAffiliateTreeDetailPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-slate-400 text-sm">{t('bg-affiliate.detail.stats.totalMembers')}</p>
-                <p className="text-2xl font-bold text-purple-400">{tree.nodes.length}</p>
+                <p className="text-2xl font-bold text-purple-400">{treeData.totalMembers}</p>
               </div>
               <div className="h-8 w-8 rounded-lg bg-purple-500/10 flex items-center justify-center">
                 <Users className="h-4 w-4 text-purple-400" />
@@ -217,7 +216,7 @@ export default function BgAffiliateTreeDetailPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-slate-400 text-sm">{t('bg-affiliate.detail.stats.created')}</p>
-                <p className="text-2xl font-bold text-cyan-400">{new Date(tree.createdAt).toLocaleDateString()}</p>
+                <p className="text-2xl font-bold text-cyan-400">{new Date(treeData.treeInfo.createdAt).toLocaleDateString()}</p>
               </div>
               <div className="h-8 w-8 rounded-lg bg-cyan-500/10 flex items-center justify-center">
                 <Calendar className="h-4 w-4 text-cyan-400" />
@@ -253,17 +252,17 @@ export default function BgAffiliateTreeDetailPage() {
               {t('bg-affiliate.detail.tabs.all')}
             </button>
             {levelsSorted.map((level: any) => (
-                              <button
-                  key={level}
-                  className={`min-w-[90px] px-3 py-1 rounded-lg text-sm font-medium transition-all duration-150
-                    ${selectedLevel === String(level)
-                      ? "bg-gradient-to-r from-blue-500 to-cyan-500 text-white shadow-sm border border-blue-400/60"
-                      : "bg-slate-700 text-slate-200 hover:bg-slate-600/80 hover:text-white hover:border hover:border-blue-400/30"}
-                  `}
-                  onClick={() => setSelectedLevel(String(level))}
-                >
-                  {t('bg-affiliate.detail.tabs.level', { level })}
-                </button>
+              <button
+                key={level}
+                className={`min-w-[90px] px-3 py-1 rounded-lg text-sm font-medium transition-all duration-150
+                  ${selectedLevel === String(level)
+                    ? "bg-gradient-to-r from-blue-500 to-cyan-500 text-white shadow-sm border border-blue-400/60"
+                    : "bg-slate-700 text-slate-200 hover:bg-slate-600/80 hover:text-white hover:border hover:border-blue-400/30"}
+                `}
+                onClick={() => setSelectedLevel(String(level))}
+              >
+                {t('bg-affiliate.detail.tabs.level', { level })}
+              </button>
             ))}
           </div>
           {/* Table */}
@@ -330,6 +329,8 @@ export default function BgAffiliateTreeDetailPage() {
                                   : 'bg-slate-600'
                               } ${updateNodeStatusMutation.isPending ? 'opacity-50 cursor-not-allowed' : ''}`}
                             >
+
+
                               <span
                                 className={`inline-block h-3 w-3 transform rounded-full bg-white transition-transform duration-200 ease-in-out ${
                                   node.status !== false ? 'translate-x-5' : 'translate-x-1'
@@ -349,118 +350,7 @@ export default function BgAffiliateTreeDetailPage() {
         </CardContent>
       </Card>
 
-      {/* Add Node Dialog */}
-      <Dialog open={showAddNode} onOpenChange={setShowAddNode}>
-        <DialogContent className="bg-slate-900 border-slate-700/50">
-          <DialogHeader>
-            <DialogTitle className="text-slate-100">{t('bg-affiliate.detail.dialogs.addNode.title')}</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-slate-300">{t('bg-affiliate.detail.dialogs.addNode.selectWallet')}</label>
-              <Select
-                options={walletOptions as any}
-                value={addNodeForm.selectedWallet ? {
-                  value: addNodeForm.selectedWallet,
-                  label: truncateAddress((addNodeForm.selectedWallet as any).wallet_solana_address)
-                } : null}
-                onChange={(option: any) => setAddNodeForm(prev => ({ 
-                  ...prev, 
-                  selectedWallet: option ? option.value : null 
-                }))}
-                onInputChange={(newValue) => setWalletSearchQuery(newValue)}
-                placeholder={t('bg-affiliate.detail.dialogs.addNode.selectWalletPlaceholder')}
-                isClearable
-                isSearchable
-                styles={selectStyles}
-                className="text-slate-100"
-                noOptionsMessage={() => "No wallets available"}
-                loadingMessage={() => "Loading wallets..."}
-                isLoading={walletsLoading}
-                isDisabled={addNodeMutation.isPending}
-                filterOption={() => true}
-                isOptionDisabled={() => false}
-              />
-              <p className="text-xs text-slate-400">
-                {availableWallets?.pagination?.total || 0} {t('bg-affiliate.detail.dialogs.addNode.availableWallets')}
-              </p>
-            </div>
 
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-slate-300">{t('bg-affiliate.detail.dialogs.addNode.selectParent')}</label>
-              <Select
-                options={parentOptions as any}
-                value={addNodeForm.selectedParent ? {
-                  value: addNodeForm.selectedParent,
-                  label: (addNodeForm.selectedParent as any).walletInfo ? 
-                    `${(addNodeForm.selectedParent as any).walletInfo.nickName} (Level ${(addNodeForm.selectedParent as any).level})` :
-                    `${(addNodeForm.selectedParent as any).nickName} (Root)`
-                } : null}
-                onChange={(option: any) => setAddNodeForm(prev => ({ 
-                  ...prev, 
-                  selectedParent: option ? option.value : null 
-                }))}
-                placeholder={t('bg-affiliate.detail.dialogs.addNode.selectParentPlaceholder')}
-                isClearable
-                isSearchable
-                styles={selectStyles}
-                className="text-slate-100"
-                isDisabled={addNodeMutation.isPending}
-              />
-              <p className="text-xs text-slate-400">
-                {t('bg-affiliate.detail.dialogs.addNode.selectParentHelp')}
-              </p>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">{t('bg-affiliate.detail.dialogs.addNode.commission')}</label>
-              <Input 
-                type="number" 
-                placeholder={t('bg-affiliate.detail.dialogs.addNode.commissionPlaceholder')} 
-                value={addNodeForm.commissionPercent} 
-                onChange={e => setAddNodeForm(f => ({ ...f, commissionPercent: e.target.value }))} 
-                className="bg-slate-800/50 border-slate-600/50" 
-                disabled={addNodeMutation.isPending}
-                min="0"
-                max="100"
-                step="0.01"
-              />
-              <p className="text-xs text-slate-400 mt-1">
-                {t('bg-affiliate.detail.dialogs.addNode.commissionHelp')}
-              </p>
-            </div>
-          </div>
-          <DialogFooter>
-            <Button 
-              variant="outline"
-              onClick={() => setShowAddNode(false)}
-              disabled={addNodeMutation.isPending}
-            >
-              {t('bg-affiliate.detail.dialogs.addNode.cancel')}
-            </Button>
-            <Button 
-              className="bg-gradient-to-r from-cyan-600 to-purple-600 hover:from-cyan-700 hover:to-purple-700" 
-              disabled={!addNodeForm.selectedWallet || !addNodeForm.selectedParent || !addNodeForm.commissionPercent || addNodeMutation.isPending || parseFloat(addNodeForm.commissionPercent) < 0 || parseFloat(addNodeForm.commissionPercent) > 100}
-              onClick={() => {
-                if (addNodeForm.selectedWallet && addNodeForm.selectedParent && addNodeForm.commissionPercent) {
-                  const parentWalletId = (addNodeForm.selectedParent as any).walletInfo ? 
-                    (addNodeForm.selectedParent as any).walletId : 
-                    (addNodeForm.selectedParent as any).walletId;
-                  
-                  addNodeMutation.mutate({
-                    treeId: tree.treeId,
-                    walletId: (addNodeForm.selectedWallet as any).wallet_id,
-                    parentWalletId: parentWalletId,
-                    commissionPercent: parseFloat(addNodeForm.commissionPercent)
-                  });
-                }
-              }}
-            >
-              {addNodeMutation.isPending ? t('bg-affiliate.detail.dialogs.addNode.adding') : t('bg-affiliate.detail.dialogs.addNode.addButton')}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }
