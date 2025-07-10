@@ -376,6 +376,8 @@
             "actions": "Hành Động",
             "active": "Hoạt Động",
             "inactive": "Không Hoạt Động",
+            "statusUpdated": "Cập nhật trạng thái cây thành công!",
+            "statusUpdateFailed": "Cập nhật trạng thái cây thất bại. Vui lòng thử lại.",
             "loading": "Đang tải cây...",
             "error": "Lỗi tải cây. Vui lòng thử lại.",
             "noTrees": "Không tìm thấy cây nào",

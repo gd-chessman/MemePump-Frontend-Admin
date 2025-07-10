@@ -12,7 +12,7 @@ import Link from "next/link";
 import Select from "react-select";
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getListWallets } from '@/services/api/ListWalletsService';
-import { createBgAffiliate, getBgAffiliateTrees, updateRootBgCommission } from '@/services/api/BgAffiliateService';
+import { createBgAffiliate, getBgAffiliateTrees, updateRootBgCommission, updateBgAffiliateNodeStatus } from '@/services/api/BgAffiliateService';
 import { selectStyles } from "@/utils/common";
 import { toast } from "sonner";
 import { useLang } from "@/lang/useLang";
@@ -108,6 +108,23 @@ export default function BgAffiliateAdminPage() {
       } else {
         toast.error(t('bg-affiliate.dialogs.updateCommission.error'));
       }
+    }
+  });
+
+  // Update Tree Status mutation
+  const updateTreeStatusMutation = useMutation({
+    mutationFn: ({ walletId, status }: { walletId: number, status: boolean }) =>
+      updateBgAffiliateNodeStatus(walletId, status),
+    onSuccess: (data) => {
+      console.log('Tree status updated successfully:', data);
+      // Invalidate and refetch trees list
+      queryClient.invalidateQueries({ queryKey: ['bg-affiliate-trees'] });
+      // Show success toast
+      toast.success(t('bg-affiliate.table.statusUpdated'));
+    },
+    onError: (error: any) => {
+      console.error('Error updating tree status:', error);
+      toast.error(t('bg-affiliate.table.statusUpdateFailed'));
     }
   });
 
@@ -301,16 +318,37 @@ export default function BgAffiliateAdminPage() {
                           {tree.createdAt ? new Date(tree.createdAt).toLocaleDateString() : 'Unknown'}
                         </TableCell>
                         <TableCell>
-                          <Badge 
-                            variant="outline" 
-                            className={
-                              tree.status 
-                                ? "border-green-500/30 text-green-400" 
-                                : "border-zinc-500/30 text-zinc-400"
-                            }
-                          >
-                            {tree.status ? t('bg-affiliate.table.active') : t('bg-affiliate.table.inactive')}
-                          </Badge>
+                          <div className="flex items-center gap-2">
+                            <div className="relative">
+                              <input
+                                type="checkbox"
+                                checked={tree.status !== false}
+                                onChange={(e) => {
+                                  updateTreeStatusMutation.mutate({
+                                    walletId: tree.rootWallet.walletId,
+                                    status: e.target.checked
+                                  });
+                                }}
+                                disabled={updateTreeStatusMutation.isPending}
+                                className="sr-only"
+                                id={`toggle-tree-${tree.treeId}`}
+                              />
+                              <label
+                                htmlFor={`toggle-tree-${tree.treeId}`}
+                                className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors duration-200 ease-in-out cursor-pointer ${
+                                  tree.status !== false 
+                                    ? 'bg-emerald-500' 
+                                    : 'bg-slate-600'
+                                } ${updateTreeStatusMutation.isPending ? 'opacity-50 cursor-not-allowed' : ''}`}
+                              >
+                                <span
+                                  className={`inline-block h-3 w-3 transform rounded-full bg-white transition-transform duration-200 ease-in-out ${
+                                    tree.status !== false ? 'translate-x-5' : 'translate-x-1'
+                                  }`}
+                                />
+                              </label>
+                            </div>
+                          </div>
                         </TableCell>
                         <TableCell>
                           <div className="flex items-center gap-2">

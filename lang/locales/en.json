@@ -378,6 +378,8 @@
             "actions": "Actions",
             "active": "Active",
             "inactive": "Inactive",
+            "statusUpdated": "Tree status updated successfully!",
+            "statusUpdateFailed": "Failed to update tree status. Please try again.",
             "loading": "Loading trees...",
             "error": "Error loading trees. Please try again.",
             "noTrees": "No trees found",
