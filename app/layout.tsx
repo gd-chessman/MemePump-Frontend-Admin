@@ -31,7 +31,7 @@ export default function RootLayout({
   const [queryClient] = useState(() => new QueryClient({
     defaultOptions: {
       queries: {
-        refetchOnMount: false,
+        refetchOnMount: true,
       },
     },
   }));
