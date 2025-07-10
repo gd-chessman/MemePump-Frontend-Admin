@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 const axiosClient = axios.create({
-  baseURL: `${apiUrl}/admin`,
+  baseURL: `${apiUrl}/api/v1/admin`,
     withCredentials: true,
 });
 
