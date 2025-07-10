@@ -377,6 +377,7 @@
             "status": "Status",
             "actions": "Actions",
             "active": "Active",
+            "inactive": "Inactive",
             "loading": "Loading trees...",
             "error": "Error loading trees. Please try again.",
             "noTrees": "No trees found",

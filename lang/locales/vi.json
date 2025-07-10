@@ -375,6 +375,7 @@
             "status": "Trạng Thái",
             "actions": "Hành Động",
             "active": "Hoạt Động",
+            "inactive": "Không Hoạt Động",
             "loading": "Đang tải cây...",
             "error": "Lỗi tải cây. Vui lòng thử lại.",
             "noTrees": "Không tìm thấy cây nào",

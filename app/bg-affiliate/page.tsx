@@ -124,7 +124,7 @@ export default function BgAffiliateAdminPage() {
     label: truncateAddress(wallet.wallet_solana_address)
   }));
 
-  const totalMembers = bgAffiliateTrees.reduce((sum: number, tree: any) => sum + (tree.nodeCount || 0), 0);
+  const totalMembers = bgAffiliateTrees.reduce((sum: number, tree: any) => sum + (tree.totalMembers || 0), 0);
 
 
   const handleUpdateCommission = (tree: any) => {
@@ -293,7 +293,7 @@ export default function BgAffiliateAdminPage() {
                         </TableCell>
                         <TableCell>
                           <div className="flex items-center gap-2">
-                            <span className="font-medium text-purple-400">{tree.nodeCount || 0}</span>
+                            <span className="font-medium text-purple-400">{tree.totalMembers || 0}</span>
                             <span className="text-xs text-slate-400">{t('bg-affiliate.table.membersCount')}</span>
                           </div>
                         </TableCell>
@@ -301,8 +301,15 @@ export default function BgAffiliateAdminPage() {
                           {tree.createdAt ? new Date(tree.createdAt).toLocaleDateString() : 'Unknown'}
                         </TableCell>
                         <TableCell>
-                          <Badge variant="outline" className="border-green-500/30 text-green-400">
-                            {t('bg-affiliate.table.active')}
+                          <Badge 
+                            variant="outline" 
+                            className={
+                              tree.status 
+                                ? "border-green-500/30 text-green-400" 
+                                : "border-zinc-500/30 text-zinc-400"
+                            }
+                          >
+                            {tree.status ? t('bg-affiliate.table.active') : t('bg-affiliate.table.inactive')}
                           </Badge>
                         </TableCell>
                         <TableCell>
