@@ -214,7 +214,7 @@ export default function BgAffiliateAdminPage() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-slate-400 text-sm">{t('bg-affiliate.stats.activeTrees')}</p>
-                <p className="text-2xl font-bold text-pink-400">{bgAffiliateTrees.length}</p>
+                <p className="text-2xl font-bold text-pink-400">{bgAffiliateTrees.filter((tree: any) => tree.status !== false).length}</p>
               </div>
               <div className="h-8 w-8 rounded-lg bg-pink-500/10 flex items-center justify-center">
                 <Activity className="h-4 w-4 text-pink-400" />
