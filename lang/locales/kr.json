@@ -8,6 +8,7 @@
         "onlineNow": "현재 온라인",
         "fromLastMonth": "지난달 대비",
         "totalWallets": "총 지갑 수",
+        "totalBgAffiliateTrees": "총 BG 어필리에이트 트리 수",
         "tabs": {
             "overview": "개요",
             "analytics": "분석",

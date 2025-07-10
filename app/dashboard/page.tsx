@@ -27,6 +27,7 @@ import {
   YAxis,
 } from "recharts"
 import { getWalletStatistics } from "@/services/api/ListWalletsService"
+import { getBgAffiliateTrees } from "@/services/api/BgAffiliateService"
 
 
 const COLORS = ["hsl(var(--chart-1))", "hsl(var(--chart-2))", "hsl(var(--chart-3))", "hsl(var(--chart-4))"]
@@ -84,7 +85,14 @@ export default function AdminDashboard() {
     queryFn: getWalletStatistics,
   })
 
-  console.log(walletStats)
+  const { data: bgAffiliateTrees = [], isLoading: treesLoading, error: treesError } = useQuery({
+    queryKey: ['bg-affiliate-trees'],
+    queryFn: getBgAffiliateTrees,
+    refetchInterval: 30000, // Refetch every 30 seconds
+  });
+
+  console.log(bgAffiliateTrees)
+
   useEffect(() => {
     const socket = io(`${process.env.NEXT_PUBLIC_API_URL}/admin`, {
       query: {
@@ -156,7 +164,7 @@ export default function AdminDashboard() {
         <p className="text-muted-foreground">{t('dashboard.overview')}</p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-1 lg:grid-cols-5">
+      <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-6">
         <Card className="stat-card min-h-[140px] flex flex-col justify-between">
           <div className="flex justify-between">
             <div>
@@ -226,6 +234,17 @@ export default function AdminDashboard() {
             </div>
             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-purple-500/10">
               <Users className="h-6 w-6 text-purple-500" />
+            </div>
+          </div>
+        </Card>
+        <Card className="stat-card min-h-[140px] flex flex-col justify-between">
+          <div className="flex justify-between">
+            <div>
+              <p className="stat-label">{t('dashboard.totalBgAffiliateTrees')}</p>
+              <p className="stat-value">{treesLoading ? '...' : bgAffiliateTrees.length}</p>
+            </div>
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-500/10">
+              <Users className="h-6 w-6 text-blue-500" />
             </div>
           </div>
         </Card>
