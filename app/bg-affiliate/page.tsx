@@ -55,7 +55,7 @@ export default function BgAffiliateAdminPage() {
   // Fetch available wallets when dialog is open
   const { data: availableWallets = [], isLoading: walletsLoading } = useQuery({
     queryKey: ["list-wallets-bg-affiliate", walletSearchQuery, 'all', 1],
-    queryFn: () => getListWallets(walletSearchQuery, 1, 30, ''),
+    queryFn: () => getListWallets(walletSearchQuery, 1, 30, '', 'main'),
     enabled: showCreate, // Only fetch when dialog is open
     placeholderData: (previousData) => previousData,
   });
