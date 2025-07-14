@@ -467,5 +467,39 @@
                 }
             }
         }
+    },
+    "normal-affiliate": {
+        "title": "Normal Affiliate Management",
+        "description": "Manage wallet-based referral relationships and rewards",
+        "cardTitle": "Wallet Referral Overview",
+        "cardDescription": "View and manage all wallet referral relationships and their rewards",
+        "searchPlaceholder": "Search wallets...",
+        "stats": {
+            "totalWallets": "Total Wallets",
+            "totalReferralRelations": "Total Referral Relations",
+            "totalRewards": "Total Rewards",
+            "topReferrer": "Top Referrer"
+        },
+        "table": {
+            "walletId": "Wallet ID",
+            "userInfo": "User Info",
+            "stats": "Stats",
+            "inviteeRelations": "Invitee Relations",
+            "referrerRelations": "Referrer Relations",
+            "total": "Total",
+            "invitee": "Invitee",
+            "referrer": "Referrer",
+            "noInviteeRelations": "No invitee relations",
+            "noReferrerRelations": "No referrer relations",
+            "noWalletsFound": "No wallets found",
+            "noWalletsMatchingSearch": "No wallets found matching your search",
+            "loading": "Loading wallet data...",
+            "error": "Error loading wallet data"
+        },
+        "copy": {
+            "addressCopied": "Address copied to clipboard",
+            "refCodeCopied": "Referral code copied to clipboard",
+            "copyFailed": "Failed to copy to clipboard"
+        }
     }
 }

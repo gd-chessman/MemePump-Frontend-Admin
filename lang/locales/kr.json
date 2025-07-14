@@ -465,5 +465,39 @@
                 }
             }
         }
+    },
+    "normal-affiliate": {
+        "title": "일반 추천 관리",
+        "description": "지갑 기반 추천 관계 및 보상 관리",
+        "cardTitle": "지갑 추천 개요",
+        "cardDescription": "모든 지갑 추천 관계와 보상을 보고 관리",
+        "searchPlaceholder": "지갑 검색...",
+        "stats": {
+            "totalWallets": "총 지갑 수",
+            "totalReferralRelations": "총 추천 관계",
+            "totalRewards": "총 보상",
+            "topReferrer": "최고 추천인"
+        },
+        "table": {
+            "walletId": "지갑 ID",
+            "userInfo": "사용자 정보",
+            "stats": "통계",
+            "inviteeRelations": "초대받은 사람 관계",
+            "referrerRelations": "추천인 관계",
+            "total": "총계",
+            "invitee": "초대받은 사람",
+            "referrer": "추천인",
+            "noInviteeRelations": "초대받은 사람 관계 없음",
+            "noReferrerRelations": "추천인 관계 없음",
+            "noWalletsFound": "지갑을 찾을 수 없습니다",
+            "noWalletsMatchingSearch": "검색과 일치하는 지갑을 찾을 수 없습니다",
+            "loading": "지갑 데이터 로딩 중...",
+            "error": "지갑 데이터 로딩 오류"
+        },
+        "copy": {
+            "addressCopied": "주소가 클립보드에 복사되었습니다",
+            "refCodeCopied": "추천 코드가 클립보드에 복사되었습니다",
+            "copyFailed": "클립보드 복사 실패"
+        }
     }
 }

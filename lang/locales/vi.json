@@ -465,5 +465,39 @@
                 }
             }
         }
+    },
+    "normal-affiliate": {
+        "title": "Quản Lý Giới Thiệu Thường",
+        "description": "Quản lý mối quan hệ giới thiệu dựa trên ví và phần thưởng",
+        "cardTitle": "Tổng Quan Giới Thiệu Ví",
+        "cardDescription": "Xem và quản lý tất cả mối quan hệ giới thiệu ví và phần thưởng của họ",
+        "searchPlaceholder": "Tìm kiếm ví...",
+        "stats": {
+            "totalWallets": "Tổng Số Ví",
+            "totalReferralRelations": "Tổng Quan Hệ Giới Thiệu",
+            "totalRewards": "Tổng Phần Thưởng",
+            "topReferrer": "Người Giới Thiệu Hàng Đầu"
+        },
+        "table": {
+            "walletId": "ID Ví",
+            "userInfo": "Thông Tin Người Dùng",
+            "stats": "Thống Kê",
+            "inviteeRelations": "Quan Hệ Người Được Mời",
+            "referrerRelations": "Quan Hệ Người Giới Thiệu",
+            "total": "Tổng",
+            "invitee": "Người Được Mời",
+            "referrer": "Người Giới Thiệu",
+            "noInviteeRelations": "Không có quan hệ người được mời",
+            "noReferrerRelations": "Không có quan hệ người giới thiệu",
+            "noWalletsFound": "Không tìm thấy ví nào",
+            "noWalletsMatchingSearch": "Không tìm thấy ví nào phù hợp với tìm kiếm",
+            "loading": "Đang tải dữ liệu ví...",
+            "error": "Lỗi tải dữ liệu ví"
+        },
+        "copy": {
+            "addressCopied": "Đã sao chép địa chỉ vào clipboard",
+            "refCodeCopied": "Đã sao chép mã giới thiệu vào clipboard",
+            "copyFailed": "Sao chép thất bại"
+        }
     }
 }

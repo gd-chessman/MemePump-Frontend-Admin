@@ -87,15 +87,15 @@ export default function NormalAffiliateAdminPage() {
       await navigator.clipboard.writeText(text);
       if (type === 'address') {
         setCopiedAddress(text);
-        toast.success(t('list-wallets.table.addressCopied') || 'Address copied to clipboard');
+        toast.success(t('normal-affiliate.copy.addressCopied'));
         setTimeout(() => setCopiedAddress(null), 2000);
       } else {
         setCopiedRefCode(text);
-        toast.success('Referral code copied to clipboard');
+        toast.success(t('normal-affiliate.copy.refCodeCopied'));
         setTimeout(() => setCopiedRefCode(null), 2000);
       }
     } catch (error) {
-      toast.error('Failed to copy to clipboard');
+      toast.error(t('normal-affiliate.copy.copyFailed'));
     }
   };
 
@@ -145,8 +145,8 @@ export default function NormalAffiliateAdminPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-100">Normal Affiliate Management</h1>
-          <p className="text-slate-400 text-sm">Manage wallet-based referral relationships and rewards</p>
+          <h1 className="text-2xl font-bold text-slate-100">{t('normal-affiliate.title')}</h1>
+          <p className="text-slate-400 text-sm">{t('normal-affiliate.description')}</p>
         </div>
       </div>
 
@@ -193,7 +193,7 @@ export default function NormalAffiliateAdminPage() {
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-slate-400 text-sm">Total Wallets</p>
+                  <p className="text-slate-400 text-sm">{t('normal-affiliate.stats.totalWallets')}</p>
                   <p className="text-2xl font-bold text-cyan-400">{statisticsData?.overview?.totalWallets || 0}</p>
                 </div>
                 <div className="h-8 w-8 rounded-lg bg-cyan-500/10 flex items-center justify-center">
@@ -207,7 +207,7 @@ export default function NormalAffiliateAdminPage() {
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-slate-400 text-sm">Total Referral Relations</p>
+                  <p className="text-slate-400 text-sm">{t('normal-affiliate.stats.totalReferralRelations')}</p>
                   <p className="text-2xl font-bold text-pink-400">{statisticsData?.overview?.totalReferralRelations || 0}</p>
                 </div>
                 <div className="h-8 w-8 rounded-lg bg-pink-500/10 flex items-center justify-center">
@@ -221,8 +221,8 @@ export default function NormalAffiliateAdminPage() {
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-slate-400 text-sm">Total Rewards</p>
-                  <p className="text-2xl font-bold text-emerald-400">{(statisticsData?.overview?.totalRewards || 0).toFixed(4)} SOL</p>
+                  <p className="text-slate-400 text-sm">{t('normal-affiliate.stats.totalRewards')}</p>
+                  <p className="text-2xl font-bold text-emerald-400">${statisticsData?.overview?.totalRewards || 0}</p>
                 </div>
                 <div className="h-8 w-8 rounded-lg bg-emerald-500/10 flex items-center justify-center">
                   <Award className="h-4 w-4 text-emerald-400" />
@@ -235,9 +235,9 @@ export default function NormalAffiliateAdminPage() {
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-slate-400 text-sm">Top Referrer</p>
+                  <p className="text-slate-400 text-sm">{t('normal-affiliate.stats.topReferrer')}</p>
                   <p className="text-lg font-bold text-purple-400">{statisticsData?.topPerformers?.topReferrers?.[0]?.nickName || 'N/A'}</p>
-                  <p className="text-xs text-slate-400">{(statisticsData?.topPerformers?.topReferrers?.[0]?.totalReferrerReward || 0).toFixed(4)} SOL</p>
+                  <p className="text-xs text-slate-400">${statisticsData?.topPerformers?.topReferrers?.[0]?.totalReferrerReward || 0}</p>
                 </div>
                 <div className="h-8 w-8 rounded-lg bg-purple-500/10 flex items-center justify-center">
                   <UserPlus className="h-4 w-4 text-purple-400" />
@@ -253,9 +253,9 @@ export default function NormalAffiliateAdminPage() {
         <CardHeader className="pb-4">
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle className="text-slate-100">Wallet Referral Overview</CardTitle>
+              <CardTitle className="text-slate-100">{t('normal-affiliate.cardTitle')}</CardTitle>
               <CardDescription className="text-slate-400">
-                View and manage all wallet referral relationships and their rewards
+                {t('normal-affiliate.cardDescription')}
               </CardDescription>
             </div>
             
@@ -264,7 +264,7 @@ export default function NormalAffiliateAdminPage() {
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
                 <Input
-                  placeholder="Search wallets..."
+                  placeholder={t('normal-affiliate.searchPlaceholder')}
                   value={searchTerm}
                   onChange={(e) => handleSearch(e.target.value)}
                   className="pl-10 w-64 bg-slate-800 border-slate-600 text-slate-300"
@@ -277,30 +277,30 @@ export default function NormalAffiliateAdminPage() {
           
           {tableLoading ? (
             <div className="flex items-center justify-center py-8">
-              <div className="text-slate-400">Loading wallet data...</div>
+              <div className="text-slate-400">{t('normal-affiliate.table.loading')}</div>
             </div>
           ) : tableError ? (
             <div className="flex items-center justify-center py-8">
-              <div className="text-red-400">Error loading wallet data</div>
+              <div className="text-red-400">{t('normal-affiliate.table.error')}</div>
             </div>
           ) : (
             <>
               <div className="overflow-x-auto rounded-md border">
                 <Table>
                   <TableHeader>
-                    <TableRow className="border-slate-700/50">
-                      <TableHead className="text-slate-300">Wallet ID</TableHead>
-                      <TableHead className="text-slate-300">User Info</TableHead>
-                      <TableHead className="text-slate-300">Stats</TableHead>
-                      <TableHead className="text-slate-300">Invitee Relations</TableHead>
-                      <TableHead className="text-slate-300">Referrer Relations</TableHead>
-                    </TableRow>
-                  </TableHeader>
+                  <TableRow className="border-slate-700/50">
+                    <TableHead className="text-slate-300">{t('normal-affiliate.table.walletId')}</TableHead>
+                    <TableHead className="text-slate-300">{t('normal-affiliate.table.userInfo')}</TableHead>
+                    <TableHead className="text-slate-300">{t('normal-affiliate.table.stats')}</TableHead>
+                    <TableHead className="text-slate-300">{t('normal-affiliate.table.inviteeRelations')}</TableHead>
+                    <TableHead className="text-slate-300">{t('normal-affiliate.table.referrerRelations')}</TableHead>
+                  </TableRow>
+                </TableHeader>
                   <TableBody>
                     {wallets.length === 0 ? (
                       <TableRow>
                         <TableCell colSpan={5} className="text-center py-8 text-slate-400">
-                          {searchTerm ? 'No wallets found matching your search' : 'No wallets found'}
+                          {searchTerm ? t('normal-affiliate.table.noWalletsMatchingSearch') : t('normal-affiliate.table.noWalletsFound')}
                         </TableCell>
                       </TableRow>
                     ) : (
@@ -346,53 +346,79 @@ export default function NormalAffiliateAdminPage() {
                           </TableCell>
                           <TableCell>
                             <div className="space-y-1">
-                              <div className="flex items-center gap-2">
-                                <span className="text-xs text-slate-400">Total:</span>
-                                <span className="font-medium text-emerald-400">{(wallet.stats?.totalReward || 0).toFixed(4)} SOL</span>
-                              </div>
-                              <div className="flex items-center gap-2">
-                                <span className="text-xs text-slate-400">Invitee:</span>
-                                <span className="font-medium text-blue-400">{(wallet.stats?.totalInviteeReward || 0).toFixed(4)} SOL</span>
-                              </div>
-                              <div className="flex items-center gap-2">
-                                <span className="text-xs text-slate-400">Referrer:</span>
-                                <span className="font-medium text-purple-400">{(wallet.stats?.totalReferrerReward || 0).toFixed(4)} SOL</span>
-                              </div>
+                            <div className="flex items-center gap-2">
+                              <span className="text-xs text-slate-400">{t('normal-affiliate.table.total')}:</span>
+                              <span className="font-medium text-emerald-400">${wallet.stats?.totalReward || 0}</span>
                             </div>
+                          </div>
                           </TableCell>
                           <TableCell>
                             <div className="space-y-1">
-                              {wallet.asInvitee.length > 0 ? (
+                              {wallet.asInvitee.filter((ref: any) => ref.level === 1).length > 0 ? (
                                 <div className="text-xs text-slate-500">
-                                  {wallet.asInvitee.map((ref: any) => (
-                                    <div key={ref.referralId} className="flex items-center gap-1">
-                                      <Badge variant="secondary" className={getLevelBadgeColor(ref.level)}>
-                                        L{ref.level}
-                                      </Badge>
-                                      <span>{ref.referent?.nickName}</span>
-                                    </div>
-                                  ))}
+                                  {wallet.asInvitee
+                                    .filter((ref: any) => ref.level === 1)
+                                    .map((ref: any) => (
+                                      <div key={ref.referralId} className="flex items-center gap-1">
+                                        <div>
+                                          <div className="font-medium text-slate-100">{ref.referent?.nickName}</div>
+                                          <div className="flex items-center gap-1">
+                                            <span className="text-xs text-slate-400">{truncateAddress(ref.referent?.solanaAddress || '')}</span>
+                                            <Button
+                                              variant="ghost"
+                                              size="icon"
+                                              className="h-5 w-5 text-slate-400 hover:text-cyan-300 hover:bg-cyan-900/20"
+                                              onClick={() => copyToClipboard(ref.referent?.solanaAddress || '', 'address')}
+                                              title="Copy address"
+                                            >
+                                              {copiedAddress === ref.referent?.solanaAddress ? (
+                                                <Check className="h-3 w-3 text-emerald-500" />
+                                              ) : (
+                                                <Copy className="h-3 w-3" />
+                                              )}
+                                            </Button>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    ))}
                                 </div>
                               ) : (
-                                <span className="text-xs text-slate-500">No invitee relations</span>
+                                <span className="text-xs text-slate-500">{t('normal-affiliate.table.noInviteeRelations')}</span>
                               )}
                             </div>
                           </TableCell>
                           <TableCell>
                             <div className="space-y-1">
-                              {wallet.asReferrer.length > 0 ? (
+                              {wallet.asReferrer.filter((ref: any) => ref.level === 1).length > 0 ? (
                                 <div className="text-xs text-slate-500">
-                                  {wallet.asReferrer.map((ref: any) => (
-                                    <div key={ref.referralId} className="flex items-center gap-1">
-                                      <Badge variant="secondary" className={getLevelBadgeColor(ref.level)}>
-                                        L{ref.level}
-                                      </Badge>
-                                      <span>{ref.invitee?.nickName}</span>
-                                    </div>
-                                  ))}
+                                  {wallet.asReferrer
+                                    .filter((ref: any) => ref.level === 1)
+                                    .map((ref: any) => (
+                                      <div key={ref.referralId} className="flex items-center gap-1">
+                                        <div>
+                                          <div className="font-medium text-slate-100">{ref.invitee?.nickName}</div>
+                                          <div className="flex items-center gap-1">
+                                            <span className="text-xs text-slate-400">{truncateAddress(ref.invitee?.solanaAddress || '')}</span>
+                                            <Button
+                                              variant="ghost"
+                                              size="icon"
+                                              className="h-5 w-5 text-slate-400 hover:text-cyan-300 hover:bg-cyan-900/20"
+                                              onClick={() => copyToClipboard(ref.invitee?.solanaAddress || '', 'address')}
+                                              title="Copy address"
+                                            >
+                                              {copiedAddress === ref.invitee?.solanaAddress ? (
+                                                <Check className="h-3 w-3 text-emerald-500" />
+                                              ) : (
+                                                <Copy className="h-3 w-3" />
+                                              )}
+                                            </Button>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    ))}
                                 </div>
                               ) : (
-                                <span className="text-xs text-slate-500">No referrer relations</span>
+                                <span className="text-xs text-slate-500">{t('normal-affiliate.table.noReferrerRelations')}</span>
                               )}
                             </div>
                           </TableCell>
