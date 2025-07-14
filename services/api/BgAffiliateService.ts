@@ -90,3 +90,13 @@ export const updateBgAffiliateNodeStatus = async (walletId: number, status: bool
     throw error;
   }
 }; 
+
+export const getBgAffiliateStatistics = async () => {
+  try {
+    const response = await axiosClient.get('/bg-affiliate/statistics');
+    return response.data;
+  } catch (error) {
+    console.log('Error fetching BG affiliate statistics:', error);
+    return [];
+  }
+};

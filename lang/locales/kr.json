@@ -366,7 +366,8 @@
         "stats": {
             "totalTrees": "총 트리",
             "totalMembers": "총 멤버",
-            "activeTrees": "활성 트리"
+            "totalCommissionDistributed": "총 분배된 수수료",
+            "totalVolume": "총 거래량"
         },
         "table": {
             "number": "#",
@@ -420,7 +421,9 @@
             "stats": {
                 "rootCommission": "루트 수수료",
                 "totalMembers": "총 멤버",
-                "created": "생성일"
+                "created": "생성일",
+                "totalVolume": "총 거래량",
+                "totalTrans": "총 거래"
             },
             "treeStructure": "제휴 트리 구조",
             "treeDescription": "수수료 비율이 포함된 완전한 제휴 계층 구조의 대화형 보기",
@@ -437,6 +440,8 @@
                 "active": "활성",
                 "inactive": "비활성",
                 "joined": "가입일",
+                "volume": "거래량",
+                "transactions": "거래수",
                 "noMembers": "멤버를 찾을 수 없습니다",
                 "statusUpdated": "노드 상태가 성공적으로 업데이트되었습니다!",
                 "statusUpdateFailed": "노드 상태 업데이트에 실패했습니다. 다시 시도해 주세요.",

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ChevronRight, ChevronDown, Percent, Users, Calendar, Wallet, Activity, Copy, Check, Power, Crown } from "lucide-react";
+import { ChevronRight, ChevronDown, Percent, Users, Calendar, Wallet, Activity, Copy, Check, Power, Crown, TrendingUp, BarChart3 } from "lucide-react";
 import { notFound, useParams } from "next/navigation";
 import { toast } from "sonner";
 import { getBgAffiliateTreeDetail, updateBgAffiliateNodeStatus } from '@/services/api/BgAffiliateService';
@@ -147,6 +147,22 @@ function TreeNode({
               <Percent className="h-3 w-3" />
               <span className="text-emerald-400 font-medium">{node.commissionPercent}%</span>
             </div>
+
+            {node.totalVolume !== undefined && (
+              <div className="flex items-center gap-1">
+                <TrendingUp className="h-3 w-3" />
+                <span className="text-slate-400">{t('bg-affiliate.detail.table.volume')}:</span>
+                <span className="text-blue-400 font-medium">${node.totalVolume || 0}</span>
+              </div>
+            )}
+
+            {node.totalTrans !== undefined && (
+              <div className="flex items-center gap-1">
+                <BarChart3 className="h-3 w-3" />
+                <span className="text-slate-400">{t('bg-affiliate.detail.table.transactions')}:</span>
+                <span className="text-purple-400 font-medium">{node.totalTrans || 0}</span>
+              </div>
+            )}
 
             {node.effectiveFrom && (
               <div className="flex items-center gap-1">

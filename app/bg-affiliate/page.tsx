@@ -12,7 +12,7 @@ import Link from "next/link";
 import Select from "react-select";
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getListWallets } from '@/services/api/ListWalletsService';
-import { createBgAffiliate, getBgAffiliateTrees, updateRootBgCommission, updateBgAffiliateNodeStatus } from '@/services/api/BgAffiliateService';
+import { createBgAffiliate, getBgAffiliateTrees, updateRootBgCommission, updateBgAffiliateNodeStatus, getBgAffiliateStatistics } from '@/services/api/BgAffiliateService';
 import { selectStyles } from "@/utils/common";
 import { toast } from "sonner";
 import { useLang } from "@/lang/useLang";
@@ -49,6 +49,13 @@ export default function BgAffiliateAdminPage() {
   const { data: bgAffiliateTrees = [], isLoading: treesLoading, error: treesError } = useQuery({
     queryKey: ['bg-affiliate-trees'],
     queryFn: getBgAffiliateTrees,
+    refetchInterval: 30000, // Refetch every 30 seconds
+  });
+
+  // Fetch BG Affiliate statistics
+  const { data: statisticsData, isLoading: statsLoading, error: statsError } = useQuery({
+    queryKey: ['bg-affiliate-statistics'],
+    queryFn: getBgAffiliateStatistics,
     refetchInterval: 30000, // Refetch every 30 seconds
   });
 
@@ -141,7 +148,8 @@ export default function BgAffiliateAdminPage() {
     label: wallet.wallet_solana_address
   }));
 
-  const totalMembers = bgAffiliateTrees.reduce((sum: number, tree: any) => sum + (tree.totalMembers || 0), 0);
+  // Use statistics data instead of manual calculation
+  const totalMembers = statisticsData?.totalMembers || 0;
 
 
   const handleUpdateCommission = (tree: any) => {
@@ -180,49 +188,101 @@ export default function BgAffiliateAdminPage() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className="bg-slate-800/50 border-slate-700/50">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-slate-400 text-sm">{t('bg-affiliate.stats.totalTrees')}</p>
-                <p className="text-2xl font-bold text-cyan-400">{bgAffiliateTrees.length}</p>
+      {statsLoading ? (
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          {[1, 2, 3, 4].map((i) => (
+            <Card key={i} className="bg-slate-800/50 border-slate-700/50">
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-slate-400 text-sm">Loading...</p>
+                    <p className="text-2xl font-bold text-slate-400">...</p>
+                  </div>
+                  <div className="h-8 w-8 rounded-lg bg-slate-500/10 flex items-center justify-center">
+                    <div className="h-4 w-4 bg-slate-400 rounded animate-pulse"></div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      ) : statsError ? (
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          {[1, 2, 3, 4].map((i) => (
+            <Card key={i} className="bg-slate-800/50 border-slate-700/50">
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-slate-400 text-sm">Error</p>
+                    <p className="text-2xl font-bold text-red-400">-</p>
+                  </div>
+                  <div className="h-8 w-8 rounded-lg bg-red-500/10 flex items-center justify-center">
+                    <div className="h-4 w-4 bg-red-400 rounded"></div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <Card className="bg-slate-800/50 border-slate-700/50">
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-slate-400 text-sm">{t('bg-affiliate.stats.totalTrees')}</p>
+                  <p className="text-2xl font-bold text-cyan-400">{statisticsData?.totalTrees || 0}</p>
+                </div>
+                <div className="h-8 w-8 rounded-lg bg-cyan-500/10 flex items-center justify-center">
+                  <Users className="h-4 w-4 text-cyan-400" />
+                </div>
               </div>
-              <div className="h-8 w-8 rounded-lg bg-cyan-500/10 flex items-center justify-center">
-                <Users className="h-4 w-4 text-cyan-400" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
 
-        <Card className="bg-slate-800/50 border-slate-700/50">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-slate-400 text-sm">{t('bg-affiliate.stats.totalMembers')}</p>
-                <p className="text-2xl font-bold text-emerald-400">{totalMembers}</p>
+          <Card className="bg-slate-800/50 border-slate-700/50">
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-slate-400 text-sm">{t('bg-affiliate.stats.totalMembers')}</p>
+                  <p className="text-2xl font-bold text-emerald-400">{statisticsData?.totalMembers || 0}</p>
+                </div>
+                <div className="h-8 w-8 rounded-lg bg-emerald-500/10 flex items-center justify-center">
+                  <Wallet className="h-4 w-4 text-emerald-400" />
+                </div>
               </div>
-              <div className="h-8 w-8 rounded-lg bg-emerald-500/10 flex items-center justify-center">
-                <Wallet className="h-4 w-4 text-emerald-400" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
 
-        <Card className="bg-slate-800/50 border-slate-700/50">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-slate-400 text-sm">{t('bg-affiliate.stats.activeTrees')}</p>
-                <p className="text-2xl font-bold text-pink-400">{bgAffiliateTrees.filter((tree: any) => tree.status !== false).length}</p>
+          <Card className="bg-slate-800/50 border-slate-700/50">
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-slate-400 text-sm">{t('bg-affiliate.stats.totalCommissionDistributed')}</p>
+                  <p className="text-2xl font-bold text-pink-400">${statisticsData?.totalCommissionDistributed || 0}</p>
+                </div>
+                <div className="h-8 w-8 rounded-lg bg-pink-500/10 flex items-center justify-center">
+                  <TrendingUp className="h-4 w-4 text-pink-400" />
+                </div>
               </div>
-              <div className="h-8 w-8 rounded-lg bg-pink-500/10 flex items-center justify-center">
-                <Activity className="h-4 w-4 text-pink-400" />
+            </CardContent>
+          </Card>
+
+          <Card className="bg-slate-800/50 border-slate-700/50">
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-slate-400 text-sm">{t('bg-affiliate.stats.totalVolume')}</p>
+                  <p className="text-2xl font-bold text-purple-400">${statisticsData?.totalVolume || 0}</p>
+                </div>
+                <div className="h-8 w-8 rounded-lg bg-purple-500/10 flex items-center justify-center">
+                  <Activity className="h-4 w-4 text-purple-400" />
+                </div>
               </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
 
       {/* Main Content */}
       <Card className="bg-slate-800/50 border-slate-700/50">

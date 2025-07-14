@@ -365,11 +365,12 @@
         "cardDescription": "Manage and monitor all BG affiliate",
         "searchPlaceholder": "Search trees...",
         "newBg": "New BG",
-        "stats": {
-            "totalTrees": "Total Trees",
-            "totalMembers": "Total Members",
-            "activeTrees": "Active Trees"
-        },
+            "stats": {
+      "totalTrees": "Total Trees",
+      "totalMembers": "Total Members",
+      "totalCommissionDistributed": "Total Commission Distributed",
+      "totalVolume": "Total Volume"
+    },
         "table": {
             "number": "#",
             "rootWallet": "Root Wallet",
@@ -422,7 +423,9 @@
             "stats": {
                 "rootCommission": "Root Commission",
                 "totalMembers": "Total Members",
-                "created": "Created"
+                "created": "Created",
+                "totalVolume": "Total Volume",
+                "totalTrans": "Total Transactions"
             },
             "treeStructure": "Affiliate Tree Structure",
             "treeDescription": "Interactive view of the complete affiliate hierarchy with commission percentages",
@@ -439,6 +442,8 @@
                 "active": "Active",
                 "inactive": "Inactive",
                 "joined": "Joined",
+                "volume": "Volume",
+                "transactions": "Transactions",
                 "noMembers": "No members found",
                 "statusUpdated": "Node status updated successfully!",
                 "statusUpdateFailed": "Failed to update node status. Please try again.",

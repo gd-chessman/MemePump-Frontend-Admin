@@ -366,7 +366,8 @@
         "stats": {
             "totalTrees": "Tổng Cây",
             "totalMembers": "Tổng Thành Viên",
-            "activeTrees": "Cây Hoạt Động"
+            "totalCommissionDistributed": "Tổng Hoa Hồng Đã Phân Phối",
+            "totalVolume": "Tổng Khối Lượng"
         },
         "table": {
             "number": "#",
@@ -420,7 +421,9 @@
             "stats": {
                 "rootCommission": "Hoa Hồng Gốc",
                 "totalMembers": "Tổng Thành Viên",
-                "created": "Tạo Lúc"
+                "created": "Tạo Lúc",
+                "totalVolume": "Tổng Khối Lượng",
+                "totalTrans": "Tổng Giao Dịch"
             },
             "treeStructure": "Cấu Trúc Giới Thiệu",
             "treeDescription": "Xem tương tác của hệ thống phân cấp giới thiệu hoàn chỉnh với phần trăm hoa hồng",
@@ -437,6 +440,8 @@
                 "active": "Hoạt Động",
                 "inactive": "Không Hoạt Động",
                 "joined": "Tham Gia",
+                "volume": "Khối Lượng",
+                "transactions": "Giao Dịch",
                 "noMembers": "Không tìm thấy thành viên",
                 "statusUpdated": "Cập nhật trạng thái node thành công!",
                 "statusUpdateFailed": "Cập nhật trạng thái node thất bại. Vui lòng thử lại.",
