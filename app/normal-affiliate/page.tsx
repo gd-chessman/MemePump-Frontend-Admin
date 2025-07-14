@@ -6,9 +6,9 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Users, Wallet, Percent, Calendar, Search, Copy, Check, TrendingUp, Activity, UserPlus, Award } from "lucide-react";
+import { Users, Wallet, Percent, Calendar, Search, Copy, Check, TrendingUp, Activity, UserPlus, Award, ChevronLeft } from "lucide-react";
 import { useQuery } from '@tanstack/react-query';
-import { getNormalAffiliateStats, getNormalAffiliateStatistics } from '@/services/api/NormalAffiliateService';
+import { getNormalAffiliateStats, getNormalAffiliateStatistics, PaginationParams } from '@/services/api/NormalAffiliateService';
 import { toast } from "sonner";
 import { useLang } from "@/lang/useLang";
 
@@ -18,250 +18,24 @@ function truncateAddress(address: string, start: number = 4, end: number = 4): s
   return `${address.slice(0, start)}...${address.slice(-end)}`;
 }
 
-// Mock data
-const mockReferralData = {
-  "data": [
-    {
-      "walletId": 3251129,
-      "nickName": "2333",
-      "solanaAddress": "8EbySEW8WJHUrNfmSNe85TuWmsVaV6T7Q6MzwkYyGgnZ",
-      "ethAddress": "0x858E9AcF9B03216AE42cFDE137aB775EAE10CA08",
-      "refCode": "3251129",
-      "stats": {
-        "totalInviteeReward": 0.04516,
-        "totalInviteeCount": 50,
-        "totalReferrerReward": 0.03026,
-        "totalReferrerCount": 18,
-        "totalReward": 0.07542
-      },
-      "asInvitee": [
-        {
-          "referralId": 1,
-          "level": 1,
-          "totalReward": 0.04516,
-          "rewardCount": 50,
-          "referent": {
-            "walletId": 3251125,
-            "nickName": "khanh382",
-            "solanaAddress": "s4uJWXe7C3QeKsUBoMTvNDRGtrk5LJYJK1Az7jyfvdy",
-            "ethAddress": "0xf68c4644C888216995C39F82DD23a3fAb1bfF026",
-            "refCode": "3251125"
-          }
-        }
-      ],
-      "asReferrer": [
-        {
-          "referralId": 5472,
-          "level": 1,
-          "totalReward": 0.0151,
-          "rewardCount": 13,
-          "invitee": {
-            "walletId": 3255669,
-            "nickName": "okbro",
-            "solanaAddress": "DWPXN6yvhhqZrnjTqS4fc65BgbG8m3A9WW3FmgomJCT9",
-            "ethAddress": "0x71F30531BAf8c595CfF960F177F52E4cA54400c8",
-            "refCode": "8URULx"
-          }
-        },
-        {
-          "referralId": 720,
-          "level": 2,
-          "totalReward": 0.01516,
-          "rewardCount": 5,
-          "invitee": {
-            "walletId": 3260717,
-            "nickName": "OK11",
-            "solanaAddress": "GwhQyPako7KUEXgkBFRsWkT2DyVPVdcznmLpTcYi2bc5",
-            "ethAddress": "0x7cBEfA3CF8a2edFdb9d8400d81e408436A34CdaE",
-            "refCode": "0z1bTs"
-          }
-        }
-      ]
-    },
-    {
-      "walletId": 3251125,
-      "nickName": "khanh382",
-      "solanaAddress": "s4uJWXe7C3QeKsUBoMTvNDRGtrk5LJYJK1Az7jyfvdy",
-      "ethAddress": "0xf68c4644C888216995C39F82DD23a3fAb1bfF026",
-      "refCode": "3251125",
-      "stats": {
-        "totalInviteeReward": 0,
-        "totalInviteeCount": 0,
-        "totalReferrerReward": 0.04516,
-        "totalReferrerCount": 50,
-        "totalReward": 0.04516
-      },
-      "asInvitee": [],
-      "asReferrer": [
-        {
-          "referralId": 1,
-          "level": 1,
-          "totalReward": 0.04516,
-          "rewardCount": 50,
-          "invitee": {
-            "walletId": 3251129,
-            "nickName": "2333",
-            "solanaAddress": "8EbySEW8WJHUrNfmSNe85TuWmsVaV6T7Q6MzwkYyGgnZ",
-            "ethAddress": "0x858E9AcF9B03216AE42cFDE137aB775EAE10CA08",
-            "refCode": "3251129"
-          }
-        },
-        {
-          "referralId": 5937,
-          "level": 2,
-          "totalReward": 0,
-          "rewardCount": 0,
-          "invitee": {
-            "walletId": 3255669,
-            "nickName": "okbro",
-            "solanaAddress": "DWPXN6yvhhqZrnjTqS4fc65BgbG8m3A9WW3FmgomJCT9",
-            "ethAddress": "0x71F30531BAf8c595CfF960F177F52E4cA54400c8",
-            "refCode": "8URULx"
-          }
-        },
-        {
-          "referralId": 1138,
-          "level": 3,
-          "totalReward": 0,
-          "rewardCount": 0,
-          "invitee": {
-            "walletId": 3260717,
-            "nickName": "OK11",
-            "solanaAddress": "GwhQyPako7KUEXgkBFRsWkT2DyVPVdcznmLpTcYi2bc5",
-            "ethAddress": "0x7cBEfA3CF8a2edFdb9d8400d81e408436A34CdaE",
-            "refCode": "0z1bTs"
-          }
-        }
-      ]
-    },
-    {
-      "walletId": 3260717,
-      "nickName": "OK11",
-      "solanaAddress": "GwhQyPako7KUEXgkBFRsWkT2DyVPVdcznmLpTcYi2bc5",
-      "ethAddress": "0x7cBEfA3CF8a2edFdb9d8400d81e408436A34CdaE",
-      "refCode": "0z1bTs",
-      "stats": {
-        "totalInviteeReward": 0.01516,
-        "totalInviteeCount": 5,
-        "totalReferrerReward": 0,
-        "totalReferrerCount": 0,
-        "totalReward": 0.01516
-      },
-      "asInvitee": [
-        {
-          "referralId": 10244,
-          "level": 1,
-          "totalReward": 0,
-          "rewardCount": 0,
-          "referent": {
-            "walletId": 3255669,
-            "nickName": "okbro",
-            "solanaAddress": "DWPXN6yvhhqZrnjTqS4fc65BgbG8m3A9WW3FmgomJCT9",
-            "ethAddress": "0x71F30531BAf8c595CfF960F177F52E4cA54400c8",
-            "refCode": "8URULx"
-          }
-        },
-        {
-          "referralId": 720,
-          "level": 2,
-          "totalReward": 0.01516,
-          "rewardCount": 5,
-          "referent": {
-            "walletId": 3251129,
-            "nickName": "2333",
-            "solanaAddress": "8EbySEW8WJHUrNfmSNe85TuWmsVaV6T7Q6MzwkYyGgnZ",
-            "ethAddress": "0x858E9AcF9B03216AE42cFDE137aB775EAE10CA08",
-            "refCode": "3251129"
-          }
-        },
-        {
-          "referralId": 1138,
-          "level": 3,
-          "totalReward": 0,
-          "rewardCount": 0,
-          "referent": {
-            "walletId": 3251125,
-            "nickName": "khanh382",
-            "solanaAddress": "s4uJWXe7C3QeKsUBoMTvNDRGtrk5LJYJK1Az7jyfvdy",
-            "ethAddress": "0xf68c4644C888216995C39F82DD23a3fAb1bfF026",
-            "refCode": "3251125"
-          }
-        }
-      ],
-      "asReferrer": []
-    },
-    {
-      "walletId": 3255669,
-      "nickName": "okbro",
-      "solanaAddress": "DWPXN6yvhhqZrnjTqS4fc65BgbG8m3A9WW3FmgomJCT9",
-      "ethAddress": "0x71F30531BAf8c595CfF960F177F52E4cA54400c8",
-      "refCode": "8URULx",
-      "stats": {
-        "totalInviteeReward": 0.0151,
-        "totalInviteeCount": 13,
-        "totalReferrerReward": 0,
-        "totalReferrerCount": 0,
-        "totalReward": 0.0151
-      },
-      "asInvitee": [
-        {
-          "referralId": 5472,
-          "level": 1,
-          "totalReward": 0.0151,
-          "rewardCount": 13,
-          "referent": {
-            "walletId": 3251129,
-            "nickName": "2333",
-            "solanaAddress": "8EbySEW8WJHUrNfmSNe85TuWmsVaV6T7Q6MzwkYyGgnZ",
-            "ethAddress": "0x858E9AcF9B03216AE42cFDE137aB775EAE10CA08",
-            "refCode": "3251129"
-          }
-        },
-        {
-          "referralId": 5937,
-          "level": 2,
-          "totalReward": 0,
-          "rewardCount": 0,
-          "referent": {
-            "walletId": 3251125,
-            "nickName": "khanh382",
-            "solanaAddress": "s4uJWXe7C3QeKsUBoMTvNDRGtrk5LJYJK1Az7jyfvdy",
-            "ethAddress": "0xf68c4644C888216995C39F82DD23a3fAb1bfF026",
-            "refCode": "3251125"
-          }
-        }
-      ],
-      "asReferrer": [
-        {
-          "referralId": 10244,
-          "level": 1,
-          "totalReward": 0,
-          "rewardCount": 0,
-          "invitee": {
-            "walletId": 3260717,
-            "nickName": "OK11",
-            "solanaAddress": "GwhQyPako7KUEXgkBFRsWkT2DyVPVdcznmLpTcYi2bc5",
-            "ethAddress": "0x7cBEfA3CF8a2edFdb9d8400d81e408436A34CdaE",
-            "refCode": "0z1bTs"
-          }
-        }
-      ]
-    }
-  ],
-  "total": 4,
-  "page": 1,
-  "limit": 100
-};
-
 export default function NormalAffiliateAdminPage() {
   const { t } = useLang();
   const [copiedAddress, setCopiedAddress] = useState<string | null>(null);
   const [copiedRefCode, setCopiedRefCode] = useState<string | null>(null);
+  
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [searchTerm, setSearchTerm] = useState("");
 
-  // Fetch normal affiliate data for table
+  // Fetch normal affiliate data for table with pagination
   const { data: normalAffiliateData, isLoading: tableLoading, error: tableError } = useQuery({
-    queryKey: ['normal-affiliate-stats'],
-    queryFn: getNormalAffiliateStats,
+    queryKey: ['normal-affiliate-stats', currentPage, pageSize, searchTerm],
+    queryFn: () => getNormalAffiliateStats({
+      page: currentPage,
+      limit: pageSize,
+      search: searchTerm || undefined
+    }),
   });
 
   // Fetch statistics data for cards
@@ -270,10 +44,42 @@ export default function NormalAffiliateAdminPage() {
     queryFn: getNormalAffiliateStatistics,
   });
 
-  // Get all wallets from API data
+  // Get pagination info from API response
+  const pagination = normalAffiliateData?.pagination || {};
+  const totalPages = pagination.totalPages || 1;
+  const totalItems = pagination.total || 0;
   const wallets = normalAffiliateData?.data || [];
 
+  // Handle search
+  const handleSearch = (value: string) => {
+    setSearchTerm(value);
+    setCurrentPage(1); // Reset to first page when searching
+  };
 
+  // Handle page change
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  // Handle page size change
+  const handlePageSizeChange = (size: number) => {
+    setPageSize(size);
+    setCurrentPage(1); // Reset to first page when changing page size
+  };
+
+  // Handle previous page
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  // Handle next page
+  const handleNextPage = () => {
+    if (totalPages && currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
 
   // Copy to clipboard function
   const copyToClipboard = async (text: string, type: 'address' | 'refCode') => {
@@ -307,6 +113,33 @@ export default function NormalAffiliateAdminPage() {
     }
   };
 
+  // Pagination component
+  const Pagination = () => {
+    return (
+      <div className="flex items-center justify-center space-x-4 mt-4">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={handlePreviousPage}
+          disabled={currentPage <= 1}
+        >
+          <ChevronLeft className="h-4 w-4" />
+        </Button>
+        <span className="text-sm text-slate-400">
+          {currentPage} / {totalPages || 1}
+        </span>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={handleNextPage}
+          disabled={!totalPages || currentPage >= totalPages}
+        >
+          <ChevronLeft className="h-4 w-4 rotate-180" />
+        </Button>
+      </div>
+    );
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -317,7 +150,7 @@ export default function NormalAffiliateAdminPage() {
         </div>
       </div>
 
-            {/* Stats Cards */}
+      {/* Stats Cards */}
       {statsLoading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {[1, 2, 3, 4].map((i) => (
@@ -415,8 +248,6 @@ export default function NormalAffiliateAdminPage() {
         </div>
       )}
 
-
-
       {/* Main Content */}
       <Card className="bg-slate-800/50 border-slate-700/50">
         <CardHeader className="pb-4">
@@ -426,6 +257,19 @@ export default function NormalAffiliateAdminPage() {
               <CardDescription className="text-slate-400">
                 View and manage all wallet referral relationships and their rewards
               </CardDescription>
+            </div>
+            
+            {/* Search */}
+            <div className="flex items-center gap-2">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
+                <Input
+                  placeholder="Search wallets..."
+                  value={searchTerm}
+                  onChange={(e) => handleSearch(e.target.value)}
+                  className="pl-10 w-64 bg-slate-800 border-slate-600 text-slate-300"
+                />
+              </div>
             </div>
           </div>
         </CardHeader>
@@ -440,123 +284,128 @@ export default function NormalAffiliateAdminPage() {
               <div className="text-red-400">Error loading wallet data</div>
             </div>
           ) : (
-            <div className="overflow-x-auto rounded-md border">
-              <Table>
-                <TableHeader>
-                  <TableRow className="border-slate-700/50">
-                    <TableHead className="text-slate-300">Wallet ID</TableHead>
-                    <TableHead className="text-slate-300">User Info</TableHead>
-                    <TableHead className="text-slate-300">Stats</TableHead>
-                    <TableHead className="text-slate-300">Invitee Relations</TableHead>
-                    <TableHead className="text-slate-300">Referrer Relations</TableHead>
-                  </TableRow>
-                </TableHeader>
-                                <TableBody>
-                  {wallets.length === 0 ? (
-                    <TableRow>
-                      <TableCell colSpan={5} className="text-center py-8 text-slate-400">
-                        No wallets found
-                      </TableCell>
+            <>
+              <div className="overflow-x-auto rounded-md border">
+                <Table>
+                  <TableHeader>
+                    <TableRow className="border-slate-700/50">
+                      <TableHead className="text-slate-300">Wallet ID</TableHead>
+                      <TableHead className="text-slate-300">User Info</TableHead>
+                      <TableHead className="text-slate-300">Stats</TableHead>
+                      <TableHead className="text-slate-300">Invitee Relations</TableHead>
+                      <TableHead className="text-slate-300">Referrer Relations</TableHead>
                     </TableRow>
-                  ) : (
-                    wallets.map((wallet: any, index: number) => (
-                    <TableRow key={wallet.walletId} className="border-slate-700/30 hover:bg-slate-700/20">
-                      <TableCell className="font-medium text-cyan-400">{wallet.walletId}</TableCell>
-                      <TableCell>
-                        <div>
-                          <p className="font-medium text-slate-100">{wallet.nickName || 'Unknown'}</p>
-                          <div className="flex items-center gap-2">
-                            <p className="text-xs text-slate-400">{truncateAddress(wallet.solanaAddress || '')}</p>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-5 w-5 text-slate-400 hover:text-cyan-300 hover:bg-cyan-900/20"
-                              onClick={() => copyToClipboard(wallet.solanaAddress || '', 'address')}
-                              title="Copy address"
-                            >
-                              {copiedAddress === wallet.solanaAddress ? (
-                                <Check className="h-3 w-3 text-emerald-500" />
-                              ) : (
-                                <Copy className="h-3 w-3" />
-                              )}
-                            </Button>
-                          </div>
-                          <div className="flex items-center gap-2 mt-1">
-                            <span className="text-xs text-slate-500">Ref: {wallet.refCode}</span>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-4 w-4 text-slate-500 hover:text-cyan-300 hover:bg-cyan-900/20"
-                              onClick={() => copyToClipboard(wallet.refCode || '', 'refCode')}
-                              title="Copy referral code"
-                            >
-                              {copiedRefCode === wallet.refCode ? (
-                                <Check className="h-2 w-2 text-emerald-500" />
-                              ) : (
-                                <Copy className="h-2 w-2" />
-                              )}
-                            </Button>
-                          </div>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="space-y-1">
-                          <div className="flex items-center gap-2">
-                            <span className="text-xs text-slate-400">Total:</span>
-                            <span className="font-medium text-emerald-400">{(wallet.stats?.totalReward || 0).toFixed(4)} SOL</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <span className="text-xs text-slate-400">Invitee:</span>
-                            <span className="font-medium text-blue-400">{(wallet.stats?.totalInviteeReward || 0).toFixed(4)} SOL</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <span className="text-xs text-slate-400">Referrer:</span>
-                            <span className="font-medium text-purple-400">{(wallet.stats?.totalReferrerReward || 0).toFixed(4)} SOL</span>
-                          </div>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="space-y-1">
-                          {wallet.asInvitee.length > 0 ? (
-                            <div className="text-xs text-slate-500">
-                              {wallet.asInvitee.map((ref: any) => (
-                                <div key={ref.referralId} className="flex items-center gap-1">
-                                  <Badge variant="secondary" className={getLevelBadgeColor(ref.level)}>
-                                    L{ref.level}
-                                  </Badge>
-                                  <span>{ref.referent?.nickName}</span>
-                                </div>
-                              ))}
+                  </TableHeader>
+                  <TableBody>
+                    {wallets.length === 0 ? (
+                      <TableRow>
+                        <TableCell colSpan={5} className="text-center py-8 text-slate-400">
+                          {searchTerm ? 'No wallets found matching your search' : 'No wallets found'}
+                        </TableCell>
+                      </TableRow>
+                    ) : (
+                      wallets.map((wallet: any, index: number) => (
+                        <TableRow key={wallet.walletId} className="border-slate-700/30 hover:bg-slate-700/20">
+                          <TableCell className="font-medium text-cyan-400">{wallet.walletId}</TableCell>
+                          <TableCell>
+                            <div>
+                              <p className="font-medium text-slate-100">{wallet.nickName || 'Unknown'}</p>
+                              <div className="flex items-center gap-2">
+                                <p className="text-xs text-slate-400">{truncateAddress(wallet.solanaAddress || '')}</p>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="h-5 w-5 text-slate-400 hover:text-cyan-300 hover:bg-cyan-900/20"
+                                  onClick={() => copyToClipboard(wallet.solanaAddress || '', 'address')}
+                                  title="Copy address"
+                                >
+                                  {copiedAddress === wallet.solanaAddress ? (
+                                    <Check className="h-3 w-3 text-emerald-500" />
+                                  ) : (
+                                    <Copy className="h-3 w-3" />
+                                  )}
+                                </Button>
+                              </div>
+                              <div className="flex items-center gap-2 mt-1">
+                                <span className="text-xs text-slate-500">Ref: {wallet.refCode}</span>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="h-4 w-4 text-slate-500 hover:text-cyan-300 hover:bg-cyan-900/20"
+                                  onClick={() => copyToClipboard(wallet.refCode || '', 'refCode')}
+                                  title="Copy referral code"
+                                >
+                                  {copiedRefCode === wallet.refCode ? (
+                                    <Check className="h-2 w-2 text-emerald-500" />
+                                  ) : (
+                                    <Copy className="h-2 w-2" />
+                                  )}
+                                </Button>
+                              </div>
                             </div>
-                          ) : (
-                            <span className="text-xs text-slate-500">No invitee relations</span>
-                          )}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="space-y-1">
-                          {wallet.asReferrer.length > 0 ? (
-                            <div className="text-xs text-slate-500">
-                              {wallet.asReferrer.map((ref: any) => (
-                                <div key={ref.referralId} className="flex items-center gap-1">
-                                  <Badge variant="secondary" className={getLevelBadgeColor(ref.level)}>
-                                    L{ref.level}
-                                  </Badge>
-                                  <span>{ref.invitee?.nickName}</span>
-                                </div>
-                              ))}
+                          </TableCell>
+                          <TableCell>
+                            <div className="space-y-1">
+                              <div className="flex items-center gap-2">
+                                <span className="text-xs text-slate-400">Total:</span>
+                                <span className="font-medium text-emerald-400">{(wallet.stats?.totalReward || 0).toFixed(4)} SOL</span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <span className="text-xs text-slate-400">Invitee:</span>
+                                <span className="font-medium text-blue-400">{(wallet.stats?.totalInviteeReward || 0).toFixed(4)} SOL</span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <span className="text-xs text-slate-400">Referrer:</span>
+                                <span className="font-medium text-purple-400">{(wallet.stats?.totalReferrerReward || 0).toFixed(4)} SOL</span>
+                              </div>
                             </div>
-                          ) : (
-                            <span className="text-xs text-slate-500">No referrer relations</span>
-                          )}
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                )}
-                              </TableBody>
-              </Table>
-            </div>
+                          </TableCell>
+                          <TableCell>
+                            <div className="space-y-1">
+                              {wallet.asInvitee.length > 0 ? (
+                                <div className="text-xs text-slate-500">
+                                  {wallet.asInvitee.map((ref: any) => (
+                                    <div key={ref.referralId} className="flex items-center gap-1">
+                                      <Badge variant="secondary" className={getLevelBadgeColor(ref.level)}>
+                                        L{ref.level}
+                                      </Badge>
+                                      <span>{ref.referent?.nickName}</span>
+                                    </div>
+                                  ))}
+                                </div>
+                              ) : (
+                                <span className="text-xs text-slate-500">No invitee relations</span>
+                              )}
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            <div className="space-y-1">
+                              {wallet.asReferrer.length > 0 ? (
+                                <div className="text-xs text-slate-500">
+                                  {wallet.asReferrer.map((ref: any) => (
+                                    <div key={ref.referralId} className="flex items-center gap-1">
+                                      <Badge variant="secondary" className={getLevelBadgeColor(ref.level)}>
+                                        L{ref.level}
+                                      </Badge>
+                                      <span>{ref.invitee?.nickName}</span>
+                                    </div>
+                                  ))}
+                                </div>
+                              ) : (
+                                <span className="text-xs text-slate-500">No referrer relations</span>
+                              )}
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    )}
+                  </TableBody>
+                </Table>
+              </div>
+              
+              {/* Pagination */}
+              {totalPages > 1 && <Pagination />}
+            </>
           )}
         </CardContent>
       </Card>
