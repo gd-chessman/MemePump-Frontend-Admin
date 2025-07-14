@@ -272,7 +272,8 @@
         "listWallets": "List Wallets",
         "categoriesToken": "Categories Token",
         "analytics": "Analytics",
-        "referral": "Referral",
+        "referral": "BG Affiliate",
+        "normalAffiliate": "Normal Affiliate",
         "settings": "Settings",
         "admin": "Admin",
         "orders": "Transactions"

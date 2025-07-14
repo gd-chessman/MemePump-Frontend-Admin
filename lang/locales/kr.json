@@ -270,7 +270,8 @@
         "listWallets": "지갑 목록",
         "categoriesToken": "토큰 분류",
         "analytics": "분석",
-        "referral": "추천",
+        "referral": "BG 추천",
+        "normalAffiliate": "일반 추천",
         "settings": "설정",
         "admin": "관리자",
         "orders": "거래"

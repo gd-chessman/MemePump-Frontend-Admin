@@ -20,6 +20,9 @@ import {
   Wallet,
   Receipt,
   Trophy,
+  Users2,
+  Network,
+  UserCheck,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -72,9 +75,15 @@ export function AdminSidebar() {
       color: "text-pink-400 hover:text-pink-300",
     },
     {
+      title: t("navigation.normalAffiliate"),
+      href: "/normal-affiliate",
+      icon: UserCheck,
+      color: "text-orange-400 hover:text-orange-300",
+    },
+    {
       title: t("navigation.referral"),
       href: "/bg-affiliate",
-      icon: Trophy,
+      icon: Network,
       color: "text-cyan-400 hover:text-cyan-300",
     },
     {
