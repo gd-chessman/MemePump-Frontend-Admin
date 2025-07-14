@@ -138,7 +138,7 @@ export default function BgAffiliateAdminPage() {
   // Convert to react-select format
   const walletOptions = availableWallets?.data?.map((wallet: any) => ({
     value: wallet,
-    label: truncateAddress(wallet.wallet_solana_address)
+    label: wallet.wallet_solana_address
   }));
 
   const totalMembers = bgAffiliateTrees.reduce((sum: number, tree: any) => sum + (tree.totalMembers || 0), 0);
