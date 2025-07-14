@@ -2,13 +2,36 @@
     "dashboard": {
         "title": "Dashboard",
         "hello": "Hello, Admin!",
-        "overview": "Here's an overview of your system's performance this month.",
+        "overview": "Here's an overview of your system's performance",
         "totalRevenue": "Total Revenue",
         "activeUsers": "Active Users",
         "onlineNow": "Online now",
         "fromLastMonth": "from last month",
         "totalWallets": "Total Wallets",
         "totalBgAffiliateTrees": "Total BG Affiliate Trees",
+        "wallets": {
+            "title": "Total Wallets",
+            "active": "active"
+        },
+        "orders": {
+            "title": "Total Orders",
+            "executed": "Executed Orders",
+            "totalVolume": "Total Volume",
+            "mostActiveWallet": "Most Active Wallet",
+            "orderCount": "{{count}} orders"
+        },
+        "referrals": {
+            "title": "Total Referrals",
+            "members": "members",
+            "normal": "Normal",
+            "bg": "BG",
+            "rewards": "rewards",
+            "wallets": "wallets",
+            "relations": "relations",
+            "trees": "trees",
+            "commission": "commission",
+            "volume": "volume"
+        },
         "tabs": {
             "overview": "Overview",
             "analytics": "Analytics",
@@ -43,6 +66,27 @@
             "device": "Device",
             "lastActive": "Last Active",
             "solAddress": "SOL Address"
+        },
+        "walletsOverview": {
+            "title": "Wallets Overview",
+            "description": "Wallet statistics and activity",
+            "totalWallets": "Total Wallets",
+            "activeWallets": "Active Wallets",
+            "newToday": "New Today",
+            "newThisWeek": "New This Week"
+        },
+        "ordersOverview": {
+            "title": "Orders Overview",
+            "description": "Order statistics and performance",
+            "totalOrders": "Total Orders",
+            "executed": "Executed",
+            "pending": "Pending"
+        },
+        "referralsOverview": {
+            "title": "Referrals Overview",
+            "description": "Referral rewards and commission distribution",
+            "normalRewards": "Normal Rewards",
+            "bgCommission": "BG Commission"
         },
         "reports": {
             "title": "Reports",

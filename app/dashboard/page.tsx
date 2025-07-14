@@ -7,7 +7,7 @@ import { io } from "socket.io-client"
 import { Badge } from "@/components/ui/badge"
 import { useLang } from "@/lang/useLang"
 import { useQuery } from "@tanstack/react-query"
-import { getOrderStatistics } from "@/services/api/OrderService"
+import { getDashboardStatistics } from "@/services/api/DashboardService"
 
 import {
   Area,
@@ -26,8 +26,6 @@ import {
   XAxis,
   YAxis,
 } from "recharts"
-import { getWalletStatistics } from "@/services/api/ListWalletsService"
-import { getBgAffiliateTrees } from "@/services/api/BgAffiliateService"
 
 
 const COLORS = ["hsl(var(--chart-1))", "hsl(var(--chart-2))", "hsl(var(--chart-3))", "hsl(var(--chart-4))"]
@@ -75,23 +73,11 @@ export default function AdminDashboard() {
     connections: []
   })
   const [copiedWallet, setCopiedWallet] = useState<string | null>(null)
-  const { data: orderStats, isLoading: isLoadingOrderStats } = useQuery({
-    queryKey: ["orders-statistics-dashboard"],
-    queryFn: getOrderStatistics,
-  })
-
-  const { data: walletStats, isLoading: isLoadingWalletStats } = useQuery({
-    queryKey: ["wallet-statistics-dashboard"],
-    queryFn: getWalletStatistics,
-  })
-
-  const { data: bgAffiliateTrees = [], isLoading: treesLoading, error: treesError } = useQuery({
-    queryKey: ['bg-affiliate-trees'],
-    queryFn: getBgAffiliateTrees,
+  const { data: dashboardStats, isLoading: isLoadingDashboardStats } = useQuery({
+    queryKey: ["dashboard-statistics"],
+    queryFn: getDashboardStatistics,
     refetchInterval: 30000, // Refetch every 30 seconds
   });
-
-  console.log(bgAffiliateTrees)
 
   useEffect(() => {
     const socket = io(`${process.env.NEXT_PUBLIC_API_URL}/admin`, {
@@ -164,64 +150,102 @@ export default function AdminDashboard() {
         <p className="text-muted-foreground">{t('dashboard.overview')}</p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-6">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
+        {/* Wallets Card */}
         <Card className="stat-card min-h-[140px] flex flex-col justify-between">
           <div className="flex justify-between">
             <div>
-              <p className="stat-label">{t('dashboard.totalWallets')}</p>
-              <p className="stat-value">{isLoadingWalletStats ? '...' : walletStats?.totalWallets ?? 0}</p>
+              <p className="stat-label">{t('dashboard.wallets.title')}</p>
+              <p className="stat-value">{isLoadingDashboardStats ? '...' : dashboardStats?.wallets?.totalWallets ?? 0}</p>
+              <p className="stat-change stat-change-positive flex items-center gap-1">
+                <Activity className="h-3 w-3" />
+                <span>{dashboardStats?.wallets?.activeWallets ?? 0} {t('dashboard.wallets.active')}</span>
+              </p>
             </div>
             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-cyan-500/10">
               <WalletIcon className="h-6 w-6 text-cyan-500" />
             </div>
           </div>
         </Card>
+
+        {/* Orders Card */}
         <Card className="stat-card min-h-[140px] flex flex-col justify-between">
-          <div className="flex justify-between">
-            <div>
-              <p className="stat-label">{t('orders.statistics.executed')}</p>
-              <p className="stat-value">{isLoadingOrderStats ? '...' : orderStats?.executed ?? 0}</p>
-            </div>
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500/10">
-              <CheckCircle className="h-6 w-6 text-emerald-500" />
-            </div>
+          <div className="flex items-center gap-2 mb-2">
+            <CheckCircle className="h-5 w-5 text-emerald-500" />
+            <span className="text-emerald-500 font-semibold text-base">{t('dashboard.orders.title')}</span>
           </div>
-        </Card>
-        <Card className="stat-card min-h-[140px] flex flex-col justify-between">
-          <div className="flex justify-between">
-            <div>
-              <p className="stat-label">{t('orders.statistics.mostActiveWallet')}</p>
-              <div className="flex flex-col gap-2 mt-2">
-                {isLoadingOrderStats ? (
-                  <span>...</span>
-                ) : orderStats?.mostActiveWallet ? (
-                  <>
-                    <span className="font-mono text-sm break-all flex items-center gap-1">
-                      {truncateMiddle(orderStats.mostActiveWallet.solAddress)}
-                      <button
-                        className="p-0.5 hover:bg-muted rounded"
-                        onClick={() => handleCopyWallet(orderStats.mostActiveWallet.solAddress!)}
-                        title={t("orders.solAddress")}
-                      >
-                        {copiedWallet === orderStats.mostActiveWallet.solAddress ? (
-                          <Check className="h-4 w-4 text-emerald-500" />
-                        ) : (
-                          <Copy className="h-4 w-4" />
-                        )}
-                      </button>
-                    </span>
-                    <span className="text-xs text-muted-foreground">{t('orders.statistics.orderCount', { count: orderStats.mostActiveWallet.orderCount })}</span>
-                  </>
-                ) : (
-                  <span>-</span>
-                )}
+          <div className="flex-1 flex flex-col justify-center gap-2">
+            <div className="flex justify-between px-2">
+              <span className="text-slate-400 font-medium text-xs">{t('dashboard.orders.executed').charAt(0).toUpperCase() + t('dashboard.orders.executed').slice(1)}:</span>
+              <span className="text-emerald-300 font-bold text-sm">{dashboardStats?.orders?.executedOrders ?? 0}</span>
+            </div>
+            <div className="flex justify-between px-2">
+              <span className="text-slate-400 font-medium text-xs">{t('dashboard.orders.totalVolume').charAt(0).toUpperCase() + t('dashboard.orders.totalVolume').slice(1)}:</span>
+              <span className="text-blue-300 font-bold text-sm">${dashboardStats?.orders?.totalVolume ?? 0}</span>
+            </div>
+            {dashboardStats?.orders?.mostActiveWallet && (
+              <div className="flex flex-col gap-1 px-2 mt-2">
+                <span className="text-slate-400 font-medium text-xs">{t('dashboard.orders.mostActiveWallet')}</span>
+                <span className="text-slate-200 font-bold text-sm">{dashboardStats.orders.mostActiveWallet.nickName || '-'} ({dashboardStats.orders.mostActiveWallet.solanaAddress?.slice(0,4)}...{dashboardStats.orders.mostActiveWallet.solanaAddress?.slice(-4)})</span>
+                <span className="text-slate-400 text-xs">{t('dashboard.orders.orderCount', { count: dashboardStats.orders.mostActiveWallet.orderCount })}</span>
               </div>
+            )}
+          </div>
+        </Card>
+
+        {/* Normal Affiliate Card */}
+        <Card className="stat-card min-h-[180px] flex flex-col justify-between border-emerald-500/30 bg-emerald-500/5">
+          <div className="flex items-center gap-2 mb-2">
+            <div className="w-2 h-2 bg-emerald-400 rounded-full"></div>
+            <span className="text-emerald-400 font-semibold text-base">{t('dashboard.referrals.normal')}</span>
+          </div>
+          <div className="flex-1 flex flex-col justify-center gap-2">
+            <div className="flex justify-between px-2">
+              <span className="text-slate-400 font-medium text-xs">{t('dashboard.referrals.wallets').charAt(0).toUpperCase() + t('dashboard.referrals.wallets').slice(1)}:</span>
+              <span className="text-slate-200 font-bold text-sm">{dashboardStats?.referrals?.traditionalReferrals?.totalWallets ?? 0}</span>
             </div>
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-orange-500/10">
-              <WalletIcon className="h-6 w-6 text-orange-500" />
+            <div className="flex justify-between px-2">
+              <span className="text-slate-400 font-medium text-xs">{t('dashboard.referrals.relations').charAt(0).toUpperCase() + t('dashboard.referrals.relations').slice(1)}:</span>
+              <span className="text-slate-200 font-bold text-sm">{dashboardStats?.referrals?.traditionalReferrals?.totalRelations ?? 0}</span>
+            </div>
+            <div className="flex justify-between px-2">
+              <span className="text-slate-400 font-medium text-xs">{t('dashboard.referrals.rewards').charAt(0).toUpperCase() + t('dashboard.referrals.rewards').slice(1)}:</span>
+              <span className="text-emerald-300 font-bold text-sm">${dashboardStats?.referrals?.traditionalReferrals?.totalRewards ?? 0}</span>
+            </div>
+            <div className="flex justify-between px-2">
+              <span className="text-slate-400 font-medium text-xs">{t('dashboard.referrals.volume').charAt(0).toUpperCase() + t('dashboard.referrals.volume').slice(1)}:</span>
+              <span className="text-orange-300 font-bold text-sm">${dashboardStats?.referrals?.traditionalReferrals?.totalVolume ?? 0}</span>
             </div>
           </div>
         </Card>
+
+        {/* BG Affiliate Card */}
+        <Card className="stat-card min-h-[180px] flex flex-col justify-between border-blue-500/30 bg-blue-500/5">
+          <div className="flex items-center gap-2 mb-2">
+            <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+            <span className="text-blue-400 font-semibold text-base">{t('dashboard.referrals.bg')}</span>
+          </div>
+          <div className="flex-1 flex flex-col justify-center gap-2">
+            <div className="flex justify-between px-2">
+              <span className="text-slate-400 font-medium text-xs">{t('dashboard.referrals.trees').charAt(0).toUpperCase() + t('dashboard.referrals.trees').slice(1)}:</span>
+              <span className="text-slate-200 font-bold text-sm">{dashboardStats?.referrals?.bgAffiliate?.totalTrees ?? 0}</span>
+            </div>
+            <div className="flex justify-between px-2">
+              <span className="text-slate-400 font-medium text-xs">{t('dashboard.referrals.members').charAt(0).toUpperCase() + t('dashboard.referrals.members').slice(1)}:</span>
+              <span className="text-slate-200 font-bold text-sm">{dashboardStats?.referrals?.bgAffiliate?.totalMembers ?? 0}</span>
+            </div>
+            <div className="flex justify-between px-2">
+              <span className="text-slate-400 font-medium text-xs">{t('dashboard.referrals.commission').charAt(0).toUpperCase() + t('dashboard.referrals.commission').slice(1)}:</span>
+              <span className="text-blue-300 font-bold text-sm">${dashboardStats?.referrals?.bgAffiliate?.totalCommissionDistributed ?? 0}</span>
+            </div>
+            <div className="flex justify-between px-2">
+              <span className="text-slate-400 font-medium text-xs">{t('dashboard.referrals.volume').charAt(0).toUpperCase() + t('dashboard.referrals.volume').slice(1)}:</span>
+              <span className="text-orange-300 font-bold text-sm">${dashboardStats?.referrals?.bgAffiliate?.totalVolume ?? 0}</span>
+            </div>
+          </div>
+        </Card>
+
+        {/* Active Users Card */}
         <Card className="stat-card min-h-[140px] flex flex-col justify-between">
           <div className="flex justify-between">
             <div>
@@ -232,37 +256,8 @@ export default function AdminDashboard() {
                 <span>{t('dashboard.onlineNow')}</span>
               </p>
             </div>
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-purple-500/10">
-              <Users className="h-6 w-6 text-purple-500" />
-            </div>
-          </div>
-        </Card>
-        <Card className="stat-card min-h-[140px] flex flex-col justify-between">
-          <div className="flex justify-between">
-            <div>
-              <p className="stat-label">{t('dashboard.totalBgAffiliateTrees')}</p>
-              <p className="stat-value">{treesLoading ? '...' : bgAffiliateTrees.length}</p>
-            </div>
             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-500/10">
               <Users className="h-6 w-6 text-blue-500" />
-            </div>
-          </div>
-        </Card>
-        <Card className="stat-card min-h-[140px] flex flex-col justify-between">
-          <div className="flex justify-between">
-            <div>
-              <p className="stat-label">{t('dashboard.deviceDistribution.title')}</p>
-              <div className="flex gap-2 mt-2">
-                {Object.entries(analyticsData.devices.deviceTypes).map(([type, count]) => (
-                  <Badge key={type} variant="secondary" className="flex items-center gap-1">
-                    {getDeviceIcon(type)}
-                    <span>{count}</span>
-                  </Badge>
-                ))}
-              </div>
-            </div>
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-amber-500/10">
-              <Monitor className="h-6 w-6 text-amber-500" />
             </div>
           </div>
         </Card>
@@ -273,6 +268,85 @@ export default function AdminDashboard() {
           <TabsTrigger value="analytics">{t('dashboard.tabs.analytics')}</TabsTrigger>
         </TabsList>
         <TabsContent value="analytics" className="space-y-4">
+          {/* 3 New Charts */}
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {/* Chart 1: Wallets */}
+            <Card className="dashboard-card">
+              <CardHeader>
+                <CardTitle>{t('dashboard.walletsOverview.title')}</CardTitle>
+                <CardDescription>{t('dashboard.walletsOverview.description')}</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ResponsiveContainer width="100%" height={250}>
+                  <BarChart data={[
+                    { name: t('dashboard.walletsOverview.totalWallets'), value: dashboardStats?.wallets?.totalWallets ?? 0 },
+                    { name: t('dashboard.walletsOverview.activeWallets'), value: dashboardStats?.wallets?.activeWallets ?? 0 },
+                    { name: t('dashboard.walletsOverview.newToday'), value: dashboardStats?.wallets?.newWalletsToday ?? 0 },
+                    { name: t('dashboard.walletsOverview.newThisWeek'), value: dashboardStats?.wallets?.newWalletsThisWeek ?? 0 }
+                  ]}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip />
+                    <Bar dataKey="value" fill="#10b981" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+
+            {/* Chart 2: Orders */}
+            <Card className="dashboard-card">
+              <CardHeader>
+                <CardTitle>{t('dashboard.ordersOverview.title')}</CardTitle>
+                <CardDescription>{t('dashboard.ordersOverview.description')}</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ResponsiveContainer width="100%" height={250}>
+                  <BarChart data={[
+                    { name: t('dashboard.ordersOverview.totalOrders'), value: dashboardStats?.orders?.totalOrders ?? 0 },
+                    { name: t('dashboard.ordersOverview.executed'), value: dashboardStats?.orders?.executedOrders ?? 0 },
+                    { name: t('dashboard.ordersOverview.pending'), value: dashboardStats?.orders?.pendingOrders ?? 0 }
+                  ]}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip />
+                    <Bar dataKey="value" fill="#3b82f6" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+
+            {/* Chart 3: Referrals */}
+            <Card className="dashboard-card">
+              <CardHeader>
+                <CardTitle>{t('dashboard.referralsOverview.title')}</CardTitle>
+                <CardDescription>{t('dashboard.referralsOverview.description')}</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ResponsiveContainer width="100%" height={250}>
+                  <BarChart data={[
+                    { 
+                      name: t('dashboard.referralsOverview.normalRewards'), 
+                      value: dashboardStats?.referrals?.traditionalReferrals?.totalRewards ?? 0 
+                    },
+                    { 
+                      name: t('dashboard.referralsOverview.bgCommission'), 
+                      value: dashboardStats?.referrals?.bgAffiliate?.totalCommissionDistributed ?? 0 
+                    }
+                  ]}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip formatter={(value) => [`$${value}`, 'Amount']} />
+                    <Bar dataKey="value" fill="#8b5cf6" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Existing Charts */}
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
             <Card className="col-span-4 dashboard-card">
               <CardHeader className="pb-2">

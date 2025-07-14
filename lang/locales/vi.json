@@ -2,13 +2,36 @@
     "dashboard": {
         "title": "Bảng điều khiển",
         "hello": "Xin chào, Admin!",
-        "overview": "Đây là tổng quan hiệu suất hệ thống của bạn trong tháng này.",
+        "overview": "Đây là tổng quan hiệu suất hệ thống của bạn",
         "totalRevenue": "Tổng doanh thu",
         "activeUsers": "Người dùng hoạt động",
         "onlineNow": "Đang trực tuyến",
         "fromLastMonth": "so với tháng trước",
         "totalWallets": "Tổng số ví",
         "totalBgAffiliateTrees": "Tổng số cây BG Affiliate",
+        "wallets": {
+            "title": "Tổng Ví",
+            "active": "hoạt động"
+        },
+        "orders": {
+            "title": "Tổng Đơn Hàng",
+            "executed": "Đã thực hiện",
+            "totalVolume": "Tổng khối lượng",
+            "mostActiveWallet": "Ví giao dịch nhiều nhất",
+            "orderCount": "{{count}} đơn"
+        },
+        "referrals": {
+            "title": "Tổng Giới Thiệu",
+            "members": "thành viên",
+            "normal": "Giới thiệu thường",
+            "bg": "Giới thiệu BG",
+            "rewards": "thưởng",
+            "wallets": "ví",
+            "relations": "quan hệ",
+            "trees": "cây",
+            "commission": "hoa hồng",
+            "volume": "khối lượng"
+        },
         "tabs": {
             "overview": "Tổng quan",
             "analytics": "Phân tích",
@@ -43,6 +66,27 @@
             "device": "Thiết bị",
             "lastActive": "Hoạt động cuối",
             "solAddress": "Địa chỉ SOL"
+        },
+        "walletsOverview": {
+            "title": "Tổng quan Ví",
+            "description": "Thống kê và hoạt động ví",
+            "totalWallets": "Tổng số ví",
+            "activeWallets": "Ví đang hoạt động",
+            "newToday": "Mới hôm nay",
+            "newThisWeek": "Mới tuần này"
+        },
+        "ordersOverview": {
+            "title": "Tổng quan Đơn hàng",
+            "description": "Thống kê và hiệu suất đơn hàng",
+            "totalOrders": "Tổng đơn hàng",
+            "executed": "Đã thực hiện",
+            "pending": "Đang chờ"
+        },
+        "referralsOverview": {
+            "title": "Tổng quan Giới thiệu",
+            "description": "Phân phối thưởng và hoa hồng giới thiệu",
+            "normalRewards": "Thưởng thường",
+            "bgCommission": "Hoa hồng BG"
         },
         "reports": {
             "title": "Báo cáo",

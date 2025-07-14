@@ -2,13 +2,36 @@
     "dashboard": {
         "title": "대시보드",
         "hello": "안녕하세요, 관리자님!",
-        "overview": "이번 달 시스템 성능 개요입니다.",
+        "overview": "시스템 성능 개요입니다.",
         "totalRevenue": "총 수익",
         "activeUsers": "활성 사용자",
         "onlineNow": "현재 온라인",
         "fromLastMonth": "지난달 대비",
         "totalWallets": "총 지갑 수",
         "totalBgAffiliateTrees": "총 BG 어필리에이트 트리 수",
+        "wallets": {
+            "title": "총 지갑",
+            "active": "활성"
+        },
+        "orders": {
+            "title": "총 주문",
+            "executed": "실행된 주문",
+            "totalVolume": "총 거래량",
+            "mostActiveWallet": "가장 활발한 지갑",
+            "orderCount": "{{count}}건 주문"
+        },
+        "referrals": {
+            "title": "총 추천",
+            "members": "멤버",
+            "normal": "일반",
+            "bg": "BG",
+            "rewards": "보상",
+            "wallets": "지갑",
+            "relations": "관계",
+            "trees": "트리",
+            "commission": "수수료",
+            "volume": "거래량"
+        },
         "tabs": {
             "overview": "개요",
             "analytics": "분석",
@@ -43,6 +66,27 @@
             "device": "기기",
             "lastActive": "마지막 활동",
             "solAddress": "SOL 주소"
+        },
+        "walletsOverview": {
+            "title": "지갑 개요",
+            "description": "지갑 통계 및 활동",
+            "totalWallets": "총 지갑",
+            "activeWallets": "활성 지갑",
+            "newToday": "오늘 신규",
+            "newThisWeek": "이번 주 신규"
+        },
+        "ordersOverview": {
+            "title": "주문 개요",
+            "description": "주문 통계 및 성능",
+            "totalOrders": "총 주문",
+            "executed": "실행됨",
+            "pending": "대기 중"
+        },
+        "referralsOverview": {
+            "title": "추천 개요",
+            "description": "추천 보상 및 수수료 분배",
+            "normalRewards": "일반 보상",
+            "bgCommission": "BG 수수료"
         },
         "reports": {
             "title": "보고서",
