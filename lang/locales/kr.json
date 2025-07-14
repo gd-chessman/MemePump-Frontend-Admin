@@ -14,7 +14,7 @@
             "active": "활성"
         },
         "orders": {
-            "title": "총 주문",
+            "title": "총 거래",
             "executed": "실행된 주문",
             "totalVolume": "총 거래량",
             "mostActiveWallet": "가장 활발한 지갑",

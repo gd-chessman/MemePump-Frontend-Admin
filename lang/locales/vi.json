@@ -14,7 +14,7 @@
             "active": "hoạt động"
         },
         "orders": {
-            "title": "Tổng Đơn Hàng",
+            "title": "Tổng Đơn Giao Dịch",
             "executed": "Đã thực hiện",
             "totalVolume": "Tổng khối lượng",
             "mostActiveWallet": "Ví giao dịch nhiều nhất",

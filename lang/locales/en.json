@@ -14,7 +14,7 @@
             "active": "active"
         },
         "orders": {
-            "title": "Total Orders",
+            "title": "Total Transactions",
             "executed": "Executed Orders",
             "totalVolume": "Total Volume",
             "mostActiveWallet": "Most Active Wallet",
