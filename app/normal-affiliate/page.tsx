@@ -251,28 +251,29 @@ export default function NormalAffiliateAdminPage() {
       {/* Main Content */}
       <Card className="bg-slate-800/50 border-slate-700/50">
         <CardHeader className="pb-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <CardTitle className="text-slate-100">{t('normal-affiliate.cardTitle')}</CardTitle>
-              <CardDescription className="text-slate-400">
-                {t('normal-affiliate.cardDescription')}
-              </CardDescription>
-            </div>
-            
-            {/* Search */}
-            <div className="flex items-center gap-2">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
-                <Input
-                  placeholder={t('normal-affiliate.searchPlaceholder')}
-                  value={searchTerm}
-                  onChange={(e) => handleSearch(e.target.value)}
-                  className="pl-10 w-64 bg-slate-800 border-slate-600 text-slate-300"
-                />
-              </div>
-            </div>
+          <div>
+            <CardTitle className="text-slate-100">{t('normal-affiliate.cardTitle')}</CardTitle>
+            <CardDescription className="text-slate-400">
+              {t('normal-affiliate.cardDescription')}
+            </CardDescription>
           </div>
         </CardHeader>
+        
+        {/* Search moved down */}
+        <div className="px-6 pb-4">
+          <div className="flex items-center gap-2">
+            <div className="relative flex-1">
+              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-slate-400" />
+              <Input
+                placeholder={t('normal-affiliate.searchPlaceholder')}
+                value={searchTerm}
+                onChange={(e) => handleSearch(e.target.value)}
+                className="pl-8 w-full md:max-w-sm bg-slate-700/50 border-slate-600/50 text-slate-300"
+              />
+            </div>
+          </div>
+        </div>
+        
         <CardContent>
           
           {tableLoading ? (
