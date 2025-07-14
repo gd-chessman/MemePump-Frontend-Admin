@@ -214,6 +214,7 @@
         "selectMaxLevel": "Select max level",
         "level": "Level",
         "levels": "Levels",
+        "root": "Root",
         "percentage": "%",
         "errors": {
             "levelRange": "Level must be between 1 and {max}",

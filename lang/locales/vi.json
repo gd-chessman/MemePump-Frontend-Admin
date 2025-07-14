@@ -212,6 +212,7 @@
         "selectMaxLevel": "Chọn cấp độ tối đa",
         "level": "Cấp độ",
         "levels": "Cấp độ",
+        "root": "Gốc",
         "percentage": "%",
         "errors": {
             "levelRange": "Cấp độ phải từ 1 đến {max}",

@@ -212,6 +212,7 @@
         "selectMaxLevel": "최대 레벨 선택",
         "level": "레벨",
         "levels": "레벨",
+        "root": "루트",
         "percentage": "%",
         "errors": {
             "levelRange": "레벨은 1에서 {max} 사이여야 합니다",
