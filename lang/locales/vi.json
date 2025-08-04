@@ -1,8 +1,11 @@
 {
+    "common": {
+        "back": "Quay lại"
+    },
     "dashboard": {
         "title": "Bảng điều khiển",
         "hello": "Xin chào, Admin!",
-        "overview": "Đây là tổng quan hiệu suất hệ thống của bạn",
+        "overview": "Đây là tổng quan hiệu suất hệ thống MEMEPUMP & Bittworld",
         "totalRevenue": "Tổng doanh thu",
         "activeUsers": "Người dùng hoạt động",
         "onlineNow": "Đang trực tuyến",
@@ -105,6 +108,17 @@
         "cardDescription": "Xem và quản lý ví người dùng và tài khoản liên kết.",
         "refresh": "Làm mới",
         "searchPlaceholder": "Tìm kiếm theo ID Ví hoặc Biệt danh ...",
+        "filters": {
+            "allTypes": "Tất cả nền tảng",
+            "bittworld": "Bittworld",
+            "nonBittworld": "Memepump",
+            "allUid": "Lọc theo UID",
+            "hasUid": "Có UID",
+            "noUid": "Không có UID",
+            "allBgAffiliate": "Tất cả giới thiệu",
+            "bgAffiliate": "BG Affiliate",
+            "nonBgAffiliate": "Không phải BG Affiliate"
+        },
         "table": {
             "walletId": "ID Ví",
             "nickname": "Biệt danh",
@@ -129,9 +143,17 @@
             "status": "Trạng thái:",
             "active": "Hoạt động",
             "inactive": "Không hoạt động",
-            "noResults": "Không có kết quả."
-        },
-        "allTypes": "Tất cả"
+            "noResults": "Không có kết quả.",
+            "authUpdated": "Cập nhật loại xác thực thành công",
+            "authUpdateFailed": "Cập nhật loại xác thực thất bại",
+            "waName": "Tên người dùng",
+            "isBittworld": "Bittworld",
+            "yes": "Có",
+            "no": "Không",
+            "walletCodeRef": "Mã giới thiệu",
+            "bittworldUid": "Bittworld UID",
+            "totalWallets": "Tổng ví"
+        }
     },
     "categories-token": {
         "title": "Phân loại token",
@@ -311,11 +333,14 @@
     },
     "navigation": {
         "dashboard": "Bảng Điều Khiển",
+        "users": "Quản trị",
         "listWallets": "Danh Sách Ví",
         "categoriesToken": "Danh Mục Token",
         "analytics": "Phân Tích",
         "referral": "Giới thiệu BG",
         "normalAffiliate": "Giới Thiệu Thường",
+        "pools": "Pools",
+        "bittworldRewards": "Phần Thưởng Bittworld",
         "settings": "Cài Đặt",
         "admin": "Quản Trị",
         "orders": "Giao dịch"
@@ -370,12 +395,13 @@
     },
     "orders": {
         "title": "Lịch sử giao dịch",
-        "description": "Xem và tìm kiếm tất cả các giao dịch.",
+        "description": "Xem và tìm kiếm tất cả các giao dịch trên MEMEPUMP & Bittworld.",
         "listTitle": "Danh sách giao dịch",
         "listDescription": "Tất cả giao dịch",
         "searchPlaceholder": "Tìm theo địa chỉ ví, tên token, địa chỉ token...",
         "stt": "STT",
         "solAddress": "Địa chỉ SOL",
+        "bittworldUid": "Bittworld UID",
         "trade": "Loại giao dịch",
         "token": "Token",
         "quantity": "Số lượng",
@@ -398,7 +424,67 @@
             "mostActiveWallet": "Ví giao dịch nhiều nhất",
             "mostActiveWalletDesc": "Ví có số giao dịch nhiều nhất.",
             "orderCount": "{{count}} giao dịch"
+        },
+        "filters": {
+            "all": "Tất cả nền tảng",
+            "bittworld": "Bittworld",
+            "nonBittworld": "Memepump"
         }
+    },
+    "bittworld-rewards": {
+        "title": "Phần Thưởng Bittworld",
+        "description": "Xem và quản lý thống kê phần thưởng Bittworld",
+        "statistics": {
+            "totalRewards": "Tổng Phần Thưởng",
+            "totalRewardsDesc": "Tổng số phần thưởng",
+            "totalAmountUSD": "Tổng Số Tiền USD",
+            "totalAmountUSDDesc": "Tổng số tiền bằng USD",
+            "canWithdraw": "Có Thể Rút",
+            "canWithdrawDesc": "Phần thưởng sẵn sàng rút",
+            "averageReward": "Phần Thưởng Trung Bình",
+            "averageRewardDesc": "Phần thưởng trung bình mỗi giao dịch"
+        },
+        "withdrawals": {
+            "title": "Lịch Sử Rút Tiền",
+            "description": "Xem tất cả lịch sử rút tiền Bittworld",
+            "searchPlaceholder": "Tìm kiếm rút tiền...",
+            "filters": {
+                "all": "Tất Cả Trạng Thái",
+                "pending": "Đang Chờ",
+                "success": "Thành Công",
+                "error": "Lỗi",
+                "cancel": "Đã Hủy"
+            },
+            "noData": "Không tìm thấy lịch sử rút tiền"
+        },
+        "dialog": {
+            "title": "Xác Nhận Rút Tiền",
+            "description": "Bạn có chắc chắn muốn kích hoạt quá trình rút tiền? Hành động này không thể hoàn tác.",
+            "currentStatus": "Trạng Thái Hiện Tại:",
+            "canWithdraw": "Có Thể Rút: {count} phần thưởng",
+            "totalRewards": "Tổng Phần Thưởng: {count} phần thưởng",
+            "totalAmount": "Tổng Số Tiền: ${amount}",
+            "cancel": "Hủy",
+            "confirm": "Xác Nhận Rút Tiền",
+            "processing": "Đang Xử Lý..."
+        },
+        "table": {
+            "id": "ID",
+            "amountSOL": "Số Lượng SOL",
+            "amountUSD": "Số Lượng USD",
+            "address": "Địa Chỉ",
+            "date": "Ngày",
+            "status": "Trạng Thái",
+            "txHash": "Hash Giao Dịch"
+        },
+        "status": {
+            "pending": "Đang Chờ",
+            "success": "Thành Công",
+            "error": "Lỗi",
+            "cancel": "Đã Hủy"
+        },
+        "loading": "Đang Tải...",
+        "noData": "Không tìm thấy dữ liệu"
     },
     "bg-affiliate": {
         "title": "BG Giới Thiệu",
@@ -406,6 +492,11 @@
         "cardTitle": "Giới Thiệu",
         "cardDescription": "Quản lý và giám sát tất cả BG giới thiệu",
         "searchPlaceholder": "Tìm kiếm cây...",
+        "filters": {
+            "all": "Tất cả nền tảng",
+            "bittworld": "Bittworld",
+            "memepump": "Memepump"
+        },
         "newBg": "BG Mới",
         "stats": {
             "totalTrees": "Tổng Cây",
@@ -416,7 +507,9 @@
         "table": {
             "number": "#",
             "rootWallet": "Ví Gốc",
+            "bittworldUid": "Bittworld UID",
             "commission": "Hoa Hồng",
+            "batAlias": "Bí danh giới thiệu",
             "members": "Thành Viên",
             "created": "Tạo Lúc",
             "status": "Trạng Thái",
@@ -427,8 +520,12 @@
             "statusUpdateFailed": "Cập nhật trạng thái cây thất bại. Vui lòng thử lại.",
             "loading": "Đang tải cây...",
             "error": "Lỗi tải cây. Vui lòng thử lại.",
-            "noTrees": "Không tìm thấy cây nào",
-            "membersCount": "thành viên"
+            "noTrees": "Không tìm thấy cây affiliate",
+            "membersCount": "thành viên",
+            "loading": "Đang tải...",
+            "error": "Lỗi tải dữ liệu",
+            "active": "Hoạt động",
+            "inactive": "Không hoạt động"
         },
         "dialogs": {
             "create": {
@@ -438,6 +535,9 @@
                 "commission": "Hoa Hồng (%)",
                 "commissionPlaceholder": "vd: 70",
                 "commissionHelp": "Nhập giá trị từ 0 đến 100",
+                "batAlias": "Bí danh giới thiệu",
+                "batAliasPlaceholder": "Nhập bí danh giới thiệu...",
+                "batAliasHelp": "Nhập định danh duy nhất cho cây BG affiliate này",
                 "availableWallets": "ví có sẵn",
                 "createButton": "Tạo BG",
                 "creating": "Đang tạo...",
@@ -446,17 +546,20 @@
                 "walletExists": "Ví đã có cây giới thiệu"
             },
             "updateCommission": {
-                "title": "Cập Nhật Hoa Hồng Root BG",
+                "title": "Cập Nhật BG Affiliate",
                 "treeInfo": "Cây #{treeId}",
                 "rootInfo": "Gốc: {nickname} ({address})",
                 "currentCommission": "Hoa Hồng Hiện Tại: {percent}%",
                 "newCommission": "Hoa Hồng Mới (%)",
                 "newCommissionPlaceholder": "vd: 60",
                 "newCommissionHelp": "Nhập giá trị từ 0 đến 100",
-                "updateButton": "Cập Nhật Hoa Hồng",
+                "batAlias": "Bí danh giới thiệu",
+                "batAliasPlaceholder": "Nhập bí danh giới thiệu...",
+                "batAliasHelp": "Nhập định danh duy nhất cho cây BG affiliate này",
+                "updateButton": "Cập Nhật",
                 "updating": "Đang cập nhật...",
-                "success": "Cập nhật hoa hồng thành công!",
-                "error": "Cập nhật hoa hồng thất bại. Vui lòng thử lại."
+                "success": "Cập nhật BG Affiliate thành công!",
+                "error": "Cập nhật BG Affiliate thất bại. Vui lòng thử lại."
             }
         },
         "detail": {
@@ -548,6 +651,305 @@
             "addressCopied": "Đã sao chép địa chỉ vào clipboard",
             "refCodeCopied": "Đã sao chép mã giới thiệu vào clipboard",
             "copyFailed": "Sao chép thất bại"
+        }
+    },
+    "users": {
+        "title": "Quản Lý Người Dùng",
+        "description": "Quản lý người dùng hệ thống và vai trò của họ",
+        "cardTitle": "Tổng Quan Người Dùng",
+        "cardDescription": "Xem và quản lý tất cả người dùng hệ thống",
+        "searchPlaceholder": "Tìm kiếm người dùng...",
+        "stats": {
+            "totalUsers": "Tổng Số Người Dùng",
+            "activeUsers": "Người Dùng Hoạt Động",
+            "newToday": "Mới Hôm Nay",
+            "newThisWeek": "Mới Tuần Này"
+        },
+        "table": {
+            "username": "Tên Đăng Nhập",
+            "email": "Email",
+            "role": "Vai Trò",
+            "status": "Trạng Thái",
+            "createdAt": "Ngày Tạo",
+            "actions": "Thao Tác",
+            "noUsersFound": "Không tìm thấy người dùng nào",
+            "noUsersMatchingSearch": "Không tìm thấy người dùng nào phù hợp với tìm kiếm",
+            "loading": "Đang tải dữ liệu người dùng...",
+            "error": "Lỗi tải dữ liệu người dùng"
+        },
+        "roles": {
+            "admin": "Quản Trị Viên",
+            "member": "Thành Viên",
+            "partner": "Đối Tác"
+        },
+        "status": {
+            "active": "Hoạt Động",
+            "inactive": "Không Hoạt Động"
+        },
+        "addUser": {
+            "title": "Thêm Người Dùng Mới",
+            "username": "Tên Đăng Nhập",
+            "usernamePlaceholder": "Nhập tên đăng nhập",
+            "password": "Mật Khẩu",
+            "passwordPlaceholder": "Nhập mật khẩu (tối thiểu 6 ký tự)",
+            "email": "Email",
+            "emailPlaceholder": "Nhập địa chỉ email",
+            "role": "Vai Trò",
+            "rolePlaceholder": "Chọn vai trò",
+            "addButton": "Thêm Người Dùng",
+            "adding": "Đang thêm...",
+            "success": "Thêm người dùng thành công!",
+            "error": "Không thể thêm người dùng. Vui lòng thử lại.",
+            "cancel": "Hủy",
+            "validation": {
+                "usernameRequired": "Tên đăng nhập là bắt buộc",
+                "passwordRequired": "Mật khẩu là bắt buộc",
+                "passwordMinLength": "Mật khẩu phải có ít nhất 6 ký tự",
+                "emailRequired": "Email là bắt buộc",
+                "emailInvalid": "Vui lòng nhập địa chỉ email hợp lệ",
+                "roleRequired": "Vai trò là bắt buộc"
+            }
+        },
+        "deleteUser": {
+            "title": "Xóa Người Dùng",
+            "description": "Bạn có chắc chắn muốn xóa người dùng này? Hành động này không thể hoàn tác.",
+            "deleteButton": "Xóa Người Dùng",
+            "deleting": "Đang xóa...",
+            "success": "Xóa người dùng thành công!",
+            "error": "Không thể xóa người dùng. Vui lòng thử lại.",
+            "cancel": "Hủy"
+        },
+        "pagination": {
+            "showing": "Hiển thị",
+            "to": "đến",
+            "of": "trong tổng số",
+            "entries": "mục",
+            "previous": "Trước",
+            "next": "Tiếp"
+        }
+    },
+    "swap-investors": {
+        "pageTitle": "Quản lý nhà đầu tư Swap",
+        "description": "Quản lý nhà đầu tư swap và cấu hình phần thưởng",
+        "stats": {
+            "totalInvestors": "Tổng nhà đầu tư",
+            "activeInvestors": "Nhà đầu tư hoạt động",
+            "totalAmount": "Tổng số tiền",
+            "swapFee": "Phí Swap"
+        },
+        "tabs": {
+            "investors": "Nhà đầu tư",
+            "rewards": "Phần thưởng",
+            "settings": "Cài đặt"
+        },
+        "investors": {
+            "title": "Nhà đầu tư Swap",
+            "description": "Quản lý và theo dõi nhà đầu tư swap",
+            "addNew": "Thêm nhà đầu tư mới",
+            "searchPlaceholder": "Tìm kiếm theo địa chỉ ví...",
+            "filters": {
+                "allCoins": "Tất cả coin",
+                "sol": "SOL",
+                "usdt": "USDT"
+            },
+            "table": {
+                "id": "ID",
+                "walletAddress": "Địa chỉ ví",
+                "coin": "Coin",
+                "amount": "Số tiền",
+                "status": "Trạng thái",
+                "createdAt": "Ngày tạo",
+                "noCoins": "Không có coin",
+                "active": "Hoạt động",
+                "inactive": "Không hoạt động",
+                "noResults": "Không tìm thấy nhà đầu tư"
+            },
+            "dialog": {
+                "title": "Thêm nhà đầu tư Swap mới",
+                "walletAddress": "Địa chỉ ví",
+                "walletAddressRequired": "Vui lòng nhập địa chỉ ví",
+                "createSuccess": "Tạo nhà đầu tư thành công!",
+                "createError": "Tạo nhà đầu tư thất bại. Vui lòng thử lại.",
+                "cancel": "Hủy",
+                "create": "Tạo"
+            }
+        },
+        "rewards": {
+            "title": "Phần thưởng nhà đầu tư Swap",
+            "description": "Xem và theo dõi phần thưởng nhà đầu tư swap",
+            "searchPlaceholder": "Tìm kiếm theo địa chỉ ví hoặc hash giao dịch...",
+            "table": {
+                "rewardId": "ID phần thưởng",
+                "investorWallet": "Ví nhà đầu tư",
+                "solAmount": "Số lượng SOL",
+                "swapOrder": "Lệnh Swap",
+                "swapType": "Loại Swap",
+                "transactionHash": "Hash giao dịch",
+                "status": "Trạng thái",
+                "createdAt": "Ngày tạo",
+                "loading": "Đang tải...",
+                "noResults": "Không tìm thấy phần thưởng"
+            }
+        },
+        "settings": {
+            "title": "Cài đặt phần thưởng",
+            "description": "Cấu hình phí swap và tỷ lệ phần trăm chia sẻ nhà đầu tư",
+            "editSettings": "Chỉnh sửa cài đặt",
+            "currentSwapFee": "Phí Swap hiện tại",
+            "currentInvestorShare": "Chia sẻ nhà đầu tư hiện tại",
+            "information": "Thông tin",
+            "infoPoints": {
+                "swapFee": "• Phí swap được tính trên tất cả giao dịch swap",
+                "investorShare": "• Chia sẻ nhà đầu tư quyết định bao nhiêu phí sẽ chia cho nhà đầu tư",
+                "totalPercentage": "• Tổng tỷ lệ phần trăm không được vượt quá 100%"
+            },
+            "dialog": {
+                "title": "Chỉnh sửa cài đặt phần thưởng",
+                "swapFeeLabel": "Tỷ lệ phần trăm phí Swap",
+                "swapFeeDescription": "Tỷ lệ phần trăm phí swap được tính trên giao dịch",
+                "investorShareLabel": "Tỷ lệ phần trăm chia sẻ nhà đầu tư",
+                "investorShareDescription": "Tỷ lệ phần trăm phí chia cho nhà đầu tư",
+                "validation": {
+                    "swapFeeRange": "Phí swap phải từ 0 đến 100",
+                    "investorShareRange": "Chia sẻ nhà đầu tư phải từ 0 đến 100",
+                    "investorShareGreater": "Tỷ lệ phần trăm chia sẻ nhà đầu tư không được lớn hơn tỷ lệ phần trăm phí swap"
+                },
+                "updateSuccess": "Cập nhật cài đặt thành công!",
+                "updateError": "Cập nhật cài đặt thất bại. Vui lòng thử lại.",
+                "cancel": "Hủy",
+                "update": "Cập nhật"
+            }
+        }
+    },
+    "pools": {
+        "title": "Quản lý Pools",
+        "description": "Theo dõi và quản lý tất cả pools trong hệ thống",
+        "stats": {
+            "totalPools": "Tổng Pools",
+            "activePools": "Pools Hoạt động",
+            "totalMembers": "Tổng Thành viên",
+            "totalVolume": "Tổng Khối lượng",
+            "combinedVolume": "Khối lượng kết hợp",
+            "currentlyRunning": "Đang chạy",
+            "acrossAllPools": "Trên tất cả pools"
+        },
+        "list": {
+            "title": "Danh sách Pools",
+            "description": "Xem và quản lý tất cả pools trong hệ thống",
+            "searchPlaceholder": "Tìm kiếm pools...",
+            "table": {
+                "pool": "Pool",
+                "members": "Thành viên",
+                "volume": "Khối lượng",
+                "status": "Trạng thái",
+                "creator": "Người tạo",
+                "bittworldUid": "Bittworld UID",
+                "dates": "Ngày tháng",
+                "actions": "Hành động",
+                "view": "Xem",
+                "created": "Tạo",
+                "ends": "Kết thúc"
+            },
+            "status": {
+                "active": "Hoạt động",
+                "pending": "Chờ xử lý",
+                "end": "Kết thúc",
+                "error": "Lỗi"
+            },
+            "noResults": "Không tìm thấy pools phù hợp",
+            "loading": "Đang tải pools..."
+        }
+    },
+    "pool-detail": {
+        "back": "Quay lại",
+        "poolId": "ID Pool",
+        "loading": "Đang tải chi tiết pool...",
+        "notFound": "Không tìm thấy pool",
+        "stats": {
+            "totalMembers": "Tổng Thành viên",
+            "totalVolume": "Tổng Khối lượng",
+            "status": "Trạng thái",
+            "transactions": "Giao dịch",
+            "activeParticipants": "Người tham gia hoạt động",
+            "combinedStakes": "Tổng cược kết hợp",
+            "poolStatus": "Trạng thái pool",
+            "totalTransactions": "Tổng giao dịch"
+        },
+        "tabs": {
+            "overview": "Tổng quan",
+            "members": "Thành viên",
+            "transactions": "Giao dịch"
+        },
+        "overview": {
+            "poolInfo": {
+                "title": "Thông tin Pool",
+                "description": "Thông tin cơ bản về pool này",
+                "description": "Mô tả",
+                "creationDate": "Ngày tạo",
+                "endDate": "Ngày kết thúc"
+            },
+            "creatorInfo": {
+                "title": "Thông tin Người tạo",
+                "description": "Chi tiết người tạo pool",
+                "poolCreator": "Người tạo Pool",
+                "bittworldUid": "Bittworld UID",
+                "solanaAddress": "Địa chỉ Solana",
+                "transactionHash": "Hash giao dịch"
+            }
+        },
+        "members": {
+            "title": "Thành viên",
+            "description": "Tất cả thành viên trong pool này",
+            "table": {
+                "member": "Thành viên",
+                "bittworldUid": "Bittworld UID",
+                "totalStaked": "Tổng cược",
+                "stakeCount": "Số lần cược",
+                "status": "Trạng thái",
+                "joinDate": "Ngày tham gia"
+            }
+        },
+        "transactions": {
+            "title": "Giao dịch",
+            "description": "Tất cả giao dịch trong pool này",
+            "table": {
+                "member": "Thành viên",
+                "bittworldUid": "Bittworld UID",
+                "stakeAmount": "Số tiền cược",
+                "status": "Trạng thái",
+                "date": "Ngày",
+                "transactionHash": "Hash giao dịch"
+            }
+        },
+        "status": {
+            "active": "Hoạt động",
+            "pending": "Chờ xử lý",
+            "end": "Kết thúc",
+            "error": "Lỗi"
+        }
+    },
+    "pools-ranking": {
+        "title": "Bảng Xếp Hạng VIP Pools",
+        "description": "Các pool VIP với khối lượng và hiệu suất cao nhất",
+        "cardTitle": "Bảng Xếp Hạng VIP Pools",
+        "cardDescription": "Tất cả pool VIP được sắp xếp theo khối lượng và xếp hạng",
+        "loading": "Đang tải dữ liệu...",
+        "error": "Lỗi tải dữ liệu",
+        "noData": "Không có dữ liệu",
+        "filters": {
+            "vip7": "VIP 7 (30M+)",
+            "vip6": "VIP 6 (20M-30M)",
+            "vip5": "VIP 5 (10M-20M)"
+        },
+        "table": {
+            "rank": "Xếp hạng",
+            "pool": "Pool",
+            "volume": "Khối lượng",
+            "members": "Thành viên",
+            "status": "Trạng thái",
+            "wallet": "Ví",
+            "bittworldUid": "Bittworld UID",
+            "created": "Ngày tạo"
         }
     }
 }

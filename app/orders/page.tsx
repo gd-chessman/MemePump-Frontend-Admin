@@ -7,18 +7,22 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Search, Copy, Check, ChevronLeft, ExternalLink, ArrowDownLeft, ArrowUpRight, BarChart3, CheckCircle, Wallet as WalletIcon } from "lucide-react"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useLang } from "@/lang/useLang"
+import Image from "next/image"
 
 export default function OrdersPage() {
   const { t } = useLang()
   const [search, setSearch] = useState('')
+  const [isBittworldFilter, setIsBittworldFilter] = useState<'all' | 'true' | 'false'>('all')
   const [page, setPage] = useState(1)
   const limit = 10
   const [copiedTxHash, setCopiedTxHash] = useState<string | null>(null)
-  useEffect(() => { setPage(1) }, [search])
+  
+  useEffect(() => { setPage(1) }, [search, isBittworldFilter])
   const { data, isLoading } = useQuery({
-    queryKey: ["orders-history", search, page],
-    queryFn: () => getOrderHistory(search, page, limit),
+    queryKey: ["orders-history", search, isBittworldFilter, page],
+    queryFn: () => getOrderHistory(search, page, limit, isBittworldFilter),
   })
   const { data: statistics, isLoading: isLoadingStats } = useQuery({
     queryKey: ["orders-statistics"],
@@ -115,7 +119,7 @@ export default function OrdersPage() {
         <h2 className="text-3xl font-bold tracking-tight">{t("orders.title")}</h2>
         <p className="text-muted-foreground">{t("orders.description")}</p>
       </div>
-      <Card className="dashboard-card">
+      <Card className="dashboard-card p-0 md:p-4">
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between">
             <div>
@@ -131,11 +135,24 @@ export default function OrdersPage() {
               <Input
                 type="search"
                 placeholder={t("orders.searchPlaceholder")}
-                className="pl-8 w-full md:max-w-sm"
+                className="pl-8 w-full md:max-w-sm min-w-[140px]"
                 value={search}
                 onChange={e => setSearch(e.target.value)}
               />
             </div>
+            <Select 
+              value={isBittworldFilter} 
+              onValueChange={(value: 'all' | 'true' | 'false') => setIsBittworldFilter(value)}
+            >
+              <SelectTrigger className="w-[180px]">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{t("orders.filters.all")}</SelectItem>
+                <SelectItem value="true">{t("orders.filters.bittworld")}</SelectItem>
+                <SelectItem value="false">{t("orders.filters.nonBittworld")}</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
           <div className="rounded-md border overflow-x-auto">
             <table className="w-full text-sm">
@@ -143,6 +160,7 @@ export default function OrdersPage() {
                 <tr className="border-b bg-muted/50">
                   <th className="h-12 px-4 text-left font-medium whitespace-nowrap">{t("orders.stt")}</th>
                   <th className="h-12 px-4 text-left font-medium whitespace-nowrap">{t("orders.solAddress")}</th>
+                  <th className="h-12 px-4 text-left font-medium whitespace-nowrap">{t("orders.bittworldUid")}</th>
                   <th className="h-12 px-4 text-left font-medium whitespace-nowrap">{t("orders.trade")}</th>
                   <th className="h-12 px-4 text-left font-medium whitespace-nowrap">{t("orders.token")}</th>
                   <th className="h-12 px-4 text-left font-medium whitespace-nowrap">{t("orders.quantity")}</th>
@@ -155,7 +173,7 @@ export default function OrdersPage() {
               </thead>
               <tbody>
                 {isLoading ? (
-                  <tr><td colSpan={11} className="text-center py-8">Loading...</td></tr>
+                  <tr><td colSpan={12} className="text-center py-8">Loading...</td></tr>
                 ) : orders.length ? (
                   orders.map((order: any, idx: number) => (
                     <tr key={order.order_id} className="border-b hover:bg-muted/50">
@@ -176,14 +194,30 @@ export default function OrdersPage() {
                               )}
                             </button>
                           )}
+                          {order.isBittworld && (
+                            <Image
+                              src="/favicon.png"
+                              alt="Bittworld"
+                              width={16}
+                              height={16}
+                              className="w-4 h-4 rounded"
+                            />
+                          )}
                         </div>
+                      </td>
+                      <td className="px-4 py-2 text-xs">
+                        {order.isBittworld && order.bittworldUid ? (
+                          <span className="font-mono">{order.bittworldUid}</span>
+                        ) : (
+                          <span className="text-muted-foreground">-</span>
+                        )}
                       </td>
                       <td className="px-4 py-2">
                         <span
                           className={
                             order.order_trade_type === 'buy'
-                              ? 'inline-flex items-center gap-1 bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full text-[11px] font-semibold shadow-sm border border-emerald-200'
-                              : 'inline-flex items-center gap-1 bg-red-100 text-red-700 px-2 py-0.5 rounded-full text-[11px] font-semibold shadow-sm border border-red-200'
+                              ? 'inline-flex whitespace-nowrap items-center gap-1 bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full text-[11px] font-semibold shadow-sm border border-emerald-200'
+                              : 'inline-flex whitespace-nowrap items-center gap-1 bg-red-100 text-red-700 px-2 py-0.5 rounded-full text-[11px] font-semibold shadow-sm border border-red-200'
                           }
                         >
                           {order.order_trade_type === 'buy' ? (
@@ -219,8 +253,8 @@ export default function OrdersPage() {
                       <td className="px-4 py-2">
                         <span className={
                           order.order_status === 'executed'
-                            ? 'bg-emerald-100 text-emerald-700 px-2 py-1 rounded text-xs'
-                            : 'bg-red-100 text-red-700 px-2 py-1 rounded text-xs'
+                            ? 'bg-emerald-100 whitespace-nowrap text-emerald-700 px-2 py-1 rounded text-xs'
+                            : 'bg-red-100 whitespace-nowrap text-red-700 px-2 py-1 rounded text-xs'
                         }>
                           {t(`orders.${order.order_status}`)}
                         </span>
@@ -244,7 +278,7 @@ export default function OrdersPage() {
                     </tr>
                   ))
                 ) : (
-                  <tr><td colSpan={11} className="text-center py-8">{t("orders.noData")}</td></tr>
+                  <tr><td colSpan={12} className="text-center py-8">{t("orders.noData")}</td></tr>
                 )}
               </tbody>
             </table>

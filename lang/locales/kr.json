@@ -1,8 +1,11 @@
 {
+    "common": {
+        "back": "뒤로"
+    },
     "dashboard": {
         "title": "대시보드",
         "hello": "안녕하세요, 관리자님!",
-        "overview": "시스템 성능 개요입니다.",
+        "overview": "MEMEPUMP & Bittworld 시스템 성능 개요입니다.",
         "totalRevenue": "총 수익",
         "activeUsers": "활성 사용자",
         "onlineNow": "현재 온라인",
@@ -105,6 +108,17 @@
         "cardDescription": "사용자 지갑과 관련 계정을 보고 관리합니다.",
         "refresh": "새로고침",
         "searchPlaceholder": "지갑 ID 또는 닉네임으로 검색 ...",
+        "filters": {
+            "allTypes": "모든 플랫폼",
+            "bittworld": "Bittworld",
+            "nonBittworld": "Memepump",
+            "allUid": "UID로 필터링",
+            "hasUid": "UID 있음",
+            "noUid": "UID 없음",
+            "allBgAffiliate": "모든 추천",
+            "bgAffiliate": "BG Affiliate",
+            "nonBgAffiliate": "BG Affiliate 아님"
+        },
         "table": {
             "walletId": "지갑 ID",
             "nickname": "닉네임",
@@ -129,9 +143,17 @@
             "status": "상태:",
             "active": "활성",
             "inactive": "비활성",
-            "noResults": "결과 없음."
-        },
-        "allTypes": "전체"
+            "noResults": "결과 없음.",
+            "authUpdated": "인증 유형이 성공적으로 업데이트되었습니다",
+            "authUpdateFailed": "인증 유형 업데이트 실패",
+            "waName": "사용자 이름",
+            "isBittworld": "Bittworld",
+            "yes": "예",
+            "no": "아니오",
+            "walletCodeRef": "추천 코드",
+            "bittworldUid": "Bittworld UID",
+            "totalWallets": "총 지갑"
+        }
     },
     "categories-token": {
         "title": "토큰 분류",
@@ -311,11 +333,14 @@
     },
     "navigation": {
         "dashboard": "대시보드",
+        "users": "관리",
         "listWallets": "지갑 목록",
         "categoriesToken": "토큰 분류",
         "analytics": "분석",
         "referral": "BG 추천",
         "normalAffiliate": "일반 추천",
+        "pools": "풀",
+        "bittworldRewards": "비트월드 보상",
         "settings": "설정",
         "admin": "관리자",
         "orders": "거래"
@@ -370,12 +395,13 @@
     },
     "orders": {
         "title": "거래 내역",
-        "description": "모든 거래 기록을 보고 검색하세요.",
+        "description": "MEMEPUMP & Bittworld의 모든 거래를 보고 검색하세요.",
         "listTitle": "거래 목록",
         "listDescription": "모든 거래",
         "searchPlaceholder": "지갑 주소, 토큰 이름, 토큰 주소로 검색...",
         "stt": "번호",
         "solAddress": "SOL 주소",
+        "bittworldUid": "Bittworld UID",
         "trade": "거래 종류",
         "token": "토큰",
         "quantity": "수량",
@@ -398,7 +424,67 @@
             "mostActiveWallet": "가장 많이 거래한 지갑",
             "mostActiveWalletDesc": "가장 많은 거래를 한 지갑입니다.",
             "orderCount": "{{count}}건 거래"
+        },
+        "filters": {
+            "all": "모두",
+            "bittworld": "Bittworld",
+            "nonBittworld": "Memepump"
         }
+    },
+    "bittworld-rewards": {
+        "title": "비트월드 보상",
+        "description": "비트월드 보상 통계 보기 및 관리",
+        "statistics": {
+            "totalRewards": "총 보상",
+            "totalRewardsDesc": "총 보상 수",
+            "totalAmountUSD": "총 USD 금액",
+            "totalAmountUSDDesc": "USD 총 금액",
+            "canWithdraw": "출금 가능",
+            "canWithdrawDesc": "출금 준비된 보상",
+            "averageReward": "평균 보상",
+            "averageRewardDesc": "거래당 평균 보상"
+        },
+        "withdrawals": {
+            "title": "출금 내역",
+            "description": "모든 비트월드 출금 내역 보기",
+            "searchPlaceholder": "출금 검색...",
+            "filters": {
+                "all": "모든 상태",
+                "pending": "대기 중",
+                "success": "성공",
+                "error": "오류",
+                "cancel": "취소됨"
+            },
+            "noData": "출금 내역을 찾을 수 없습니다"
+        },
+        "dialog": {
+            "title": "출금 확인",
+            "description": "출금 프로세스를 트리거하시겠습니까? 이 작업은 되돌릴 수 없습니다.",
+            "currentStatus": "현재 상태:",
+            "canWithdraw": "출금 가능: {count} 보상",
+            "totalRewards": "총 보상: {count} 보상",
+            "totalAmount": "총 금액: ${amount}",
+            "cancel": "취소",
+            "confirm": "출금 확인",
+            "processing": "처리 중..."
+        },
+        "table": {
+            "id": "ID",
+            "amountSOL": "SOL 금액",
+            "amountUSD": "USD 금액",
+            "address": "주소",
+            "date": "날짜",
+            "status": "상태",
+            "txHash": "거래 해시"
+        },
+        "status": {
+            "pending": "대기 중",
+            "success": "성공",
+            "error": "오류",
+            "cancel": "취소됨"
+        },
+        "loading": "로딩 중...",
+        "noData": "데이터를 찾을 수 없습니다"
     },
     "bg-affiliate": {
         "title": "BG Affiliate",
@@ -406,6 +492,11 @@
         "cardTitle": "제휴",
         "cardDescription": "모든 BG 제휴 관리 및 모니터링",
         "searchPlaceholder": "트리 검색...",
+        "filters": {
+            "all": "모든 플랫폼",
+            "bittworld": "Bittworld",
+            "memepump": "Memepump"
+        },
         "newBg": "새 BG",
         "stats": {
             "totalTrees": "총 트리",
@@ -416,7 +507,9 @@
         "table": {
             "number": "#",
             "rootWallet": "루트 지갑",
+            "bittworldUid": "Bittworld UID",
             "commission": "수수료",
+            "batAlias": "추천 별칭",
             "members": "멤버",
             "created": "생성일",
             "status": "상태",
@@ -428,7 +521,9 @@
             "loading": "트리 로딩 중...",
             "error": "트리 로딩 오류. 다시 시도해 주세요.",
             "noTrees": "트리를 찾을 수 없습니다",
-            "membersCount": "멤버"
+            "membersCount": "멤버",
+            "active": "활성",
+            "inactive": "비활성"
         },
         "dialogs": {
             "create": {
@@ -438,6 +533,9 @@
                 "commission": "수수료 (%)",
                 "commissionPlaceholder": "예: 70",
                 "commissionHelp": "0에서 100 사이의 값을 입력하세요",
+                "batAlias": "추천 별칭",
+                "batAliasPlaceholder": "추천 별칭 입력...",
+                "batAliasHelp": "이 BG 제휴 트리의 고유 식별자를 입력하세요",
                 "availableWallets": "사용 가능한 지갑",
                 "createButton": "BG 생성",
                 "creating": "생성 중...",
@@ -446,17 +544,20 @@
                 "walletExists": "지갑이 이미 제휴 트리를 가지고 있습니다"
             },
             "updateCommission": {
-                "title": "루트 BG 수수료 업데이트",
+                "title": "BG 제휴 업데이트",
                 "treeInfo": "트리 #{treeId}",
                 "rootInfo": "루트: {nickname} ({address})",
                 "currentCommission": "현재 수수료: {percent}%",
                 "newCommission": "새 수수료 (%)",
                 "newCommissionPlaceholder": "예: 60",
                 "newCommissionHelp": "0에서 100 사이의 값을 입력하세요",
-                "updateButton": "수수료 업데이트",
+                "batAlias": "추천 별칭",
+                "batAliasPlaceholder": "추천 별칭 입력...",
+                "batAliasHelp": "이 BG 제휴 트리의 고유 식별자를 입력하세요",
+                "updateButton": "업데이트",
                 "updating": "업데이트 중...",
-                "success": "수수료가 성공적으로 업데이트되었습니다!",
-                "error": "수수료 업데이트에 실패했습니다. 다시 시도해 주세요."
+                "success": "BG 제휴가 성공적으로 업데이트되었습니다!",
+                "error": "BG 제휴 업데이트에 실패했습니다. 다시 시도해 주세요."
             }
         },
         "detail": {
@@ -548,6 +649,305 @@
             "addressCopied": "주소가 클립보드에 복사되었습니다",
             "refCodeCopied": "추천 코드가 클립보드에 복사되었습니다",
             "copyFailed": "클립보드 복사 실패"
+        }
+    },
+    "users": {
+        "title": "사용자 관리",
+        "description": "시스템 사용자 및 역할 관리",
+        "cardTitle": "사용자 개요",
+        "cardDescription": "모든 시스템 사용자 보기 및 관리",
+        "searchPlaceholder": "사용자 검색...",
+        "stats": {
+            "totalUsers": "총 사용자",
+            "activeUsers": "활성 사용자",
+            "newToday": "오늘 신규",
+            "newThisWeek": "이번 주 신규"
+        },
+        "table": {
+            "username": "사용자명",
+            "email": "이메일",
+            "role": "역할",
+            "status": "상태",
+            "createdAt": "생성일",
+            "actions": "작업",
+            "noUsersFound": "사용자를 찾을 수 없습니다",
+            "noUsersMatchingSearch": "검색과 일치하는 사용자를 찾을 수 없습니다",
+            "loading": "사용자 데이터 로딩 중...",
+            "error": "사용자 데이터 로딩 오류"
+        },
+        "roles": {
+            "admin": "관리자",
+            "member": "회원",
+            "partner": "파트너"
+        },
+        "status": {
+            "active": "활성",
+            "inactive": "비활성"
+        },
+        "addUser": {
+            "title": "새 사용자 추가",
+            "username": "사용자명",
+            "usernamePlaceholder": "사용자명 입력",
+            "password": "비밀번호",
+            "passwordPlaceholder": "비밀번호 입력 (최소 6자)",
+            "email": "이메일",
+            "emailPlaceholder": "이메일 주소 입력",
+            "role": "역할",
+            "rolePlaceholder": "역할 선택",
+            "addButton": "사용자 추가",
+            "adding": "추가 중...",
+            "success": "사용자가 성공적으로 추가되었습니다!",
+            "error": "사용자 추가에 실패했습니다. 다시 시도해 주세요.",
+            "cancel": "취소",
+            "validation": {
+                "usernameRequired": "사용자명은 필수입니다",
+                "passwordRequired": "비밀번호는 필수입니다",
+                "passwordMinLength": "비밀번호는 최소 6자여야 합니다",
+                "emailRequired": "이메일은 필수입니다",
+                "emailInvalid": "유효한 이메일 주소를 입력해 주세요",
+                "roleRequired": "역할은 필수입니다"
+            }
+        },
+        "deleteUser": {
+            "title": "사용자 삭제",
+            "description": "이 사용자를 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.",
+            "deleteButton": "사용자 삭제",
+            "deleting": "삭제 중...",
+            "success": "사용자가 성공적으로 삭제되었습니다!",
+            "error": "사용자 삭제에 실패했습니다. 다시 시도해 주세요.",
+            "cancel": "취소"
+        },
+        "pagination": {
+            "showing": "표시",
+            "to": "~",
+            "of": "/",
+            "entries": "개 항목",
+            "previous": "이전",
+            "next": "다음"
+        }
+    },
+    "swap-investors": {
+        "pageTitle": "스왑 투자자 관리",
+        "description": "스왑 투자자를 관리하고 보상 설정을 구성합니다",
+        "stats": {
+            "totalInvestors": "총 투자자",
+            "activeInvestors": "활성 투자자",
+            "totalAmount": "총 금액",
+            "swapFee": "스왑 수수료"
+        },
+        "tabs": {
+            "investors": "투자자",
+            "rewards": "보상",
+            "settings": "설정"
+        },
+        "investors": {
+            "title": "스왑 투자자",
+            "description": "스왑 투자자를 관리하고 모니터링합니다",
+            "addNew": "새 투자자 추가",
+            "searchPlaceholder": "지갑 주소로 검색...",
+            "filters": {
+                "allCoins": "모든 코인",
+                "sol": "SOL",
+                "usdt": "USDT"
+            },
+            "table": {
+                "id": "ID",
+                "walletAddress": "지갑 주소",
+                "coin": "코인",
+                "amount": "금액",
+                "status": "상태",
+                "createdAt": "생성일",
+                "noCoins": "코인 없음",
+                "active": "활성",
+                "inactive": "비활성",
+                "noResults": "투자자를 찾을 수 없습니다"
+            },
+            "dialog": {
+                "title": "새 스왑 투자자 추가",
+                "walletAddress": "지갑 주소",
+                "walletAddressRequired": "지갑 주소를 입력해주세요",
+                "createSuccess": "투자자가 성공적으로 생성되었습니다!",
+                "createError": "투자자 생성에 실패했습니다. 다시 시도해주세요.",
+                "cancel": "취소",
+                "create": "생성"
+            }
+        },
+        "rewards": {
+            "title": "스왑 투자자 보상",
+            "description": "스왑 투자자 보상을 보고 추적합니다",
+            "searchPlaceholder": "지갑 주소 또는 거래 해시로 검색...",
+            "table": {
+                "rewardId": "보상 ID",
+                "investorWallet": "투자자 지갑",
+                "solAmount": "SOL 금액",
+                "swapOrder": "스왑 주문",
+                "swapType": "스왑 유형",
+                "transactionHash": "거래 해시",
+                "status": "상태",
+                "createdAt": "생성일",
+                "loading": "로딩 중...",
+                "noResults": "보상을 찾을 수 없습니다"
+            }
+        },
+        "settings": {
+            "title": "보상 설정",
+            "description": "스왑 수수료 및 투자자 공유 비율을 구성합니다",
+            "editSettings": "설정 편집",
+            "currentSwapFee": "현재 스왑 수수료",
+            "currentInvestorShare": "현재 투자자 공유",
+            "information": "정보",
+            "infoPoints": {
+                "swapFee": "• 스왑 수수료는 모든 스왑 거래에 적용됩니다",
+                "investorShare": "• 투자자 공유는 수수료 중 투자자에게 가는 비율을 결정합니다",
+                "totalPercentage": "• 총 비율은 100%를 초과할 수 없습니다"
+            },
+            "dialog": {
+                "title": "보상 설정 편집",
+                "swapFeeLabel": "스왑 수수료 비율",
+                "swapFeeDescription": "거래에 적용되는 스왑 수수료의 비율",
+                "investorShareLabel": "투자자 공유 비율",
+                "investorShareDescription": "투자자와 공유되는 수수료의 비율",
+                "validation": {
+                    "swapFeeRange": "스왑 수수료는 0에서 100 사이여야 합니다",
+                    "investorShareRange": "투자자 공유는 0에서 100 사이여야 합니다",
+                    "investorShareGreater": "투자자 공유 비율은 스왑 수수료 비율보다 클 수 없습니다"
+                },
+                "updateSuccess": "설정이 성공적으로 업데이트되었습니다!",
+                "updateError": "설정 업데이트에 실패했습니다. 다시 시도해주세요.",
+                "cancel": "취소",
+                "update": "업데이트"
+            }
+        }
+    },
+    "pools": {
+        "title": "풀 관리",
+        "description": "시스템의 모든 풀을 모니터링하고 관리합니다",
+        "stats": {
+            "totalPools": "총 풀",
+            "activePools": "활성 풀",
+            "totalMembers": "총 멤버",
+            "totalVolume": "총 볼륨",
+            "combinedVolume": "결합된 볼륨",
+            "currentlyRunning": "현재 실행 중",
+            "acrossAllPools": "모든 풀에서"
+        },
+        "list": {
+            "title": "풀 목록",
+            "description": "시스템의 모든 풀을 보고 관리합니다",
+            "searchPlaceholder": "풀 검색...",
+            "table": {
+                "pool": "풀",
+                "members": "멤버",
+                "volume": "볼륨",
+                "status": "상태",
+                "creator": "생성자",
+                "bittworldUid": "Bittworld UID",
+                "dates": "날짜",
+                "actions": "작업",
+                "view": "보기",
+                "created": "생성됨",
+                "ends": "종료"
+            },
+            "status": {
+                "active": "활성",
+                "pending": "대기 중",
+                "end": "종료",
+                "error": "오류"
+            },
+            "noResults": "조건에 맞는 풀을 찾을 수 없습니다",
+            "loading": "풀 로딩 중..."
+        }
+    },
+    "pool-detail": {
+        "back": "뒤로",
+        "poolId": "풀 ID",
+        "loading": "풀 세부사항 로딩 중...",
+        "notFound": "풀을 찾을 수 없습니다",
+        "stats": {
+            "totalMembers": "총 멤버",
+            "totalVolume": "총 볼륨",
+            "status": "상태",
+            "transactions": "거래",
+            "activeParticipants": "활성 참가자",
+            "combinedStakes": "결합된 스테이크",
+            "poolStatus": "풀 상태",
+            "totalTransactions": "총 거래"
+        },
+        "tabs": {
+            "overview": "개요",
+            "members": "멤버",
+            "transactions": "거래"
+        },
+        "overview": {
+            "poolInfo": {
+                "title": "풀 정보",
+                "description": "이 풀에 대한 기본 정보",
+                "description": "설명",
+                "creationDate": "생성일",
+                "endDate": "종료일"
+            },
+            "creatorInfo": {
+                "title": "생성자 정보",
+                "description": "풀 생성자 세부사항",
+                "poolCreator": "풀 생성자",
+                "bittworldUid": "Bittworld UID",
+                "solanaAddress": "솔라나 주소",
+                "transactionHash": "거래 해시"
+            }
+        },
+        "members": {
+            "title": "멤버",
+            "description": "이 풀의 모든 멤버",
+            "table": {
+                "member": "멤버",
+                "bittworldUid": "Bittworld UID",
+                "totalStaked": "총 스테이크",
+                "stakeCount": "스테이크 횟수",
+                "status": "상태",
+                "joinDate": "가입일"
+            }
+        },
+        "transactions": {
+            "title": "거래",
+            "description": "이 풀의 모든 거래",
+            "table": {
+                "member": "멤버",
+                "bittworldUid": "Bittworld UID",
+                "stakeAmount": "스테이크 금액",
+                "status": "상태",
+                "date": "날짜",
+                "transactionHash": "거래 해시"
+            }
+        },
+        "status": {
+            "active": "활성",
+            "pending": "대기 중",
+            "end": "종료",
+            "error": "오류"
+        }
+    },
+    "pools-ranking": {
+        "title": "VIP 풀 랭킹",
+        "description": "최고 볼륨과 성능을 가진 독점 풀",
+        "cardTitle": "VIP 풀 랭킹 테이블",
+        "cardDescription": "볼륨과 랭킹별로 정렬된 모든 VIP 풀",
+        "loading": "데이터 로딩 중...",
+        "error": "데이터 로딩 오류",
+        "noData": "데이터 없음",
+        "filters": {
+            "vip7": "VIP 7 (30M+)",
+            "vip6": "VIP 6 (20M-30M)",
+            "vip5": "VIP 5 (10M-20M)"
+        },
+        "table": {
+            "rank": "순위",
+            "pool": "풀",
+            "volume": "볼륨",
+            "members": "멤버",
+            "status": "상태",
+            "wallet": "지갑",
+            "bittworldUid": "Bittworld UID",
+            "created": "생성일"
         }
     }
 }

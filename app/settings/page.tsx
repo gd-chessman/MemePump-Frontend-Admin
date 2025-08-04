@@ -132,16 +132,15 @@ export default function SettingsPage() {
       </div>
 
       <Tabs defaultValue="profile" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-3 lg:w-auto">
+        <TabsList className="grid w-full grid-cols-2 lg:w-auto">
           <TabsTrigger value="profile">{t("settings.tabs.profile")}</TabsTrigger>
-          <TabsTrigger value="referral">{t("settings.tabs.referral")}</TabsTrigger>
           <TabsTrigger value="security">{t("settings.tabs.security")}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="profile" className="space-y-4">
           <Card className="dashboard-card">
             <CardHeader>
-              <CardTitle>{t("settings.profile.title")}</CardTitle>
+              <CardTitle className="text-black dark:text-white font-bold">{t("settings.profile.title")}</CardTitle>
               <CardDescription>
                 {t("settings.profile.description")}
               </CardDescription>
@@ -153,7 +152,6 @@ export default function SettingsPage() {
                   id="username"
                   value={myInfor?.username || ''}
                   disabled
-                  className="bg-slate-600/30 border-slate-500/50 text-slate-100"
                 />
               </div>
               
@@ -163,7 +161,6 @@ export default function SettingsPage() {
                   id="email"
                   value={myInfor?.email || ''}
                   disabled
-                  className="bg-slate-600/30 border-slate-500/50 text-slate-100"
                 />
               </div>
               
@@ -173,7 +170,6 @@ export default function SettingsPage() {
                   id="role"
                   value={myInfor?.role || ''}
                   disabled
-                  className="bg-slate-600/30 border-slate-500/50 text-slate-100"
                 />
               </div>
               
@@ -183,7 +179,6 @@ export default function SettingsPage() {
                   id="created-at"
                   value={myInfor?.createdAt ? formatDate(myInfor.createdAt) : 'N/A'}
                   disabled
-                  className="bg-slate-600/30 border-slate-500/50 text-slate-100"
                 />
               </div>
               
@@ -193,21 +188,16 @@ export default function SettingsPage() {
                   id="updated-at"
                   value={myInfor?.updatedAt ? formatDate(myInfor.updatedAt) : 'N/A'}
                   disabled
-                  className="bg-slate-600/30 border-slate-500/50 text-slate-100"
                 />
               </div>
             </CardContent>
           </Card>
         </TabsContent>
 
-        <TabsContent value="referral" className="space-y-4">
-          <ReferralSettingsTab />
-        </TabsContent>
-
         <TabsContent value="security" className="space-y-4">
           <Card className="dashboard-card">
             <CardHeader>
-              <CardTitle>{t("settings.security.title")}</CardTitle>
+              <CardTitle className="text-black dark:text-white font-bold">{t("settings.security.title")}</CardTitle>
               <CardDescription>{t("settings.security.description")}</CardDescription>
             </CardHeader>
             <form
@@ -230,7 +220,6 @@ export default function SettingsPage() {
                         currentPassword: e.target.value,
                       }))
                     }
-                    className="bg-slate-600/30 border-slate-500/50 text-slate-100"
                   />
                 </div>
                 <div className="space-y-2 w-full max-w-lg">
@@ -246,7 +235,6 @@ export default function SettingsPage() {
                         newPassword: e.target.value,
                       }))
                     }
-                    className="bg-slate-600/30 border-slate-500/50 text-slate-100"
                   />
                 </div>
                 <div className="space-y-2 w-full max-w-lg">
@@ -262,7 +250,6 @@ export default function SettingsPage() {
                         confirmPassword: e.target.value,
                       }))
                     }
-                    className="bg-slate-600/30 border-slate-500/50 text-slate-100"
                   />
                 </div>
               </CardContent>
@@ -373,7 +360,7 @@ function ReferralSettingsTab() {
       )}
       <Card>
         <CardHeader>
-          <CardTitle>{t("ref.cardTitle")}</CardTitle>
+          <CardTitle className="text-black dark:text-white font-bold">{t("ref.cardTitle")}</CardTitle>
           <CardDescription>
             {t("ref.cardDescription")}
             {referentSettings && (

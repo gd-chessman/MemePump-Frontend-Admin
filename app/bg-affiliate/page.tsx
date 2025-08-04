@@ -7,8 +7,10 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { Select as UISelect, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Plus, Eye, Users, Wallet, Percent, Calendar, ChevronRight, ChevronDown, Search, MoreHorizontal, TrendingUp, Activity, Edit, Copy, Check } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import Select from "react-select";
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getListWallets } from '@/services/api/ListWalletsService';
@@ -16,6 +18,7 @@ import { createBgAffiliate, getBgAffiliateTrees, updateRootBgCommission, updateB
 import { selectStyles } from "@/utils/common";
 import { toast } from "sonner";
 import { useLang } from "@/lang/useLang";
+import { getMyInfor } from "@/services/api/UserAdminService";
 
 
 // Helper function to truncate address
@@ -31,24 +34,34 @@ export default function BgAffiliateAdminPage() {
   const [showUpdateCommission, setShowUpdateCommission] = useState(false);
   const [selectedTree, setSelectedTree] = useState<any>(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [isBittworldFilter, setIsBittworldFilter] = useState<'all' | 'true' | 'false'>('all');
   const [walletSearchQuery, setWalletSearchQuery] = useState("");
   const [copiedAddress, setCopiedAddress] = useState<string | null>(null);
   const queryClient = useQueryClient();
 
+  // Get user info
+  const { data: myInfor } = useQuery({
+    queryKey: ["my-infor"],
+    queryFn: getMyInfor,
+    refetchOnMount: true,
+  });
+
   // Form states
   const [createForm, setCreateForm] = useState({ 
     selectedWallet: null, 
-    totalCommissionPercent: "" 
+    totalCommissionPercent: "",
+    batAlias: ""
   });
 
   const [updateCommissionForm, setUpdateCommissionForm] = useState({
-    newPercent: ""
+    newPercent: "",
+    batAlias: ""
   });
 
   // Fetch BG Affiliate trees
   const { data: bgAffiliateTrees = [], isLoading: treesLoading, error: treesError } = useQuery({
-    queryKey: ['bg-affiliate-trees'],
-    queryFn: getBgAffiliateTrees,
+    queryKey: ['bg-affiliate-trees', isBittworldFilter],
+    queryFn: () => getBgAffiliateTrees(isBittworldFilter),
     refetchInterval: 30000, // Refetch every 30 seconds
   });
 
@@ -61,21 +74,25 @@ export default function BgAffiliateAdminPage() {
 
   // Fetch available wallets when dialog is open
   const { data: availableWallets = [], isLoading: walletsLoading } = useQuery({
-    queryKey: ["list-wallets-bg-affiliate", walletSearchQuery, 'all', 1],
-    queryFn: () => getListWallets(walletSearchQuery, 1, 30, '', 'main'),
+    queryKey: ["list-wallets-bg-affiliate", walletSearchQuery, 'all', 1, myInfor?.role],
+    queryFn: () => {
+      // For partner role, always set isBittworld to true
+      const isBittworld = myInfor?.role === 'partner' ? true : undefined;
+      return getListWallets(walletSearchQuery, 1, 30, '', 'main', isBittworld);
+    },
     enabled: showCreate, // Only fetch when dialog is open
     placeholderData: (previousData) => previousData,
   });
 
   // Create BG Affiliate mutation
   const createBgAffiliateMutation = useMutation({
-    mutationFn: ({ walletId, totalCommissionPercent }: { walletId: number, totalCommissionPercent: number }) =>
-      createBgAffiliate(walletId, totalCommissionPercent),
+    mutationFn: ({ walletId, totalCommissionPercent, batAlias }: { walletId: number, totalCommissionPercent: number, batAlias?: string }) =>
+      createBgAffiliate(walletId, totalCommissionPercent, batAlias),
     onSuccess: (data) => {
       console.log('BG Affiliate created successfully:', data);
       // Close dialog and reset form
       setShowCreate(false);
-      setCreateForm({ selectedWallet: null, totalCommissionPercent: "" });
+      setCreateForm({ selectedWallet: null, totalCommissionPercent: "", batAlias: "" });
       // Invalidate and refetch trees list
       queryClient.invalidateQueries({ queryKey: ['bg-affiliate-trees'] });
       // Show success toast
@@ -83,7 +100,7 @@ export default function BgAffiliateAdminPage() {
     },
     onError: (error: any) => {
       console.error('Error creating BG Affiliate:', error);
-      if (error.response?.data?.message === "Wallet đã có cây affiliate") {
+      if (error.response?.data?.message == "Wallet already has a BG affiliate tree, cannot create another one") {
         // Show error toast
         toast.error(t('bg-affiliate.dialogs.create.walletExists'));
       } else {
@@ -95,14 +112,14 @@ export default function BgAffiliateAdminPage() {
 
   // Update Root BG Commission mutation
   const updateCommissionMutation = useMutation({
-    mutationFn: ({ treeId, newPercent, rootWalletId }: { treeId: number, newPercent: number, rootWalletId: number }) =>
-      updateRootBgCommission(treeId, newPercent, rootWalletId),
+    mutationFn: ({ treeId, newPercent, rootWalletId, batAlias }: { treeId: number, newPercent: number, rootWalletId: number, batAlias?: string }) =>
+      updateRootBgCommission(treeId, newPercent, rootWalletId, batAlias),
     onSuccess: (data) => {
       console.log('Commission updated successfully:', data);
       // Close dialog and reset form
       setShowUpdateCommission(false);
       setSelectedTree(null);
-      setUpdateCommissionForm({ newPercent: "" });
+      setUpdateCommissionForm({ newPercent: "", batAlias: "" });
       // Invalidate and refetch trees list
       queryClient.invalidateQueries({ queryKey: ['bg-affiliate-trees'] });
       // Show success toast
@@ -154,7 +171,10 @@ export default function BgAffiliateAdminPage() {
 
   const handleUpdateCommission = (tree: any) => {
     setSelectedTree(tree);
-    setUpdateCommissionForm({ newPercent: Number(tree.totalCommissionPercent).toString() });
+    setUpdateCommissionForm({ 
+      newPercent: Number(tree.totalCommissionPercent).toString(),
+      batAlias: tree.batAlias || ""
+    });
     setShowUpdateCommission(true);
   };
 
@@ -175,11 +195,11 @@ export default function BgAffiliateAdminPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-100">{t('bg-affiliate.title')}</h1>
-          <p className="text-slate-400 text-sm">{t('bg-affiliate.description')}</p>
+          <h1 className="text-2xl font-bold">{t('bg-affiliate.title')}</h1>
+          <p className="text-muted-foreground text-sm">{t('bg-affiliate.description')}</p>
         </div>
         <Button 
-          className="bg-gradient-to-r from-cyan-600 to-purple-600 hover:from-cyan-700 hover:to-purple-700"
+          className="bg-[#00e09e] hover:bg-[#00d08e] text-black font-medium"
           onClick={() => setShowCreate(true)}
         >
           <Plus className="h-4 w-4 mr-2" />
@@ -191,15 +211,15 @@ export default function BgAffiliateAdminPage() {
       {statsLoading ? (
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           {[1, 2, 3, 4].map((i) => (
-            <Card key={i} className="bg-slate-800/50 border-slate-700/50">
+            <Card key={i} className="dashboard-card">
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-slate-400 text-sm">Loading...</p>
-                    <p className="text-2xl font-bold text-slate-400">...</p>
+                    <p className="text-muted-foreground text-sm">Loading...</p>
+                    <p className="text-2xl font-bold text-muted-foreground">...</p>
                   </div>
-                  <div className="h-8 w-8 rounded-lg bg-slate-500/10 flex items-center justify-center">
-                    <div className="h-4 w-4 bg-slate-400 rounded animate-pulse"></div>
+                  <div className="h-8 w-8 rounded-lg bg-muted/10 flex items-center justify-center">
+                    <div className="h-4 w-4 bg-muted-foreground rounded animate-pulse"></div>
                   </div>
                 </div>
               </CardContent>
@@ -209,11 +229,11 @@ export default function BgAffiliateAdminPage() {
       ) : statsError ? (
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           {[1, 2, 3, 4].map((i) => (
-            <Card key={i} className="bg-slate-800/50 border-slate-700/50">
+            <Card key={i} className="dashboard-card">
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-slate-400 text-sm">Error</p>
+                    <p className="text-muted-foreground text-sm">Error</p>
                     <p className="text-2xl font-bold text-red-400">-</p>
                   </div>
                   <div className="h-8 w-8 rounded-lg bg-red-500/10 flex items-center justify-center">
@@ -226,11 +246,11 @@ export default function BgAffiliateAdminPage() {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <Card className="bg-slate-800/50 border-slate-700/50">
+          <Card className="dashboard-card">
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-slate-400 text-sm">{t('bg-affiliate.stats.totalTrees')}</p>
+                  <p className="text-black dark:text-white font-semibold text-sm">{t('bg-affiliate.stats.totalTrees')}</p>
                   <p className="text-2xl font-bold text-cyan-400">{statisticsData?.totalTrees || 0}</p>
                 </div>
                 <div className="h-8 w-8 rounded-lg bg-cyan-500/10 flex items-center justify-center">
@@ -240,11 +260,11 @@ export default function BgAffiliateAdminPage() {
             </CardContent>
           </Card>
 
-          <Card className="bg-slate-800/50 border-slate-700/50">
+          <Card className="dashboard-card">
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-slate-400 text-sm">{t('bg-affiliate.stats.totalMembers')}</p>
+                  <p className="text-black dark:text-white font-semibold text-sm">{t('bg-affiliate.stats.totalMembers')}</p>
                   <p className="text-2xl font-bold text-emerald-400">{statisticsData?.totalMembers || 0}</p>
                 </div>
                 <div className="h-8 w-8 rounded-lg bg-emerald-500/10 flex items-center justify-center">
@@ -254,11 +274,11 @@ export default function BgAffiliateAdminPage() {
             </CardContent>
           </Card>
 
-          <Card className="bg-slate-800/50 border-slate-700/50">
+          <Card className="dashboard-card">
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-slate-400 text-sm">{t('bg-affiliate.stats.totalCommissionDistributed')}</p>
+                  <p className="text-black dark:text-white font-semibold text-sm">{t('bg-affiliate.stats.totalCommissionDistributed')}</p>
                   <p className="text-2xl font-bold text-pink-400">${statisticsData?.totalCommissionDistributed || 0}</p>
                 </div>
                 <div className="h-8 w-8 rounded-lg bg-pink-500/10 flex items-center justify-center">
@@ -268,11 +288,11 @@ export default function BgAffiliateAdminPage() {
             </CardContent>
           </Card>
 
-          <Card className="bg-slate-800/50 border-slate-700/50">
+          <Card className="dashboard-card">
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-slate-400 text-sm">{t('bg-affiliate.stats.totalVolume')}</p>
+                  <p className="text-black dark:text-white font-semibold text-sm">{t('bg-affiliate.stats.totalVolume')}</p>
                   <p className="text-2xl font-bold text-purple-400">${statisticsData?.totalVolume || 0}</p>
                 </div>
                 <div className="h-8 w-8 rounded-lg bg-purple-500/10 flex items-center justify-center">
@@ -285,12 +305,12 @@ export default function BgAffiliateAdminPage() {
       )}
 
       {/* Main Content */}
-      <Card className="bg-slate-800/50 border-slate-700/50">
+      <Card className="dashboard-card p-0 md:p-4">
         <CardHeader className="pb-4">
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle className="text-slate-100">{t('bg-affiliate.cardTitle')}</CardTitle>
-              <CardDescription className="text-slate-400">
+              <CardTitle className="text-foreground font-bold">{t('bg-affiliate.cardTitle')}</CardTitle>
+              <CardDescription className="text-muted-foreground">
                 {t('bg-affiliate.cardDescription')}
               </CardDescription>
             </div>
@@ -299,19 +319,32 @@ export default function BgAffiliateAdminPage() {
         <CardContent>
           <div className="flex items-center gap-2 mb-4">
             <div className="relative flex-1">
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-slate-400" />
+              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input 
                 type="search" 
                 placeholder={t('bg-affiliate.searchPlaceholder')} 
-                className="pl-8 w-full md:max-w-sm bg-slate-700/50 border-slate-600/50"
+                className="pl-8 w-full md:max-w-sm min-w-[140px]"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
+            <UISelect 
+              value={isBittworldFilter} 
+              onValueChange={(value: 'all' | 'true' | 'false') => setIsBittworldFilter(value)}
+            >
+              <SelectTrigger className="w-[180px]">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{t('bg-affiliate.filters.all')}</SelectItem>
+                <SelectItem value="true">{t('bg-affiliate.filters.bittworld')}</SelectItem>
+                <SelectItem value="false">{t('bg-affiliate.filters.memepump')}</SelectItem>
+              </SelectContent>
+            </UISelect>
           </div>
           {treesLoading ? (
             <div className="flex items-center justify-center py-8">
-              <div className="text-slate-400">{t('bg-affiliate.table.loading')}</div>
+              <div className="text-muted-foreground">{t('bg-affiliate.table.loading')}</div>
             </div>
           ) : treesError ? (
             <div className="flex items-center justify-center py-8">
@@ -321,36 +354,43 @@ export default function BgAffiliateAdminPage() {
             <div className="overflow-x-auto rounded-md border">
               <Table>
                 <TableHeader>
-                  <TableRow className="border-slate-700/50">
-                    <TableHead className="text-slate-300">{t('bg-affiliate.table.number')}</TableHead>
-                    <TableHead className="text-slate-300">{t('bg-affiliate.table.rootWallet')}</TableHead>
-                    <TableHead className="text-slate-300">{t('bg-affiliate.table.commission')}</TableHead>
-                    <TableHead className="text-slate-300">{t('bg-affiliate.table.members')}</TableHead>
-                    <TableHead className="text-slate-300">{t('bg-affiliate.table.created')}</TableHead>
-                    <TableHead className="text-slate-300">{t('bg-affiliate.table.status')}</TableHead>
-                    <TableHead className="text-slate-300">{t('bg-affiliate.table.actions')}</TableHead>
+                  <TableRow>
+                    <TableHead className="font-semibold text-foreground">{t('bg-affiliate.table.number')}</TableHead>
+                    <TableHead className="font-semibold text-foreground">{t('bg-affiliate.table.batAlias')}</TableHead>
+                    <TableHead className="font-semibold text-foreground">{t('bg-affiliate.table.rootWallet')}</TableHead>
+                    <TableHead className="font-semibold text-foreground">{t('bg-affiliate.table.bittworldUid')}</TableHead>
+                    <TableHead className="font-semibold text-foreground">{t('bg-affiliate.table.commission')}</TableHead>
+                    <TableHead className="font-semibold text-foreground">{t('bg-affiliate.table.members')}</TableHead>
+                    <TableHead className="font-semibold text-foreground">{t('bg-affiliate.table.created')}</TableHead>
+                    <TableHead className="font-semibold text-foreground">{t('bg-affiliate.table.status')}</TableHead>
+                    <TableHead className="font-semibold text-foreground">{t('bg-affiliate.table.actions')}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {filteredTrees.length === 0 ? (
-                                      <TableRow>
-                    <TableCell colSpan={7} className="text-center py-8 text-slate-400">
+                    <TableRow>
+                    <TableCell colSpan={9} className="text-center py-8 text-muted-foreground">
                       {t('bg-affiliate.table.noTrees')}
                     </TableCell>
                   </TableRow>
                   ) : (
                     filteredTrees.map((tree: any, index: number) => (
-                      <TableRow key={tree.treeId} className="border-slate-700/30 hover:bg-slate-700/20">
+                      <TableRow key={tree.treeId} className="hover:bg-muted/50">
                         <TableCell className="font-medium text-cyan-400">{index + 1}</TableCell>
                         <TableCell>
+                          <span className="text-sm text-muted-foreground">
+                            {tree.batAlias || '-'}
+                          </span>
+                        </TableCell>
+                        <TableCell>
                           <div>
-                            <p className="font-medium text-slate-100">{tree.rootWallet?.nickName || 'Unknown'}</p>
+                            <p className="font-medium">{tree.rootWallet?.nickName || 'Unknown'}</p>
                             <div className="flex items-center gap-2">
-                              <p className="text-xs text-slate-400">{truncateAddress(tree.rootWallet?.solanaAddress || '')}</p>
+                              <p className="text-xs text-muted-foreground">{truncateAddress(tree.rootWallet?.solanaAddress || '')}</p>
                               <Button
                                 variant="ghost"
                                 size="icon"
-                                className="h-5 w-5 text-slate-400 hover:text-cyan-300 hover:bg-cyan-900/20"
+                                className="h-5 w-5 text-muted-foreground hover:text-cyan-300 hover:bg-muted/50"
                                 onClick={() => copyToClipboard(tree.rootWallet?.solanaAddress || '')}
                                 title="Copy address"
                               >
@@ -360,8 +400,24 @@ export default function BgAffiliateAdminPage() {
                                   <Copy className="h-3 w-3" />
                                 )}
                               </Button>
+                              {tree.rootWallet?.isBittworld && (
+                                <Image
+                                  src="/favicon.png"
+                                  alt="Bittworld"
+                                  width={16}
+                                  height={16}
+                                  className="w-4 h-4 rounded"
+                                />
+                              )}
                             </div>
                           </div>
+                        </TableCell>
+                        <TableCell className="text-xs">
+                          {tree.rootWallet?.isBittworld && tree.rootWallet?.bittworldUid ? (
+                            <span className="font-mono">{tree.rootWallet.bittworldUid}</span>
+                          ) : (
+                            <span className="text-muted-foreground">-</span>
+                          )}
                         </TableCell>
                         <TableCell>
                           <Badge variant="secondary" className="bg-emerald-900/20 text-emerald-400 border-emerald-500/30">
@@ -371,44 +427,50 @@ export default function BgAffiliateAdminPage() {
                         <TableCell>
                           <div className="flex items-center gap-2">
                             <span className="font-medium text-purple-400">{tree.totalMembers || 0}</span>
-                            <span className="text-xs text-slate-400">{t('bg-affiliate.table.membersCount')}</span>
+                            <span className="text-xs text-muted-foreground">{t('bg-affiliate.table.membersCount')}</span>
                           </div>
                         </TableCell>
-                        <TableCell className="text-slate-400 text-sm">
+                        <TableCell className="text-muted-foreground text-sm">
                           {tree.createdAt ? new Date(tree.createdAt).toLocaleDateString() : 'Unknown'}
                         </TableCell>
                         <TableCell>
-                          <div className="flex items-center gap-2">
-                            <div className="relative">
-                              <input
-                                type="checkbox"
-                                checked={tree.status !== false}
-                                onChange={(e) => {
-                                  updateTreeStatusMutation.mutate({
-                                    walletId: tree.rootWallet.walletId,
-                                    status: e.target.checked
-                                  });
-                                }}
-                                disabled={updateTreeStatusMutation.isPending}
-                                className="sr-only"
-                                id={`toggle-tree-${tree.treeId}`}
-                              />
-                              <label
-                                htmlFor={`toggle-tree-${tree.treeId}`}
-                                className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors duration-200 ease-in-out cursor-pointer ${
-                                  tree.status !== false 
-                                    ? 'bg-emerald-500' 
-                                    : 'bg-slate-600'
-                                } ${updateTreeStatusMutation.isPending ? 'opacity-50 cursor-not-allowed' : ''}`}
-                              >
-                                <span
-                                  className={`inline-block h-3 w-3 transform rounded-full bg-white transition-transform duration-200 ease-in-out ${
-                                    tree.status !== false ? 'translate-x-5' : 'translate-x-1'
-                                  }`}
+                          {!(myInfor?.role === 'partner' && !tree.rootWallet?.isBittworld) ? (
+                            <div className="flex items-center gap-2">
+                              <div className="relative">
+                                <input
+                                  type="checkbox"
+                                  checked={tree.status !== false}
+                                  onChange={(e) => {
+                                    updateTreeStatusMutation.mutate({
+                                      walletId: tree.rootWallet.walletId,
+                                      status: e.target.checked
+                                    });
+                                  }}
+                                  disabled={updateTreeStatusMutation.isPending}
+                                  className="sr-only"
+                                  id={`toggle-tree-${tree.treeId}`}
                                 />
-                              </label>
+                                <label
+                                  htmlFor={`toggle-tree-${tree.treeId}`}
+                                  className={`relative inline-flex h-5 w-9 items-center rounded-full transition-colors duration-200 ease-in-out cursor-pointer ${
+                                    tree.status !== false 
+                                      ? 'bg-emerald-500' 
+                                      : 'bg-slate-600'
+                                  } ${updateTreeStatusMutation.isPending ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                >
+                                  <span
+                                    className={`inline-block h-3 w-3 transform rounded-full bg-white transition-transform duration-200 ease-in-out ${
+                                      tree.status !== false ? 'translate-x-5' : 'translate-x-1'
+                                    }`}
+                                  />
+                                </label>
+                              </div>
                             </div>
-                          </div>
+                          ) : (
+                            <Badge variant={tree.status !== false ? "default" : "secondary"}>
+                              {tree.status !== false ? t('bg-affiliate.table.active') : t('bg-affiliate.table.inactive')}
+                            </Badge>
+                          )}
                         </TableCell>
                         <TableCell>
                           <div className="flex items-center gap-2">
@@ -416,19 +478,21 @@ export default function BgAffiliateAdminPage() {
                               <Button 
                                 size="sm" 
                                 variant="ghost" 
-                                className="h-8 w-8 p-0 text-slate-400 hover:text-cyan-300 hover:bg-cyan-900/20"
+                                className="h-8 w-8 p-0 text-muted-foreground hover:text-cyan-300 hover:bg-muted/50"
                               >
                                 <Eye className="h-4 w-4" />
                               </Button>
                             </Link>
-                            <Button 
-                              size="sm" 
-                              variant="ghost" 
-                              className="h-8 w-8 p-0 text-slate-400 hover:text-emerald-300 hover:bg-emerald-900/20"
-                              onClick={() => handleUpdateCommission(tree)}
-                            >
-                              <Edit className="h-4 w-4" />
-                            </Button>
+                            {!(myInfor?.role === 'partner' && !tree.rootWallet?.isBittworld) && (
+                              <Button 
+                                size="sm" 
+                                variant="ghost" 
+                                className="h-8 w-8 p-0 text-muted-foreground hover:text-emerald-300 hover:bg-muted/50"
+                                onClick={() => handleUpdateCommission(tree)}
+                              >
+                                <Edit className="h-4 w-4" />
+                              </Button>
+                            )}
                           </div>
                         </TableCell>
                       </TableRow>
@@ -443,13 +507,13 @@ export default function BgAffiliateAdminPage() {
 
       {/* Create Tree Dialog */}
       <Dialog open={showCreate} onOpenChange={setShowCreate}>
-        <DialogContent className="bg-slate-900 border-slate-700/50">
+        <DialogContent>
           <DialogHeader>
-            <DialogTitle className="text-slate-100">{t('bg-affiliate.dialogs.create.title')}</DialogTitle>
+            <DialogTitle className="text-foreground font-bold">{t('bg-affiliate.dialogs.create.title')}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-slate-300">{t('bg-affiliate.dialogs.create.selectWallet')}</label>
+              <label className="block text-sm font-medium">{t('bg-affiliate.dialogs.create.selectWallet')}</label>
               <Select
                 options={walletOptions as any}
                 value={createForm.selectedWallet ? {
@@ -465,7 +529,7 @@ export default function BgAffiliateAdminPage() {
                 isClearable
                 isSearchable
                 styles={selectStyles}
-                className="text-slate-100"
+
                 noOptionsMessage={() => "No wallets available"}
                 loadingMessage={() => "Loading wallets..."}
                 isLoading={walletsLoading}
@@ -473,37 +537,50 @@ export default function BgAffiliateAdminPage() {
                 filterOption={() => true}
                 isOptionDisabled={() => false}
               />
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-muted-foreground">
                 {availableWallets?.pagination?.total || 0} {t('bg-affiliate.dialogs.create.availableWallets')}
               </p>
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">{t('bg-affiliate.dialogs.create.commission')}</label>
+              <label className="block text-sm font-medium mb-2">{t('bg-affiliate.dialogs.create.commission')}</label>
               <Input 
                 type="number" 
                 placeholder={t('bg-affiliate.dialogs.create.commissionPlaceholder')} 
                 value={createForm.totalCommissionPercent} 
                 onChange={e => setCreateForm(f => ({ ...f, totalCommissionPercent: e.target.value }))} 
-                className="bg-slate-800/50 border-slate-600/50" 
                 disabled={createBgAffiliateMutation.isPending}
                 min="0"
                 max="100"
                 step="0.01"
               />
-              <p className="text-xs text-slate-400 mt-1">
+              <p className="text-xs text-muted-foreground mt-1">
                 {t('bg-affiliate.dialogs.create.commissionHelp')}
+              </p>
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-2">{t('bg-affiliate.dialogs.create.batAlias')}</label>
+              <Input 
+                type="text" 
+                placeholder={t('bg-affiliate.dialogs.create.batAliasPlaceholder')} 
+                value={createForm.batAlias} 
+                onChange={e => setCreateForm(f => ({ ...f, batAlias: e.target.value }))} 
+                disabled={createBgAffiliateMutation.isPending}
+              />
+              <p className="text-xs text-muted-foreground mt-1">
+                {t('bg-affiliate.dialogs.create.batAliasHelp')}
               </p>
             </div>
           </div>
           <DialogFooter>
             <Button 
-              className="bg-gradient-to-r from-cyan-600 to-purple-600 hover:from-cyan-700 hover:to-purple-700" 
-              disabled={!createForm.selectedWallet || !createForm.totalCommissionPercent || createBgAffiliateMutation.isPending || parseFloat(createForm.totalCommissionPercent) < 0 || parseFloat(createForm.totalCommissionPercent) > 100}
+              className="bg-[#00e09e] hover:bg-[#00d08e] text-black font-medium" 
+              disabled={!createForm.selectedWallet || !createForm.totalCommissionPercent || !createForm.batAlias.trim() || createBgAffiliateMutation.isPending || parseFloat(createForm.totalCommissionPercent) < 0 || parseFloat(createForm.totalCommissionPercent) > 100}
               onClick={() => {
-                if (createForm.selectedWallet && createForm.totalCommissionPercent) {
+                if (createForm.selectedWallet && createForm.totalCommissionPercent && createForm.batAlias.trim()) {
                   createBgAffiliateMutation.mutate({
                     walletId: (createForm.selectedWallet as any).wallet_id,
-                    totalCommissionPercent: parseFloat(createForm.totalCommissionPercent)
+                    totalCommissionPercent: parseFloat(createForm.totalCommissionPercent),
+                    batAlias: createForm.batAlias.trim()
                   });
                 }
               }}
@@ -516,20 +593,20 @@ export default function BgAffiliateAdminPage() {
 
       {/* Update Commission Dialog */}
       <Dialog open={showUpdateCommission} onOpenChange={setShowUpdateCommission}>
-        <DialogContent className="bg-slate-900/95 border-slate-700/50">
+        <DialogContent>
           <DialogHeader>
-            <DialogTitle className="text-slate-100">{t('bg-affiliate.dialogs.updateCommission.title')}</DialogTitle>
+            <DialogTitle className="text-foreground font-bold">{t('bg-affiliate.dialogs.updateCommission.title')}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             {selectedTree && (
-              <div className="p-3 rounded-lg bg-slate-800/30 border border-slate-600/30">
-                <p className="text-sm text-slate-400">
+              <div className="p-3 rounded-lg bg-muted/30 border border-border">
+                <p className="text-sm text-muted-foreground">
                   {t('bg-affiliate.dialogs.updateCommission.rootInfo', { 
                     nickname: selectedTree.rootWallet?.nickName || 'Unknown', 
                     address: truncateAddress(selectedTree.rootWallet?.solanaAddress || '') 
                   })}
                 </p>
-                <p className="text-sm text-slate-400">
+                <p className="text-sm text-muted-foreground">
                   {t('bg-affiliate.dialogs.updateCommission.currentCommission', { 
                     percent: selectedTree.totalCommissionPercent 
                   })}
@@ -537,20 +614,32 @@ export default function BgAffiliateAdminPage() {
               </div>
             )}
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">{t('bg-affiliate.dialogs.updateCommission.newCommission')}</label>
+              <label className="block text-sm font-medium mb-2">{t('bg-affiliate.dialogs.updateCommission.newCommission')}</label>
               <Input 
                 type="number" 
                 placeholder={t('bg-affiliate.dialogs.updateCommission.newCommissionPlaceholder')} 
                 value={updateCommissionForm.newPercent} 
                 onChange={e => setUpdateCommissionForm(f => ({ ...f, newPercent: e.target.value }))} 
-                className="bg-slate-800/50 border-slate-600/50" 
                 disabled={updateCommissionMutation.isPending}
                 min="0"
                 max="100"
                 step="0.01"
               />
-              <p className="text-xs text-slate-400 mt-1">
+              <p className="text-xs text-muted-foreground mt-1">
                 {t('bg-affiliate.dialogs.updateCommission.newCommissionHelp')}
+              </p>
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-2">{t('bg-affiliate.dialogs.updateCommission.batAlias')}</label>
+              <Input 
+                type="text" 
+                placeholder={t('bg-affiliate.dialogs.updateCommission.batAliasPlaceholder')} 
+                value={updateCommissionForm.batAlias} 
+                onChange={e => setUpdateCommissionForm(f => ({ ...f, batAlias: e.target.value }))} 
+                disabled={updateCommissionMutation.isPending}
+              />
+              <p className="text-xs text-muted-foreground mt-1">
+                {t('bg-affiliate.dialogs.updateCommission.batAliasHelp')}
               </p>
             </div>
           </div>
@@ -563,14 +652,15 @@ export default function BgAffiliateAdminPage() {
               Cancel
             </Button>
             <Button 
-              className="bg-gradient-to-r from-emerald-600 to-blue-600 hover:from-emerald-700 hover:to-blue-700" 
-              disabled={!updateCommissionForm.newPercent || updateCommissionMutation.isPending || parseFloat(updateCommissionForm.newPercent) < 0 || parseFloat(updateCommissionForm.newPercent) > 100}
+              className="bg-[#00e09e] hover:bg-[#00d08e] text-black font-medium" 
+              disabled={!updateCommissionForm.newPercent || !updateCommissionForm.batAlias.trim() || updateCommissionMutation.isPending || parseFloat(updateCommissionForm.newPercent) < 0 || parseFloat(updateCommissionForm.newPercent) > 100}
               onClick={() => {
-                if (selectedTree && updateCommissionForm.newPercent) {
+                if (selectedTree && updateCommissionForm.newPercent && updateCommissionForm.batAlias.trim()) {
                   updateCommissionMutation.mutate({
                     treeId: selectedTree.treeId,
                     newPercent: parseFloat(updateCommissionForm.newPercent),
-                    rootWalletId: selectedTree.rootWallet.walletId
+                    rootWalletId: selectedTree.rootWallet.walletId,
+                    batAlias: updateCommissionForm.batAlias.trim()
                   });
                 }
               }}

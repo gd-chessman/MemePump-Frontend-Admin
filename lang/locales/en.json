@@ -1,8 +1,11 @@
 {
+    "common": {
+        "back": "Back"
+    },
     "dashboard": {
         "title": "Dashboard",
         "hello": "Hello, Admin!",
-        "overview": "Here's an overview of your system's performance",
+        "overview": "Here's an overview of MEMEPUMP & Bittworld system performance",
         "totalRevenue": "Total Revenue",
         "activeUsers": "Active Users",
         "onlineNow": "Online now",
@@ -105,7 +108,17 @@
         "cardDescription": "View and manage user wallets and their associated accounts.",
         "refresh": "Refresh",
         "searchPlaceholder": "Search by Wallet ID or Nickname ...",
-        "allTypes": "All types",
+        "filters": {
+            "allTypes": "All Platforms",
+            "bittworld": "Bittworld",
+            "nonBittworld": "Memepump",
+            "allUid": "Filter by UID",
+            "hasUid": "Has UID",
+            "noUid": "No UID",
+            "allBgAffiliate": "All Referrals",
+            "bgAffiliate": "BG Affiliate",
+            "nonBgAffiliate": "Non BG Affiliate"
+        },
         "table": {
             "walletId": "Wallet ID",
             "nickname": "Nickname",
@@ -132,7 +145,14 @@
             "inactive": "Inactive",
             "noResults": "No results.",
             "authUpdated": "Auth type updated successfully",
-            "authUpdateFailed": "Failed to update auth type"
+            "authUpdateFailed": "Failed to update auth type",
+            "waName": "User Name",
+            "isBittworld": "Bittworld",
+            "yes": "Yes",
+            "no": "No",
+            "walletCodeRef": "Referral Code",
+            "bittworldUid": "Bittworld UID",
+            "totalWallets": "Total Wallets"
         }
     },
     "categories-token": {
@@ -313,11 +333,14 @@
     },
     "navigation": {
         "dashboard": "Dashboard",
+        "users": "Administration",
         "listWallets": "List Wallets",
         "categoriesToken": "Categories Token",
         "analytics": "Analytics",
         "referral": "BG Affiliate",
         "normalAffiliate": "Normal Affiliate",
+        "pools": "Pools",
+        "bittworldRewards": "Bittworld Rewards",
         "settings": "Settings",
         "admin": "Admin",
         "orders": "Transactions"
@@ -372,12 +395,13 @@
     },
     "orders": {
         "title": "Transaction History",
-        "description": "View and search all transaction records.",
+        "description": "View and search all transactions on MEMEPUMP & Bittworld.",
         "listTitle": "Transaction List",
         "listDescription": "All transactions",
         "searchPlaceholder": "Search by Wallet Address, Token Name, Token Address...",
         "stt": "No.",
         "solAddress": "SOL Address",
+        "bittworldUid": "Bittworld UID",
         "trade": "Trade",
         "token": "Token",
         "quantity": "Quantity",
@@ -400,7 +424,67 @@
             "mostActiveWallet": "Most Traded Wallet",
             "mostActiveWalletDesc": "Wallet with the most transactions.",
             "orderCount": "{{count}} transactions"
+        },
+        "filters": {
+            "all": "All",
+            "bittworld": "Bittworld",
+            "nonBittworld": "Memepump"
         }
+    },
+    "bittworld-rewards": {
+        "title": "Bittworld Rewards",
+        "description": "View and manage Bittworld rewards statistics",
+        "statistics": {
+            "totalRewards": "Total Rewards",
+            "totalRewardsDesc": "Total number of rewards",
+            "totalAmountUSD": "Total Amount USD",
+            "totalAmountUSDDesc": "Total amount in USD",
+            "canWithdraw": "Can Withdraw",
+            "canWithdrawDesc": "Rewards ready to withdraw",
+            "averageReward": "Average Reward",
+            "averageRewardDesc": "Average reward per transaction"
+        },
+        "withdrawals": {
+            "title": "Withdrawals History",
+            "description": "View all Bittworld withdrawal history",
+            "searchPlaceholder": "Search withdrawals...",
+            "filters": {
+                "all": "All Status",
+                "pending": "Pending",
+                "success": "Success",
+                "error": "Error",
+                "cancel": "Cancelled"
+            },
+            "noData": "No withdrawals found"
+        },
+        "dialog": {
+            "title": "Confirm Withdrawal",
+            "description": "Are you sure you want to trigger the withdrawal process? This action cannot be undone.",
+            "currentStatus": "Current Status:",
+            "canWithdraw": "Can Withdraw: {count} rewards",
+            "totalRewards": "Total Rewards: {count} rewards",
+            "totalAmount": "Total Amount: ${amount}",
+            "cancel": "Cancel",
+            "confirm": "Confirm Withdrawal",
+            "processing": "Processing..."
+        },
+        "table": {
+            "id": "ID",
+            "amountSOL": "Amount SOL",
+            "amountUSD": "Amount USD",
+            "address": "Address",
+            "date": "Date",
+            "status": "Status",
+            "txHash": "TX Hash"
+        },
+        "status": {
+            "pending": "Pending",
+            "success": "Success",
+            "error": "Error",
+            "cancel": "Cancelled"
+        },
+        "loading": "Loading...",
+        "noData": "No data found"
     },
     "bg-affiliate": {
         "title": "BG Affiliate",
@@ -408,6 +492,11 @@
         "cardTitle": "Affiliate",
         "cardDescription": "Manage and monitor all BG affiliate",
         "searchPlaceholder": "Search trees...",
+        "filters": {
+            "all": "All Platforms",
+            "bittworld": "Bittworld",
+            "memepump": "Memepump"
+        },
         "newBg": "New BG",
             "stats": {
       "totalTrees": "Total Trees",
@@ -418,7 +507,9 @@
         "table": {
             "number": "#",
             "rootWallet": "Root Wallet",
+            "bittworldUid": "Bittworld UID",
             "commission": "Commission",
+            "batAlias": "Referral Alias",
             "members": "Members",
             "created": "Created",
             "status": "Status",
@@ -430,7 +521,9 @@
             "loading": "Loading trees...",
             "error": "Error loading trees. Please try again.",
             "noTrees": "No trees found",
-            "membersCount": "members"
+            "membersCount": "members",
+            "active": "Active",
+            "inactive": "Inactive"
         },
         "dialogs": {
             "create": {
@@ -440,6 +533,9 @@
                 "commission": "Commission (%)",
                 "commissionPlaceholder": "e.g., 70",
                 "commissionHelp": "Enter a value between 0 and 100",
+                "batAlias": "Referral Alias",
+                "batAliasPlaceholder": "Enter referral alias...",
+                "batAliasHelp": "Enter a unique identifier for this BG affiliate tree",
                 "availableWallets": "available wallets",
                 "createButton": "Create BG",
                 "creating": "Creating...",
@@ -448,17 +544,20 @@
                 "walletExists": "The wallet already has an affiliate tree"
             },
             "updateCommission": {
-                "title": "Update Root BG Commission",
+                "title": "Update BG Affiliate",
                 "treeInfo": "Tree #{treeId}",
                 "rootInfo": "Root: {nickname} ({address})",
                 "currentCommission": "Current Commission: {percent}%",
                 "newCommission": "New Commission (%)",
                 "newCommissionPlaceholder": "e.g., 60",
                 "newCommissionHelp": "Enter a value between 0 and 100",
-                "updateButton": "Update Commission",
+                "batAlias": "Referral Alias",
+                "batAliasPlaceholder": "Enter referral alias...",
+                "batAliasHelp": "Enter a unique identifier for this BG affiliate tree",
+                "updateButton": "Update",
                 "updating": "Updating...",
-                "success": "Commission updated successfully!",
-                "error": "Failed to update commission. Please try again."
+                "success": "BG Affiliate updated successfully!",
+                "error": "Failed to update BG Affiliate. Please try again."
             }
         },
         "detail": {
@@ -550,6 +649,304 @@
             "addressCopied": "Address copied to clipboard",
             "refCodeCopied": "Referral code copied to clipboard",
             "copyFailed": "Failed to copy to clipboard"
+        }
+    },
+    "users": {
+        "title": "User Management",
+        "description": "Manage system users and their roles",
+        "cardTitle": "User Overview",
+        "cardDescription": "View and manage all system users",
+        "searchPlaceholder": "Search users...",
+        "stats": {
+            "totalUsers": "Total Users",
+            "activeUsers": "Active Users",
+            "newToday": "New Today",
+            "newThisWeek": "New This Week"
+        },
+        "table": {
+            "username": "Username",
+            "email": "Email",
+            "role": "Role",
+            "status": "Status",
+            "createdAt": "Created At",
+            "actions": "Actions",
+            "noUsersFound": "No users found",
+            "noUsersMatchingSearch": "No users found matching your search",
+            "loading": "Loading user data...",
+            "error": "Error loading user data"
+        },
+        "roles": {
+            "admin": "Admin",
+            "member": "Member",
+            "partner": "Partner"
+        },
+        "status": {
+            "active": "Active",
+            "inactive": "Inactive"
+        },
+        "addUser": {
+            "title": "Add New User",
+            "username": "Username",
+            "usernamePlaceholder": "Enter username",
+            "password": "Password",
+            "passwordPlaceholder": "Enter password (min 6 characters)",
+            "email": "Email",
+            "emailPlaceholder": "Enter email address",
+            "role": "Role",
+            "rolePlaceholder": "Select role",
+            "addButton": "Add User",
+            "adding": "Adding...",
+            "success": "User added successfully!",
+            "error": "Failed to add user. Please try again.",
+            "cancel": "Cancel",
+            "validation": {
+                "usernameRequired": "Username is required",
+                "passwordRequired": "Password is required",
+                "passwordMinLength": "Password must be at least 6 characters",
+                "emailRequired": "Email is required",
+                "emailInvalid": "Please enter a valid email address",
+                "roleRequired": "Role is required"
+            }
+        },
+        "deleteUser": {
+            "title": "Delete User",
+            "description": "Are you sure you want to delete this user? This action cannot be undone.",
+            "deleteButton": "Delete User",
+            "deleting": "Deleting...",
+            "success": "User deleted successfully!",
+            "error": "Failed to delete user. Please try again.",
+            "cancel": "Cancel"
+        },
+        "pagination": {
+            "showing": "Showing",
+            "to": "to",
+            "of": "of",
+            "entries": "entries",
+            "previous": "Previous",
+            "next": "Next"
+        }
+    },
+    "swap-investors": {
+        "pageTitle": "Swap Investors Management",
+        "description": "Manage swap investors and configure reward settings",
+        "stats": {
+            "totalInvestors": "Total Investors",
+            "activeInvestors": "Active Investors",
+            "totalAmount": "Total Amount",
+            "swapFee": "Swap Fee"
+        },
+        "tabs": {
+            "investors": "Investors",
+            "rewards": "Rewards",
+            "settings": "Settings"
+        },
+        "investors": {
+            "title": "Swap Investors",
+            "description": "Manage and monitor swap investors",
+            "addNew": "Add New Investor",
+            "searchPlaceholder": "Search by wallet address...",
+            "filters": {
+                "allCoins": "All Coins",
+                "sol": "SOL",
+                "usdt": "USDT"
+            },
+            "table": {
+                "id": "ID",
+                "walletAddress": "Wallet Address",
+                "coin": "Coin",
+                "amount": "Amount",
+                "status": "Status",
+                "createdAt": "Created At",
+                "noCoins": "No coins",
+                "active": "Active",
+                "inactive": "Inactive",
+                "noResults": "No investors found"
+            },
+            "dialog": {
+                "title": "Add New Swap Investor",
+                "walletAddress": "Wallet Address",
+                "walletAddressRequired": "Please fill in wallet address",
+                "createSuccess": "Investor created successfully!",
+                "createError": "Failed to create investor. Please try again.",
+                "cancel": "Cancel",
+                "create": "Create"
+            }
+        },
+        "rewards": {
+            "title": "Swap Investor Rewards",
+            "description": "View and track swap investor rewards",
+            "searchPlaceholder": "Search by wallet address or transaction hash...",
+            "table": {
+                "rewardId": "Reward ID",
+                "investorWallet": "Investor Wallet",
+                "solAmount": "SOL Amount",
+                "swapOrder": "Swap Order",
+                "swapType": "Swap Type",
+                "transactionHash": "Transaction Hash",
+                "status": "Status",
+                "createdAt": "Created At",
+                "loading": "Loading...",
+                "noResults": "No rewards found"
+            }
+        },
+        "settings": {
+            "title": "Reward Settings",
+            "description": "Configure swap fees and investor share percentages",
+            "editSettings": "Edit Settings",
+            "currentSwapFee": "Current Swap Fee",
+            "currentInvestorShare": "Current Investor Share",
+            "information": "Information",
+            "infoPoints": {
+                "swapFee": "• Swap fee is charged on all swap transactions",
+                "investorShare": "• Investor share determines how much of fees go to investors",
+                "totalPercentage": "• Total percentage should not exceed 100%"
+            },
+            "dialog": {
+                "title": "Edit Reward Settings",
+                "swapFeeLabel": "Swap Fee Percentage",
+                "swapFeeDescription": "Percentage of swap fee charged on transactions",
+                "investorShareLabel": "Investor Share Percentage",
+                "investorShareDescription": "Percentage of fees shared with investors",
+                "validation": {
+                    "swapFeeRange": "Swap fee must be between 0 and 100",
+                    "investorShareRange": "Investor share must be between 0 and 100",
+                    "investorShareGreater": "Investor share percentage cannot be greater than swap fee percentage"
+                },
+                "updateSuccess": "Settings updated successfully!",
+                "updateError": "Failed to update settings. Please try again.",
+                "cancel": "Cancel",
+                "update": "Update"
+            }
+        }
+    },
+    "pools": {
+        "title": "Pools Management",
+        "description": "Monitor and manage all pools in the system",
+        "stats": {
+            "totalPools": "Total Pools",
+            "activePools": "Active Pools",
+            "totalMembers": "Total Members",
+            "totalVolume": "Total Volume",
+            "combinedVolume": "Combined volume",
+            "currentlyRunning": "Currently running",
+            "acrossAllPools": "Across all pools"
+        },
+        "list": {
+            "title": "Pools List",
+            "description": "View and manage all pools in the system",
+            "searchPlaceholder": "Search pools...",
+            "table": {
+                "pool": "Pool",
+                "members": "Members",
+                "volume": "Volume",
+                "status": "Status",
+                "creator": "Creator",
+                "bittworldUid": "Bittworld UID",
+                "dates": "Dates",
+                "actions": "Actions",
+                "view": "View",
+                "created": "Created",
+                "ends": "Ends"
+            },
+            "status": {
+                "active": "Active",
+                "pending": "Pending",
+                "end": "End",
+                "error": "Error"
+            },
+            "noResults": "No pools found matching your criteria",
+            "loading": "Loading pools..."
+        }
+    },
+    "pool-detail": {
+        "back": "Back",
+        "poolId": "Pool ID",
+        "loading": "Loading pool details...",
+        "notFound": "Pool not found",
+        "stats": {
+            "totalMembers": "Total Members",
+            "totalVolume": "Total Volume",
+            "status": "Status",
+            "transactions": "Transactions",
+            "activeParticipants": "Active participants",
+            "combinedStakes": "Combined stakes",
+            "poolStatus": "Pool status",
+            "totalTransactions": "Total transactions"
+        },
+        "tabs": {
+            "overview": "Overview",
+            "members": "Members",
+            "transactions": "Transactions"
+        },
+        "overview": {
+            "poolInfo": {
+                "title": "Pool Information",
+                "description": "Description",
+                "creationDate": "Creation Date",
+                "endDate": "End Date"
+            },
+            "creatorInfo": {
+                "title": "Creator Information",
+                "description": "Pool creator details",
+                "poolCreator": "Pool Creator",
+                "bittworldUid": "Bittworld UID",
+                "solanaAddress": "Solana Address",
+                "transactionHash": "Transaction Hash"
+            }
+        },
+        "members": {
+            "title": "Members",
+            "description": "All members in this pool",
+            "table": {
+                "member": "Member",
+                "bittworldUid": "Bittworld UID",
+                "totalStaked": "Total Staked",
+                "stakeCount": "Stake Count",
+                "status": "Status",
+                "joinDate": "Join Date"
+            }
+        },
+        "transactions": {
+            "title": "Transactions",
+            "description": "All transactions in this pool",
+            "table": {
+                "member": "Member",
+                "bittworldUid": "Bittworld UID",
+                "stakeAmount": "Stake Amount",
+                "status": "Status",
+                "date": "Date",
+                "transactionHash": "Transaction Hash"
+            }
+        },
+        "status": {
+            "active": "Active",
+            "pending": "Pending",
+            "end": "End",
+            "error": "Error"
+        }
+    },
+    "pools-ranking": {
+        "title": "VIP Pools Ranking",
+        "description": "Exclusive pools with highest volume and performance",
+        "cardTitle": "VIP Pools Ranking Table",
+        "cardDescription": "All VIP pools sorted by volume and rank",
+        "loading": "Loading data...",
+        "error": "Error loading data",
+        "noData": "No data available",
+        "filters": {
+            "vip7": "VIP 7 (30M+)",
+            "vip6": "VIP 6 (20M-30M)",
+            "vip5": "VIP 5 (10M-20M)"
+        },
+        "table": {
+            "rank": "Rank",
+            "pool": "Pool",
+            "volume": "Volume",
+            "members": "Members",
+            "status": "Status",
+            "wallet": "Wallet",
+            "bittworldUid": "Bittworld UID",
+            "created": "Created"
         }
     }
 }

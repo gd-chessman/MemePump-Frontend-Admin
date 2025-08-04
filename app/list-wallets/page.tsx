@@ -17,6 +17,8 @@ import { truncateString } from "@/utils/format"
 import { toast } from "react-toastify"
 import { Fragment } from "react"
 import { ChevronLeft, Copy, Check } from "lucide-react"
+import Image from "next/image"
+import { getMyInfor } from "@/services/api/UserAdminService"
 
 export default function UserWalletsPage() {
   const { t } = useLang()
@@ -24,18 +26,27 @@ export default function UserWalletsPage() {
   const [isRefreshing, setIsRefreshing] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
   const [copiedAddress, setCopiedAddress] = useState<string | null>(null)
-  const [walletAuthType, setWalletAuthType] = useState('all')
+  const [isBittworldFilter, setIsBittworldFilter] = useState<boolean | undefined>(undefined)
+  const [bittworldUidFilter, setBittworldUidFilter] = useState<string>('has_uid')
+  const [bgAffiliateFilter, setBgAffiliateFilter] = useState<string>('all')
+
   const pageSize = 10
   const queryClient = useQueryClient()
 
-  // Reset to page 1 when search hoặc loại ví thay đổi
+  const { data: myInfor } = useQuery({
+    queryKey: ["my-infor"],
+    queryFn: getMyInfor,
+    refetchOnMount: true,
+  });
+
+  // Reset to page 1 when search or filter changes
   useEffect(() => {
     setCurrentPage(1)
-  }, [searchQuery, walletAuthType])
+  }, [searchQuery, isBittworldFilter, bittworldUidFilter, bgAffiliateFilter])
 
   const { data: listWallets, refetch: refetchListWallets, isLoading } = useQuery({
-    queryKey: ["list-wallets", searchQuery, walletAuthType, currentPage],
-    queryFn: () => getListWallets(searchQuery, currentPage, pageSize, walletAuthType === 'all' ? '' : walletAuthType),
+    queryKey: ["list-wallets", searchQuery, currentPage, isBittworldFilter, bittworldUidFilter, bgAffiliateFilter],
+    queryFn: () => getListWallets(searchQuery, currentPage, pageSize, '', '', isBittworldFilter, bittworldUidFilter, bgAffiliateFilter),
     placeholderData: (previousData) => previousData,
   })
 
@@ -88,7 +99,7 @@ export default function UserWalletsPage() {
         <p className="text-muted-foreground">{t('list-wallets.description')}</p>
       </div>
 
-      <Card className="dashboard-card">
+      <Card className="dashboard-card p-0 md:p-4">
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between">
             <div>
@@ -98,51 +109,86 @@ export default function UserWalletsPage() {
           </div>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center gap-2 mb-4">
+          <div className="flex items-center gap-2 mb-4 flex-wrap">
             <div className="relative flex-1">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input type="search" placeholder={t('list-wallets.searchPlaceholder')} className="pl-8 w-full md:max-w-sm"
+              <Input type="search" placeholder={t('list-wallets.searchPlaceholder')} className="pl-8 w-full md:max-w-sm min-w-[140px]"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
-            <Select value={walletAuthType} onValueChange={value => setWalletAuthType(value)}>
-              <SelectTrigger className="w-32">
-                <SelectValue placeholder={t('list-wallets.selectType')} />
+            <div className="flex items-center gap-2 overflow-x-auto">
+            <Select value={isBittworldFilter === undefined ? "all" : isBittworldFilter ? "bittworld" : "non-bittworld"} onValueChange={(value) => {
+              if (value === "all") {
+                setIsBittworldFilter(undefined)
+              } else if (value === "bittworld") {
+                setIsBittworldFilter(true)
+              } else {
+                setIsBittworldFilter(false)
+              }
+            }}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">{t('list-wallets.allTypes')}</SelectItem>
-                <SelectItem value="member">{t('list-wallets.table.member')}</SelectItem>
-                <SelectItem value="master">{t('list-wallets.table.master')}</SelectItem>
+                <SelectItem value="all">{t('list-wallets.filters.allTypes')}</SelectItem>
+                <SelectItem value="bittworld">{t('list-wallets.filters.bittworld')}</SelectItem>
+                <SelectItem value="non-bittworld">{t('list-wallets.filters.nonBittworld')}</SelectItem>
               </SelectContent>
             </Select>
+            <Select value={bgAffiliateFilter} onValueChange={setBgAffiliateFilter}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{t('list-wallets.filters.allBgAffiliate')}</SelectItem>
+                <SelectItem value="bg">{t('list-wallets.filters.bgAffiliate')}</SelectItem>
+                <SelectItem value="non_bg">{t('list-wallets.filters.nonBgAffiliate')}</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select value={bittworldUidFilter} onValueChange={setBittworldUidFilter}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="has_uid">{t('list-wallets.filters.hasUid')}</SelectItem>
+                <SelectItem value="no_uid">{t('list-wallets.filters.noUid')}</SelectItem>
+              </SelectContent>
+            </Select>
+            </div>
           </div>
           <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="text-sm text-muted-foreground">
+                {t('list-wallets.table.totalWallets')}: <span className="font-semibold">{listWallets?.pagination?.total || 0}</span>
+              </div>
+            </div>
             <div className="rounded-md border">
               <Table>
                 <TableHeader className="sticky top-0 bg-background z-20 border-b">
                   <TableRow>
-                    <TableHead>{t('list-wallets.table.walletId')}</TableHead>
-                    <TableHead>{t('list-wallets.table.solanaAddress')}</TableHead>
+                    <TableHead>{t('list-wallets.table.waName')}</TableHead>
                     <TableHead>{t('list-wallets.table.nickname')}</TableHead>
-                    <TableHead>{t('list-wallets.table.authType')}</TableHead>
-                    <TableHead>{t('list-wallets.table.stream')}</TableHead>
+                    <TableHead>{t('list-wallets.table.solanaAddress')}</TableHead>
+                    <TableHead>{t('list-wallets.table.walletCodeRef')}</TableHead>
+                    <TableHead>{t('list-wallets.table.bittworldUid')}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {isLoading ? (
                     <TableRow>
-                      <TableCell colSpan={6} className="h-24 text-center">
+                      <TableCell colSpan={5} className="h-24 text-center">
                         {t('list-wallets.table.loading')}
                       </TableCell>
                     </TableRow>
                   ) : listWallets?.data?.length ? (
                     listWallets.data.map((row: any) => (
                       <TableRow key={row.wallet_id}>
-                        <TableCell className="font-medium">{row.wallet_id}</TableCell>
+                        <TableCell className="font-medium">{row.wallet_auths?.[0]?.wa_name || t('list-wallets.table.na')}</TableCell>
+                        <TableCell>{row.wallet_nick_name || t('list-wallets.table.na')}</TableCell>
                         <TableCell>
                           <div className="flex items-center gap-2">
-                            <span className="text-xs break-all">{truncateString(row.wallet_solana_address, 14)}</span>
+                            <span className="text-xs break-all whitespace-nowrap">{truncateString(row.wallet_solana_address, 14)}</span>
                             <Button
                               variant="ghost"
                               size="icon"
@@ -155,32 +201,29 @@ export default function UserWalletsPage() {
                                 <Copy className="h-3.5 w-3.5" />
                               )}
                             </Button>
-                          </div>
-                        </TableCell>
-                        <TableCell>{row.wallet_nick_name || t('list-wallets.table.na')}</TableCell>
-                        <TableCell>
-                          <div className="flex">
-                            <Select value={row.wallet_auth} onValueChange={(value) => handleUpdateAuth(row.wallet_id, value)}>
-                              <SelectTrigger className="w-28 h-8 text-xs bg-slate-800 border-slate-600 text-slate-200">
-                                <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="master">{t('list-wallets.table.master')}</SelectItem>
-                                <SelectItem value="member">{t('list-wallets.table.member')}</SelectItem>
-                              </SelectContent>
-                            </Select>
+                            {row.isBittworld && (
+                              <Image
+                                src="/favicon.png"
+                                alt="Bittworld"
+                                width={16}
+                                height={16}
+                                className="w-4 h-4 rounded"
+                              />
+                            )}
                           </div>
                         </TableCell>
                         <TableCell>
-                          {row.wallet_stream ? (
-                            <Badge
-                              variant="outline"
-                              className="bg-emerald-50 text-emerald-600 border-emerald-200 dark:bg-emerald-950/30 dark:text-emerald-400 dark:border-emerald-800/50"
-                            >
-                              {row.wallet_stream}
-                            </Badge>
+                          <span className="text-sm text-muted-foreground">
+                            {row.wallet_code_ref || '-'}
+                          </span>
+                        </TableCell>
+                        <TableCell>
+                          {row.isBittworld ? (
+                            <span className="text-sm font-mono text-blue-600 dark:text-blue-400">
+                              {row.bittworld_uid || '-'}
+                            </span>
                           ) : (
-                            t('list-wallets.table.na')
+                            <span className="text-sm text-muted-foreground">-</span>
                           )}
                         </TableCell>
                       </TableRow>

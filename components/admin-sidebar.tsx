@@ -23,6 +23,8 @@ import {
   Users2,
   Network,
   UserCheck,
+  Coins,
+  Database,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -50,24 +52,24 @@ export function AdminSidebar() {
       icon: LayoutDashboard,
       color: "text-blue-400 hover:text-blue-300",
     },
-    // {
-    //   title: "Users",
-    //   href: "/admin/users",
-    //   icon: Users,
-    //   color: "text-purple-400 hover:text-purple-300",
-    // },
+    {
+      title: t("navigation.users"),
+      href: "/users",
+      icon: Users,
+      color: "text-purple-400 hover:text-purple-300",
+    },
     {
       title: t("navigation.listWallets"),
       href: "/list-wallets",
       icon: Wallet,
       color: "text-emerald-400 hover:text-emerald-300",
     },
-    {
-      title: t("navigation.categoriesToken"),
-      href: "/categories-token",
-      icon: Tag,
-      color: "text-amber-400 hover:text-amber-300",
-    },
+    // {
+    //   title: t("navigation.categoriesToken"),
+    //   href: "/categories-token",
+    //   icon: Tag,
+    //   color: "text-amber-400 hover:text-amber-300",
+    // },
     {
       title: t("navigation.orders"),
       href: "/orders",
@@ -85,6 +87,18 @@ export function AdminSidebar() {
       href: "/bg-affiliate",
       icon: Network,
       color: "text-cyan-400 hover:text-cyan-300",
+    },
+    {
+      title: t("navigation.pools"),
+      href: "/pools",
+      icon: Database,
+      color: "text-indigo-400 hover:text-indigo-300",
+    },
+    {
+      title: t("navigation.bittworldRewards"),
+      href: "/bittworld-rewards",
+      icon: Coins,
+      color: "text-yellow-400 hover:text-yellow-300",
     },
     {
       title: t("navigation.analytics"),
