@@ -152,6 +152,7 @@
             "no": "Không",
             "walletCodeRef": "Mã giới thiệu",
             "bittworldUid": "Bittworld UID",
+            "walletAuth": "Cấp độ ví",
             "totalWallets": "Tổng ví"
         }
     },

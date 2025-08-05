@@ -27,8 +27,9 @@ export default function UserWalletsPage() {
   const [currentPage, setCurrentPage] = useState(1)
   const [copiedAddress, setCopiedAddress] = useState<string | null>(null)
   const [isBittworldFilter, setIsBittworldFilter] = useState<boolean | undefined>(undefined)
-  const [bittworldUidFilter, setBittworldUidFilter] = useState<string>('has_uid')
+  const [bittworldUidFilter, setBittworldUidFilter] = useState<string>('no_uid')
   const [bgAffiliateFilter, setBgAffiliateFilter] = useState<string>('all')
+  const [updatingWalletId, setUpdatingWalletId] = useState<number | null>(null)
 
   const pageSize = 10
   const queryClient = useQueryClient()
@@ -60,12 +61,15 @@ export default function UserWalletsPage() {
 
   const handleUpdateAuth = async (walletId: number, newAuth: string) => {
     try {
+      setUpdatingWalletId(walletId)
       await updateListWalletsAuth(walletId.toString(), { wallet_auth: newAuth })
       toast.success(t('list-wallets.table.authUpdated'))
       queryClient.invalidateQueries({ queryKey: ['listWallets'] })
       refetchListWallets()
     } catch (error) {
       toast.error(t('list-wallets.table.authUpdateFailed'))
+    } finally {
+      setUpdatingWalletId(null)
     }
   }
 
@@ -123,8 +127,10 @@ export default function UserWalletsPage() {
                 setIsBittworldFilter(undefined)
               } else if (value === "bittworld") {
                 setIsBittworldFilter(true)
+                setBittworldUidFilter('has_uid') // Tự động chuyển thành has_uid khi chọn Bittworld
               } else {
                 setIsBittworldFilter(false)
+                setBittworldUidFilter('no_uid') // Tự động chuyển thành no_uid khi chọn Memepump
               }
             }}>
               <SelectTrigger className="w-[180px]">
@@ -170,14 +176,19 @@ export default function UserWalletsPage() {
                     <TableHead>{t('list-wallets.table.waName')}</TableHead>
                     <TableHead>{t('list-wallets.table.nickname')}</TableHead>
                     <TableHead>{t('list-wallets.table.solanaAddress')}</TableHead>
+                    {isBittworldFilter === false && (
+                      <TableHead>{t('list-wallets.table.walletAuth')}</TableHead>
+                    )}
                     <TableHead>{t('list-wallets.table.walletCodeRef')}</TableHead>
-                    <TableHead>{t('list-wallets.table.bittworldUid')}</TableHead>
+                    {isBittworldFilter !== false && (
+                      <TableHead>{t('list-wallets.table.bittworldUid')}</TableHead>
+                    )}
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {isLoading ? (
                     <TableRow>
-                      <TableCell colSpan={5} className="h-24 text-center">
+                      <TableCell colSpan={isBittworldFilter === false ? 5 : 6} className="h-24 text-center">
                         {t('list-wallets.table.loading')}
                       </TableCell>
                     </TableRow>
@@ -212,25 +223,44 @@ export default function UserWalletsPage() {
                             )}
                           </div>
                         </TableCell>
+                        {isBittworldFilter === false && (
+                          <TableCell>
+                            <Select
+                              value={row.wallet_auth || 'member'}
+                              onValueChange={(value) => handleUpdateAuth(row.wallet_id, value)}
+                              disabled={updatingWalletId === row.wallet_id}
+                            >
+                              <SelectTrigger className="w-24 h-8 min-w-[8rem] dark:bg-slate-800">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="master">{t('list-wallets.table.master')}</SelectItem>
+                                <SelectItem value="member">{t('list-wallets.table.member')}</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </TableCell>
+                        )}
                         <TableCell>
                           <span className="text-sm text-muted-foreground">
                             {row.wallet_code_ref || '-'}
                           </span>
                         </TableCell>
-                        <TableCell>
-                          {row.isBittworld ? (
-                            <span className="text-sm font-mono text-blue-600 dark:text-blue-400">
-                              {row.bittworld_uid || '-'}
-                            </span>
-                          ) : (
-                            <span className="text-sm text-muted-foreground">-</span>
-                          )}
-                        </TableCell>
+                        {isBittworldFilter !== false && (
+                          <TableCell>
+                            {row.isBittworld ? (
+                              <span className="text-sm font-mono text-blue-600 dark:text-blue-400">
+                                {row.bittworld_uid || '-'}
+                              </span>
+                            ) : (
+                              <span className="text-sm text-muted-foreground">-</span>
+                            )}
+                          </TableCell>
+                        )}
                       </TableRow>
                     ))
                   ) : (
                     <TableRow>
-                      <TableCell colSpan={5} className="h-24 text-center">
+                      <TableCell colSpan={isBittworldFilter === false ? 5 : 6} className="h-24 text-center">
                         {t('list-wallets.table.noResults')}
                       </TableCell>
                     </TableRow>

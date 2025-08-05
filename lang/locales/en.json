@@ -152,6 +152,7 @@
             "no": "No",
             "walletCodeRef": "Referral Code",
             "bittworldUid": "Bittworld UID",
+            "walletAuth": "Wallet Level",
             "totalWallets": "Total Wallets"
         }
     },
