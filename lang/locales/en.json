@@ -147,6 +147,7 @@
             "authUpdated": "Auth type updated successfully",
             "authUpdateFailed": "Failed to update auth type",
             "waName": "User Name",
+            "email": "Email",
             "isBittworld": "Bittworld",
             "yes": "Yes",
             "no": "No",

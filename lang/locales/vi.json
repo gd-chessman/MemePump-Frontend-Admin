@@ -147,6 +147,7 @@
             "authUpdated": "Cập nhật loại xác thực thành công",
             "authUpdateFailed": "Cập nhật loại xác thực thất bại",
             "waName": "Tên người dùng",
+            "email": "Email",
             "isBittworld": "Bittworld",
             "yes": "Có",
             "no": "Không",

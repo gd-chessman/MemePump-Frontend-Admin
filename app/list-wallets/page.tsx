@@ -27,7 +27,7 @@ export default function UserWalletsPage() {
   const [currentPage, setCurrentPage] = useState(1)
   const [copiedAddress, setCopiedAddress] = useState<string | null>(null)
   const [isBittworldFilter, setIsBittworldFilter] = useState<boolean | undefined>(undefined)
-  const [bittworldUidFilter, setBittworldUidFilter] = useState<string>('no_uid')
+  const [bittworldUidFilter, setBittworldUidFilter] = useState<string>('has_uid')
   const [bgAffiliateFilter, setBgAffiliateFilter] = useState<string>('all')
   const [updatingWalletId, setUpdatingWalletId] = useState<number | null>(null)
 
@@ -175,6 +175,7 @@ export default function UserWalletsPage() {
                   <TableRow>
                     <TableHead>{t('list-wallets.table.waName')}</TableHead>
                     <TableHead>{t('list-wallets.table.nickname')}</TableHead>
+                    <TableHead>{t('list-wallets.table.email')}</TableHead>
                     <TableHead>{t('list-wallets.table.solanaAddress')}</TableHead>
                     {isBittworldFilter === false && (
                       <TableHead>{t('list-wallets.table.walletAuth')}</TableHead>
@@ -188,7 +189,7 @@ export default function UserWalletsPage() {
                 <TableBody>
                   {isLoading ? (
                     <TableRow>
-                      <TableCell colSpan={isBittworldFilter === false ? 5 : 6} className="h-24 text-center">
+                      <TableCell colSpan={isBittworldFilter === false ? 6 : 7} className="h-24 text-center">
                         {t('list-wallets.table.loading')}
                       </TableCell>
                     </TableRow>
@@ -197,6 +198,11 @@ export default function UserWalletsPage() {
                       <TableRow key={row.wallet_id}>
                         <TableCell className="font-medium">{row.wallet_auths?.[0]?.wa_name || t('list-wallets.table.na')}</TableCell>
                         <TableCell>{row.wallet_nick_name || t('list-wallets.table.na')}</TableCell>
+                        <TableCell>
+                          <span className="text-sm text-muted-foreground">
+                            {row.email || t('list-wallets.table.na')}
+                          </span>
+                        </TableCell>
                         <TableCell>
                           <div className="flex items-center gap-2">
                             <span className="text-xs break-all whitespace-nowrap">{truncateString(row.wallet_solana_address, 14)}</span>
@@ -260,7 +266,7 @@ export default function UserWalletsPage() {
                     ))
                   ) : (
                     <TableRow>
-                      <TableCell colSpan={isBittworldFilter === false ? 5 : 6} className="h-24 text-center">
+                      <TableCell colSpan={isBittworldFilter === false ? 6 : 7} className="h-24 text-center">
                         {t('list-wallets.table.noResults')}
                       </TableCell>
                     </TableRow>

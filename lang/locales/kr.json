@@ -147,6 +147,7 @@
             "authUpdated": "인증 유형이 성공적으로 업데이트되었습니다",
             "authUpdateFailed": "인증 유형 업데이트 실패",
             "waName": "사용자 이름",
+            "email": "이메일",
             "isBittworld": "Bittworld",
             "yes": "예",
             "no": "아니오",
@@ -827,7 +828,7 @@
             "totalPools": "총 풀",
             "activePools": "활성 풀",
             "totalMembers": "총 멤버",
-            "totalVolume": "총 볼륨",
+            "totalVolume": "총수량",
             "combinedVolume": "결합된 볼륨",
             "currentlyRunning": "현재 실행 중",
             "acrossAllPools": "모든 풀에서"
@@ -839,7 +840,7 @@
             "table": {
                 "pool": "풀",
                 "members": "멤버",
-                "volume": "볼륨",
+                "volume": "총수량",
                 "status": "상태",
                 "creator": "생성자",
                 "bittworldUid": "Bittworld UID",
@@ -866,7 +867,7 @@
         "notFound": "풀을 찾을 수 없습니다",
         "stats": {
             "totalMembers": "총 멤버",
-            "totalVolume": "총 볼륨",
+            "totalVolume": "총수량",
             "status": "상태",
             "transactions": "거래",
             "activeParticipants": "활성 참가자",
