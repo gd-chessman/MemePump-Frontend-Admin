@@ -3,7 +3,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { Search, Plus, Settings, DollarSign, Users, TrendingUp, Gift } from "lucide-react"
+import { Search, Plus, Settings, DollarSign, Users, TrendingUp, Gift, Copy, Check, ExternalLink } from "lucide-react"
 import { useState, useEffect } from "react"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
@@ -19,48 +19,16 @@ import { useQuery } from "@tanstack/react-query"
 import { ChevronLeft } from "lucide-react"
 import { useLang } from "@/lang/useLang"
 
-// Mock data
-const mockInvestors = [
-  {
-    swap_investor_id: 1,
-    wallet_address: "0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6",
-    coin: "SOL",
-    amount: 50000,
-    active: true,
-    created_at: "2024-01-15T10:30:00Z"
-  },
-  {
-    swap_investor_id: 2,
-    wallet_address: "0x8ba1f109551bD432803012645Hac136c772c3",
-    coin: "USDT",
-    amount: 75000,
-    active: true,
-    created_at: "2024-01-16T14:20:00Z"
-  },
-  {
-    swap_investor_id: 3,
-    wallet_address: "0x1234567890abcdef1234567890abcdef12345678",
-    coin: "SOL",
-    amount: 30000,
-    active: false,
-    created_at: "2024-01-17T09:15:00Z"
-  }
-];
-
-const mockSettings = {
-  swap_fee_percent: 2.5,
-  investor_share_percent: 80
-};
 
 export default function SwapInvestorsPage() {
   const { t } = useLang()
   const [searchQuery, setSearchQuery] = useState('')
-  const [coinFilter, setCoinFilter] = useState('all')
   const [openCreateDialog, setOpenCreateDialog] = useState(false)
   const [openSettingsDialog, setOpenSettingsDialog] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
   const [rewardsPage, setRewardsPage] = useState(1)
   const [rewardsSearchQuery, setRewardsSearchQuery] = useState('')
+  const [copiedAddresses, setCopiedAddresses] = useState<Set<string>>(new Set())
 
   // Form states
   const [createForm, setCreateForm] = useState({
@@ -74,7 +42,7 @@ export default function SwapInvestorsPage() {
 
   // Fetch investors with useQuery
   const { data: investorsRes, isLoading, refetch } = useQuery({
-    queryKey: ["swap-investors", currentPage, searchQuery, coinFilter],
+    queryKey: ["swap-investors", currentPage, searchQuery],
     queryFn: () => getSwapInvestors(currentPage, 10, searchQuery),
   })
 
@@ -167,8 +135,7 @@ export default function SwapInvestorsPage() {
 
   const filteredInvestors = investors.filter((investor: any) => {
     const matchesSearch = investor.wallet_address.toLowerCase().includes(searchQuery.toLowerCase())
-    const matchesCoin = coinFilter === 'all' || (Array.isArray(investor.coins) && investor.coins.includes(coinFilter))
-    return matchesSearch && matchesCoin
+    return matchesSearch
   })
 
   const handleRewardsPreviousPage = () => {
@@ -181,6 +148,45 @@ export default function SwapInvestorsPage() {
     if (rewardsPagination.totalPages && rewardsPage < rewardsPagination.totalPages) {
       setRewardsPage(rewardsPage + 1)
     }
+  }
+
+  const handleCopyAddress = async (address: string) => {
+    try {
+      await navigator.clipboard.writeText(address)
+      setCopiedAddresses(prev => new Set(prev).add(address))
+      
+      // Reset the check mark after 2 seconds
+      setTimeout(() => {
+        setCopiedAddresses(prev => {
+          const newSet = new Set(prev)
+          newSet.delete(address)
+          return newSet
+        })
+      }, 2000)
+    } catch (error) {
+      toast.error(t('swap-investors.investors.table.copyError') || 'Failed to copy address')
+    }
+  }
+
+  const handleOpenSolscan = (transactionHash: string) => {
+    if (transactionHash) {
+      window.open(`https://solscan.io/tx/${transactionHash}`, '_blank')
+    }
+  }
+
+  const formatSwapType = (swapType: string) => {
+    switch (swapType) {
+      case 'usdt_to_sol':
+        return 'USDT → SOL'
+      case 'sol_to_usdt':
+        return 'SOL → USDT'
+      default:
+        return swapType || 'N/A'
+    }
+  }
+
+  const formatStatus = (status: string) => {
+    return t(`swap-investors.rewards.table.statuses.${status}`) || status || 'N/A'
   }
 
   return (
@@ -313,25 +319,14 @@ export default function SwapInvestorsPage() {
                     onChange={(e) => setSearchQuery(e.target.value)}
                   />
                 </div>
-                <Select value={coinFilter} onValueChange={setCoinFilter}>
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue />
-                  </SelectTrigger>
-                                     <SelectContent>
-                     <SelectItem value="all">{t('swap-investors.investors.filters.allCoins')}</SelectItem>
-                     <SelectItem value="SOL">{t('swap-investors.investors.filters.sol')}</SelectItem>
-                     <SelectItem value="USDT">{t('swap-investors.investors.filters.usdt')}</SelectItem>
-                   </SelectContent>
-                </Select>
               </div>
 
               <div className="rounded-md border">
                 <Table>
                   <TableHeader className="sticky top-0 bg-background z-20 border-b">
                     <TableRow>
-                      <TableHead className="font-semibold text-foreground">{t('swap-investors.investors.table.id')}</TableHead>
+                      <TableHead className="font-semibold text-foreground">{t('swap-investors.investors.table.stt')}</TableHead>
                       <TableHead className="font-semibold text-foreground">{t('swap-investors.investors.table.walletAddress')}</TableHead>
-                      <TableHead className="font-semibold text-foreground">{t('swap-investors.investors.table.coin')}</TableHead>
                       <TableHead className="font-semibold text-foreground">{t('swap-investors.investors.table.amount')}</TableHead>
                       <TableHead className="font-semibold text-foreground">{t('swap-investors.investors.table.status')}</TableHead>
                       <TableHead className="font-semibold text-foreground">{t('swap-investors.investors.table.createdAt')}</TableHead>
@@ -339,21 +334,22 @@ export default function SwapInvestorsPage() {
                   </TableHeader>
                   <TableBody>
                     {filteredInvestors.length > 0 ? (
-                      filteredInvestors.map((investor: any) => (
+                      filteredInvestors.map((investor: any, index: number) => (
                         <TableRow key={investor.swap_investor_id}>
-                          <TableCell className="font-medium">#{investor.swap_investor_id}</TableCell>
+                          <TableCell className="font-medium">#{index + 1}</TableCell>
                           <TableCell>
-                            <span className="text-sm font-mono">
-                              {investor.wallet_address.slice(0, 8)}...{investor.wallet_address.slice(-6)}
-                            </span>
-                          </TableCell>
-                          <TableCell>
-                            <div className="flex gap-1">
-                              {Array.isArray(investor.coins) ? investor.coins.map((coin: string) => (
-                                <Badge key={coin} variant="outline">{coin}</Badge>
-                              )) : (
-                                <span className="text-muted-foreground">{t('swap-investors.investors.table.noCoins')}</span>
-                              )}
+                            <div className="flex items-center gap-2">
+                              <span className="text-sm font-mono">
+                                {investor.wallet_address.slice(0, 8)}...{investor.wallet_address.slice(-6)}
+                              </span>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-6 w-6 p-0 text-muted-foreground hover:text-foreground"
+                                onClick={() => handleCopyAddress(investor.wallet_address)}
+                              >
+                                {copiedAddresses.has(investor.wallet_address) ? <Check className="h-3 w-3 text-green-500" /> : <Copy className="h-3 w-3" />}
+                              </Button>
                             </div>
                           </TableCell>
                           <TableCell>
@@ -389,7 +385,7 @@ export default function SwapInvestorsPage() {
                       ))
                     ) : (
                       <TableRow>
-                        <TableCell colSpan={6} className="h-24 text-center text-muted-foreground">
+                        <TableCell colSpan={5} className="h-24 text-center text-muted-foreground">
                           {t('swap-investors.investors.table.noResults')}
                         </TableCell>
                       </TableRow>
@@ -429,31 +425,38 @@ export default function SwapInvestorsPage() {
                 <Table>
                   <TableHeader className="sticky top-0 bg-background z-20 border-b">
                     <TableRow>
-                      <TableHead className="font-semibold text-foreground">{t('swap-investors.rewards.table.rewardId')}</TableHead>
                       <TableHead className="font-semibold text-foreground">{t('swap-investors.rewards.table.investorWallet')}</TableHead>
                       <TableHead className="font-semibold text-foreground">{t('swap-investors.rewards.table.solAmount')}</TableHead>
-                      <TableHead className="font-semibold text-foreground">{t('swap-investors.rewards.table.swapOrder')}</TableHead>
                       <TableHead className="font-semibold text-foreground">{t('swap-investors.rewards.table.swapType')}</TableHead>
-                      <TableHead className="font-semibold text-foreground">{t('swap-investors.rewards.table.transactionHash')}</TableHead>
                       <TableHead className="font-semibold text-foreground">{t('swap-investors.rewards.table.status')}</TableHead>
                       <TableHead className="font-semibold text-foreground">{t('swap-investors.rewards.table.createdAt')}</TableHead>
+                      <TableHead className="font-semibold text-foreground"></TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {rewardsLoading ? (
                       <TableRow>
-                        <TableCell colSpan={8} className="h-24 text-center">
+                        <TableCell colSpan={6} className="h-24 text-center">
                           {t('swap-investors.rewards.table.loading')}
                         </TableCell>
                       </TableRow>
                     ) : rewards.length > 0 ? (
                       rewards.map((reward: any) => (
                         <TableRow key={reward.swap_investor_reward_id}>
-                          <TableCell className="font-medium">#{reward.swap_investor_reward_id}</TableCell>
                           <TableCell>
-                            <span className="text-sm font-mono">
-                              {reward.investor_wallet_address.slice(0, 8)}...{reward.investor_wallet_address.slice(-6)}
-                            </span>
+                            <div className="flex items-center gap-2">
+                              <span className="text-sm font-mono">
+                                {reward.investor_wallet_address.slice(0, 8)}...{reward.investor_wallet_address.slice(-6)}
+                              </span>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-6 w-6 p-0 text-muted-foreground hover:text-foreground"
+                                onClick={() => handleCopyAddress(reward.investor_wallet_address)}
+                              >
+                                {copiedAddresses.has(reward.investor_wallet_address) ? <Check className="h-3 w-3 text-green-500" /> : <Copy className="h-3 w-3" />}
+                              </Button>
+                            </div>
                           </TableCell>
                           <TableCell>
                             <span className="text-sm font-semibold text-green-600 dark:text-green-400">
@@ -461,24 +464,18 @@ export default function SwapInvestorsPage() {
                             </span>
                           </TableCell>
                           <TableCell>
-                            <span className="text-sm">#{reward.swap_order_id}</span>
-                          </TableCell>
-                          <TableCell>
                             <Badge variant="outline">
-                              {reward.swapOrder?.swap_type || 'N/A'}
+                              {formatSwapType(reward.swapOrder?.swap_type)}
                             </Badge>
                           </TableCell>
                           <TableCell>
-                            <span className="text-xs font-mono text-muted-foreground">
-                              {reward.swapOrder?.transaction_hash ? 
-                                `${reward.swapOrder.transaction_hash.slice(0, 8)}...${reward.swapOrder.transaction_hash.slice(-6)}` : 
-                                'N/A'
-                              }
-                            </span>
-                          </TableCell>
-                          <TableCell>
-                            <Badge variant={reward.swapOrder?.status === 'completed' ? "default" : "secondary"}>
-                              {reward.swapOrder?.status || 'N/A'}
+                            <Badge variant={
+                              reward.status === 'paid' ? "default" : 
+                              reward.status === 'failed' ? "destructive" :
+                              reward.status === 'pending' || reward.status === 'wait_balance' ? "secondary" : 
+                              "secondary"
+                            }>
+                              {formatStatus(reward.status)}
                             </Badge>
                           </TableCell>
                           <TableCell>
@@ -486,11 +483,25 @@ export default function SwapInvestorsPage() {
                               {new Date(reward.created_at).toLocaleDateString()}
                             </span>
                           </TableCell>
+                          <TableCell>
+                            {reward.transaction_hash ? (
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-6 w-6 p-0 text-blue-400 hover:text-blue-600"
+                                onClick={() => handleOpenSolscan(reward.transaction_hash)}
+                              >
+                                <ExternalLink className="h-4 w-4" />
+                              </Button>
+                            ) : (
+                              <span className="text-xs text-muted-foreground">-</span>
+                            )}
+                          </TableCell>
                         </TableRow>
                       ))
                     ) : (
                       <TableRow>
-                        <TableCell colSpan={8} className="h-24 text-center text-muted-foreground">
+                        <TableCell colSpan={6} className="h-24 text-center text-muted-foreground">
                           {t('swap-investors.rewards.table.noResults')}
                         </TableCell>
                       </TableRow>

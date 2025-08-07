@@ -754,6 +754,7 @@
             },
             "table": {
                 "id": "ID",
+                "stt": "번호",
                 "walletAddress": "지갑 주소",
                 "coin": "코인",
                 "amount": "금액",
@@ -788,7 +789,13 @@
                 "status": "상태",
                 "createdAt": "생성일",
                 "loading": "로딩 중...",
-                "noResults": "보상을 찾을 수 없습니다"
+                "noResults": "보상을 찾을 수 없습니다",
+                "statuses": {
+                    "pending": "대기 중",
+                    "wait_balance": "잔액 대기",
+                    "paid": "지급됨",
+                    "failed": "실패"
+                }
             }
         },
         "settings": {

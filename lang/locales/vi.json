@@ -756,6 +756,7 @@
             },
             "table": {
                 "id": "ID",
+                "stt": "STT",
                 "walletAddress": "Địa chỉ ví",
                 "coin": "Coin",
                 "amount": "Số tiền",
@@ -790,7 +791,13 @@
                 "status": "Trạng thái",
                 "createdAt": "Ngày tạo",
                 "loading": "Đang tải...",
-                "noResults": "Không tìm thấy phần thưởng"
+                "noResults": "Không tìm thấy phần thưởng",
+                "statuses": {
+                    "pending": "Chờ xử lý",
+                    "wait_balance": "Chờ số dư",
+                    "paid": "Đã thanh toán",
+                    "failed": "Thất bại"
+                }
             }
         },
         "settings": {

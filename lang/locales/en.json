@@ -754,6 +754,7 @@
             },
             "table": {
                 "id": "ID",
+                "stt": "No.",
                 "walletAddress": "Wallet Address",
                 "coin": "Coin",
                 "amount": "Amount",
@@ -788,7 +789,13 @@
                 "status": "Status",
                 "createdAt": "Created At",
                 "loading": "Loading...",
-                "noResults": "No rewards found"
+                "noResults": "No rewards found",
+                "statuses": {
+                    "pending": "Pending",
+                    "wait_balance": "Wait Balance",
+                    "paid": "Paid",
+                    "failed": "Failed"
+                }
             }
         },
         "settings": {
