@@ -263,9 +263,9 @@ export default function SwapInvestorsPage() {
         </TabsList>
 
         <TabsContent value="investors" className="space-y-4">
-          <Card className="dashboard-card">
+          <Card className="dashboard-card p-0 md:p-4">
             <CardHeader className="pb-2">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between flex-wrap gap-2">
                 <div>
                   <CardTitle className="text-black dark:text-white font-bold">{t('swap-investors.investors.title')}</CardTitle>
                   <CardDescription className="text-muted-foreground">{t('swap-investors.investors.description')}</CardDescription>
@@ -355,24 +355,24 @@ export default function SwapInvestorsPage() {
                           <TableCell>
                             <div className="space-y-1">
                               {investor.amount_sol > 0 && (
-                                <div className="text-sm">
+                                <div className="text-sm whitespace-nowrap">
                                   <span className="font-semibold">{investor.amount_sol}</span> SOL
                                 </div>
                               )}
                               {investor.amount_usdt > 0 && (
-                                <div className="text-sm">
+                                <div className="text-sm whitespace-nowrap">
                                   <span className="font-semibold">{investor.amount_usdt.toLocaleString()}</span> USDT
                                 </div>
                               )}
                               {investor.amount_usd > 0 && (
-                                <div className="text-xs text-muted-foreground">
+                                <div className="text-xs text-muted-foreground whitespace-nowrap">
                                   ≈ ${investor.amount_usd.toLocaleString()}
                                 </div>
                               )}
                             </div>
                           </TableCell>
                           <TableCell>
-                            <Badge variant={investor.active ? "default" : "secondary"}>
+                            <Badge variant={investor.active ? "default" : "secondary"} className="whitespace-nowrap">
                               {investor.active ? t('swap-investors.investors.table.active') : t('swap-investors.investors.table.inactive')}
                             </Badge>
                           </TableCell>
@@ -398,7 +398,7 @@ export default function SwapInvestorsPage() {
         </TabsContent>
 
         <TabsContent value="rewards" className="space-y-4">
-          <Card className="dashboard-card">
+          <Card className="dashboard-card p-0 md:p-4">
             <CardHeader className="pb-2">
               <div className="flex items-center justify-between">
                 <div>
@@ -459,12 +459,12 @@ export default function SwapInvestorsPage() {
                             </div>
                           </TableCell>
                           <TableCell>
-                            <span className="text-sm font-semibold text-green-600 dark:text-green-400">
+                            <span className="text-sm font-semibold text-green-600 dark:text-green-400 whitespace-nowrap">
                               {reward.reward_sol_amount.toFixed(6)} SOL
                             </span>
                           </TableCell>
                           <TableCell>
-                            <Badge variant="outline">
+                            <Badge variant="outline" className="whitespace-nowrap">
                               {formatSwapType(reward.swapOrder?.swap_type)}
                             </Badge>
                           </TableCell>
@@ -474,7 +474,7 @@ export default function SwapInvestorsPage() {
                               reward.status === 'failed' ? "destructive" :
                               reward.status === 'pending' || reward.status === 'wait_balance' ? "secondary" : 
                               "secondary"
-                            }>
+                            } className="whitespace-nowrap">
                               {formatStatus(reward.status)}
                             </Badge>
                           </TableCell>
@@ -538,7 +538,7 @@ export default function SwapInvestorsPage() {
         <TabsContent value="settings" className="space-y-4">
           <Card className="dashboard-card">
             <CardHeader className="pb-2">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between flex-wrap gap-2">
                 <div>
                   <CardTitle className="text-black dark:text-white font-bold">{t('swap-investors.settings.title')}</CardTitle>
                   <CardDescription className="text-muted-foreground">{t('swap-investors.settings.description')}</CardDescription>
