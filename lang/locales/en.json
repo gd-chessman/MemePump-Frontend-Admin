@@ -406,9 +406,9 @@
         "bittworldUid": "Bittworld UID",
         "trade": "Trade",
         "token": "Token",
-        "quantity": "Quantity",
-        "price": "Price",
-        "total": "Total",
+        "quantity": "Token Quantity",
+        "price": "Price at Transaction Time $",
+        "total": "Total Transaction $",
         "status": "Status",
         "createdAt": "Created At",
         "txHash": "Tx Hash",
@@ -523,9 +523,7 @@
             "loading": "Loading trees...",
             "error": "Error loading trees. Please try again.",
             "noTrees": "No trees found",
-            "membersCount": "members",
-            "active": "Active",
-            "inactive": "Inactive"
+            "membersCount": "members"
         },
         "dialogs": {
             "create": {
