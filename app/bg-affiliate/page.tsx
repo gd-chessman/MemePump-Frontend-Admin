@@ -402,7 +402,7 @@ export default function BgAffiliateAdminPage() {
                               </Button>
                               {tree.rootWallet?.isBittworld && (
                                 <Image
-                                  src="/logo.png"
+                                  src="/favicon.png"
                                   alt="Bittworld"
                                   width={16}
                                   height={16}

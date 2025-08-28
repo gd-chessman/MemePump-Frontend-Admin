@@ -249,7 +249,7 @@ export default function PoolsRankingPage() {
                             </button>
                             {item.isBittworld && (
                               <Image
-                                src="/logo.png"
+                                src="/favicon.png"
                                 alt="Bittworld"
                                 width={16}
                                 height={16}
