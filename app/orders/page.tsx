@@ -196,7 +196,7 @@ export default function OrdersPage() {
                           )}
                           {order.isBittworld && (
                             <Image
-                              src="/favicon.png"
+                              src="/logo.png"
                               alt="Bittworld"
                               width={16}
                               height={16}

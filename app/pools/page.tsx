@@ -303,7 +303,7 @@ export default function PoolsPage() {
                             </button>
                             {pool.originator.isBittworld && (
                               <Image
-                                src="/favicon.png"
+                                src="/logo.png"
                                 alt="Bittworld"
                                 width={16}
                                 height={16}
