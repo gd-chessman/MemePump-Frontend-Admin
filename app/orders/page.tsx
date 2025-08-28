@@ -194,7 +194,7 @@ export default function OrdersPage() {
                               )}
                             </button>
                           )}
-                          {order.isBittworld && (
+                          {order.isBittworld ? (
                             <Image
                               src="/favicon.png"
                               alt="Bittworld"
@@ -202,7 +202,13 @@ export default function OrdersPage() {
                               height={16}
                               className="w-4 h-4 rounded"
                             />
-                          )}
+                            ) : <Image
+                                src="/logo.png"
+                              alt="Memepump"
+                              width={16}
+                              height={16}
+                              className="w-4 h-4 rounded"
+                            />}
                         </div>
                       </td>
                       <td className="px-4 py-2 text-xs">

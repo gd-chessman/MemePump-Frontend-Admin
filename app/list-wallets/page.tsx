@@ -218,7 +218,7 @@ export default function UserWalletsPage() {
                                 <Copy className="h-3.5 w-3.5" />
                               )}
                             </Button>
-                            {row.isBittworld && (
+                            {row.isBittworld ? (
                               <Image
                                 src="/favicon.png"
                                 alt="Bittworld"
@@ -226,7 +226,13 @@ export default function UserWalletsPage() {
                                 height={16}
                                 className="w-4 h-4 rounded"
                               />
-                            )}
+                            ) : <Image
+                                src="/logo.png"
+                              alt="Memepump"
+                              width={16}
+                              height={16}
+                              className="w-4 h-4 rounded"
+                            />}
                           </div>
                         </TableCell>
                         {isBittworldFilter === false && (

@@ -400,7 +400,7 @@ export default function BgAffiliateAdminPage() {
                                   <Copy className="h-3 w-3" />
                                 )}
                               </Button>
-                              {tree.rootWallet?.isBittworld && (
+                              {tree.rootWallet?.isBittworld ? (
                                 <Image
                                   src="/favicon.png"
                                   alt="Bittworld"
@@ -408,7 +408,13 @@ export default function BgAffiliateAdminPage() {
                                   height={16}
                                   className="w-4 h-4 rounded"
                                 />
-                              )}
+                              ) : <Image
+                                src="/logo.png"
+                                alt="Memepump"
+                                width={16}
+                                height={16}
+                                className="w-4 h-4 rounded"
+                              />}
                             </div>
                           </div>
                         </TableCell>
