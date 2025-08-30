@@ -407,6 +407,7 @@
         "trade": "거래 종류",
         "token": "토큰",
         "quantity": "토큰 수량",
+        "priceAtTrade": "매수단가",
         "price": "거래 시점 가격 $",
         "total": "총 거래 $",
         "status": "상태",

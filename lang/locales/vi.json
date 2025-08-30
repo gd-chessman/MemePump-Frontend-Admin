@@ -407,6 +407,7 @@
         "trade": "Loại giao dịch",
         "token": "Token",
         "quantity": "Số lượng token",
+        "priceAtTrade": "Giá mua bình quân",
         "price": "Giá thời điểm giao dịch $",
         "total": "Tổng giao dịch $",
         "status": "Trạng thái",

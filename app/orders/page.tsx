@@ -163,6 +163,7 @@ export default function OrdersPage() {
                   <th className="h-12 px-4 text-left font-medium whitespace-nowrap">{t("orders.bittworldUid")}</th>
                   <th className="h-12 px-4 text-left font-medium whitespace-nowrap">{t("orders.trade")}</th>
                   <th className="h-12 px-4 text-left font-medium whitespace-nowrap">{t("orders.token")}</th>
+                  <th className="h-12 px-4 text-left font-medium whitespace-nowrap">{t("orders.priceAtTrade")}</th>
                   <th className="h-12 px-4 text-left font-medium whitespace-nowrap">{t("orders.quantity")}</th>
                   <th className="h-12 px-4 text-left font-medium whitespace-nowrap">{t("orders.price")}</th>
                   <th className="h-12 px-4 text-left font-medium whitespace-nowrap">{t("orders.total")}</th>
@@ -253,6 +254,7 @@ export default function OrdersPage() {
                           )}
                         </div>
                       </td>
+                      <td className="px-4 py-2">{order.current_price?.toFixed(5) ?? '-'}</td>
                       <td className="px-4 py-2">{order.order_qlty}</td>
                       <td className="px-4 py-2">{order.order_price}</td>
                       <td className="px-4 py-2">{order.order_total_value}</td>

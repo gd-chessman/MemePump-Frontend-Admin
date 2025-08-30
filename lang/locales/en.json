@@ -407,6 +407,7 @@
         "trade": "Trade",
         "token": "Token",
         "quantity": "Token Quantity",
+        "priceAtTrade": "Average Buy Price",
         "price": "Price at Transaction Time $",
         "total": "Total Transaction $",
         "status": "Status",
