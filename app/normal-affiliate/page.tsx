@@ -19,6 +19,10 @@ function truncateAddress(address: string, start: number = 4, end: number = 4): s
 }
 
 export default function NormalAffiliateAdminPage() {
+  const hiddenPage = true;
+  if (hiddenPage) {
+    return null;
+  }
   const { t } = useLang();
   const [copiedAddress, setCopiedAddress] = useState<string | null>(null);
   const [copiedRefCode, setCopiedRefCode] = useState<string | null>(null);
